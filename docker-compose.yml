@@ -1,32 +1,68 @@
 name: tallents-rh
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Deploy no Coolify:
+#   1. New Resource → Docker Compose
+#   2. Aponte para github.com/julioandolfo/tallents (branch main)
+#   3. Em "Domains", adicione seu domínio → Coolify injeta SERVICE_FQDN_APP
+#   4. Clique em Deploy — tudo sobe automaticamente
+#
+# Nenhuma variável precisa ser configurada manualmente.
+# APP_KEY é gerado no primeiro boot. Credenciais iniciais aparecem no log.
+# ─────────────────────────────────────────────────────────────────────────────
+
+x-app-env: &app-env
+  APP_NAME: "Tallents RH"
+  APP_ENV: production
+  APP_DEBUG: "false"
+  APP_URL: "${SERVICE_FQDN_APP:-http://localhost}"
+  APP_TIMEZONE: "America/Sao_Paulo"
+  APP_LOCALE: pt_BR
+  APP_FALLBACK_LOCALE: pt_BR
+  BCRYPT_ROUNDS: "12"
+  LOG_CHANNEL: stack
+  LOG_STACK: daily
+  LOG_LEVEL: error
+
+  DB_CONNECTION: mysql
+  DB_HOST: mysql
+  DB_PORT: "3306"
+  DB_DATABASE: tallents_rh
+  DB_USERNAME: tallents
+  DB_PASSWORD: "${DB_PASSWORD:-T4ll3nts_DB_2024!}"
+
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: "${REDIS_PASSWORD:-T4ll3nts_RD_2024!}"
+  REDIS_CLIENT: phpredis
+
+  CACHE_STORE: redis
+  SESSION_DRIVER: redis
+  SESSION_LIFETIME: "120"
+  SESSION_ENCRYPT: "true"
+  QUEUE_CONNECTION: redis
+  BROADCAST_CONNECTION: log
+  FILESYSTEM_DISK: local
+
+  MAIL_MAILER: "${MAIL_MAILER:-log}"
+  MAIL_HOST: "${MAIL_HOST:-}"
+  MAIL_PORT: "${MAIL_PORT:-587}"
+  MAIL_USERNAME: "${MAIL_USERNAME:-}"
+  MAIL_PASSWORD: "${MAIL_PASSWORD:-}"
+  MAIL_FROM_ADDRESS: "${MAIL_FROM_ADDRESS:-noreply@tallents.com.br}"
+  MAIL_FROM_NAME: "Tallents RH"
+
 services:
+  # ─── Aplicação Laravel ───────────────────────────────────────────────────────
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: tallents-app
     restart: unless-stopped
-    ports:
-      - "${APP_PORT:-8000}:80"
     environment:
-      APP_ENV: local
-      APP_KEY: ${APP_KEY}
-      APP_URL: ${APP_URL:-http://localhost:8000}
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_DATABASE: ${DB_DATABASE:-tallents_rh}
-      DB_USERNAME: ${DB_USERNAME:-tallents}
-      DB_PASSWORD: ${DB_PASSWORD:-secret}
-      CACHE_STORE: redis
-      SESSION_DRIVER: redis
-      QUEUE_CONNECTION: redis
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      MAIL_MAILER: ${MAIL_MAILER:-log}
+      <<: *app-env
     volumes:
-      - storage_data:/var/www/html/storage/app/public
+      - storage_uploads:/var/www/html/storage/app/public
     depends_on:
       mysql:
         condition: service_healthy
@@ -34,63 +70,55 @@ services:
         condition: service_healthy
     networks:
       - tallents
+    labels:
+      - "coolify.managed=true"
 
+  # ─── MySQL 8.4 ───────────────────────────────────────────────────────────────
   mysql:
     image: mysql:8.4
-    container_name: tallents-mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-tallents_rh}
-      MYSQL_USER: ${DB_USERNAME:-tallents}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
-      MYSQL_CHARSET: utf8mb4
-      MYSQL_COLLATION: utf8mb4_unicode_ci
-    ports:
-      - "${DB_PORT:-3306}:3306"
+      MYSQL_DATABASE: tallents_rh
+      MYSQL_USER: tallents
+      MYSQL_PASSWORD: "${DB_PASSWORD:-T4ll3nts_DB_2024!}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-T4ll3nts_ROOT_2024!}"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "tallents", "-p${DB_PASSWORD:-T4ll3nts_DB_2024!}"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 40s
     networks:
       - tallents
 
+  # ─── Redis 7 ─────────────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    container_name: tallents-redis
     restart: unless-stopped
-    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-redissecret}
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD:-T4ll3nts_RD_2024!}
+      --save 60 1
+      --loglevel warning
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redissecret}", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-T4ll3nts_RD_2024!}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - tallents
-
-  # Mailpit — captura de e-mails em dev
-  mailpit:
-    image: axllent/mailpit:latest
-    container_name: tallents-mail
-    restart: unless-stopped
-    ports:
-      - "8025:8025"   # UI web
-      - "1025:1025"   # SMTP
+      start_period: 10s
     networks:
       - tallents
 
 volumes:
   mysql_data:
   redis_data:
-  storage_data:
+  storage_uploads:
 
 networks:
   tallents:
