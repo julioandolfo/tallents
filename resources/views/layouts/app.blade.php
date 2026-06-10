@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') — Tallents RH</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet">
     @include('layouts.partials.theme-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="h-full dark:bg-gray-900" x-data="{ sidebarOpen: false }">
+<body class="h-full dark:bg-slate-900" x-data="{ sidebarOpen: false }">
     <div class="flex h-screen overflow-hidden">
         <!-- Overlay mobile -->
         <div x-show="sidebarOpen"
@@ -18,8 +20,8 @@
              @click="sidebarOpen = false"></div>
 
         <!-- SIDEBAR DESKTOP -->
-        <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-gray-900 z-50">
-            <div class="flex items-center h-16 px-4 bg-gray-800 shrink-0">
+        <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-slate-900 z-50">
+            <div class="flex items-center h-16 px-4 bg-slate-800/40 shrink-0">
                 <svg class="h-7 w-7 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -29,16 +31,16 @@
             <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
                 @include('layouts.partials.sidebar-nav')
             </nav>
-            <div class="px-4 py-3 bg-gray-800 shrink-0">
+            <div class="px-4 py-3 bg-slate-800/40 shrink-0">
                 <p class="text-xs text-gray-500">Tallents RH v1.0</p>
             </div>
         </div>
 
         <!-- SIDEBAR MOBILE -->
-        <div class="flex flex-col w-64 bg-gray-900 fixed inset-y-0 z-50 transition-transform duration-300 lg:hidden"
+        <div class="flex flex-col w-64 bg-slate-900 fixed inset-y-0 z-50 transition-transform duration-300 lg:hidden"
              :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
              x-cloak>
-            <div class="flex items-center justify-between h-16 px-4 bg-gray-800 shrink-0">
+            <div class="flex items-center justify-between h-16 px-4 bg-slate-800/40 shrink-0">
                 <span class="text-white font-bold text-xl">Tallents <span class="text-indigo-400">RH</span></span>
                 <button @click="sidebarOpen = false" class="text-gray-400 hover:text-white focus:outline-none">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,7 +51,7 @@
             <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
                 @include('layouts.partials.sidebar-nav')
             </nav>
-            <div class="px-4 py-3 bg-gray-800 shrink-0">
+            <div class="px-4 py-3 bg-slate-800/40 shrink-0">
                 <p class="text-xs text-gray-500">Tallents RH v1.0</p>
             </div>
         </div>
@@ -57,7 +59,7 @@
         <!-- CONTEÚDO PRINCIPAL -->
         <div class="flex flex-col flex-1 overflow-hidden lg:pl-64">
             <!-- Header -->
-            <header class="bg-white shadow-sm z-10 shrink-0">
+            <header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10 shrink-0">
                 <div class="flex items-center justify-between h-16 px-4 sm:px-6">
                     <button @click="sidebarOpen = true" class="lg:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
