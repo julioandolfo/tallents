@@ -134,6 +134,7 @@ echo "✅ Assets do painel publicados"
 
 # ─── 7. Cache de produção (best-effort) ───────────────────────────────────────
 echo "⚡ Gerando caches..."
+php artisan package:discover 2>/dev/null || true
 php artisan config:cache 2>/dev/null || echo "⚠️  config:cache falhou"
 php artisan route:cache  2>/dev/null || echo "⚠️  route:cache falhou"
 php artisan view:cache   2>/dev/null || echo "⚠️  view:cache falhou"
