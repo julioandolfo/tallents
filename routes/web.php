@@ -37,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('cargos', CargoController::class);
     Route::resource('ocorrencias', OcorrenciaController::class);
     Route::resource('horas-extras', HoraExtraController::class)->parameters(['horas-extras' => 'horasExtra']);
-    Route::resource('promocoes', PromocaoController::class)->only(['index', 'create', 'store', 'show'])->parameters(['promocoes' => 'promocao']);
+    Route::resource('promocoes', PromocaoController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->parameters(['promocoes' => 'promocao']);
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);

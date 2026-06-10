@@ -11,7 +11,7 @@ class OcorrenciaController extends Controller
 {
     public function index(Request $request)
     {
-        $ocorrencias = Ocorrencia::with(['colaborador', 'tipoOcorrencia', 'registradoPor'])
+        $ocorrencias = Ocorrencia::with(['colaborador.empresa', 'tipoOcorrencia', 'registradoPor'])
             ->when($request->empresa_id, fn($q, $v) => $q->whereHas('colaborador', fn($sub) => $sub->where('empresa_id', $v)))
             ->when($request->colaborador_id, fn($q, $v) => $q->where('colaborador_id', $v))
             ->when($request->tipo_ocorrencia_id, fn($q, $v) => $q->where('tipo_ocorrencia_id', $v))

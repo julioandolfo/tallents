@@ -10,7 +10,7 @@ class CargoController extends Controller
 {
     public function index(Request $request)
     {
-        $cargos = Cargo::with('empresa')
+        $cargos = Cargo::with(['empresa', 'nivelHierarquico'])
             ->when($request->empresa_id, fn($q, $v) => $q->where('empresa_id', $v))
             ->when($request->search, fn($q, $v) => $q->where('nome', 'like', "%$v%"))
             ->orderBy('nome')

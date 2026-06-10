@@ -83,4 +83,13 @@ class PromocaoController extends Controller
 
         return view('promocoes.show', compact('promocao'));
     }
+
+    public function destroy(Promocao $promocao)
+    {
+        $promocao->delete();
+
+        return redirect()
+            ->route('promocoes.index')
+            ->with('success', 'Promoção removida com sucesso!');
+    }
 }
