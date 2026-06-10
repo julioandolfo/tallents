@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') — Tallents RH</title>
+    @include('layouts.partials.theme-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="h-full" x-data="{ sidebarOpen: false }">
+<body class="h-full dark:bg-gray-900" x-data="{ sidebarOpen: false }">
     <div class="flex h-screen overflow-hidden">
         <!-- Overlay mobile -->
         <div x-show="sidebarOpen"
@@ -68,7 +69,8 @@
                     </div>
 
                     <!-- User menu -->
-                    <div class="flex items-center gap-4 ml-auto" x-data="{ userMenuOpen: false }">
+                    <div class="flex items-center gap-3 ml-auto" x-data="{ userMenuOpen: false }">
+                        @include('layouts.partials.theme-switcher')
                         <span class="text-sm text-gray-600 hidden sm:block">{{ auth()->user()->name }}</span>
                         <div class="relative">
                             <button @click="userMenuOpen = !userMenuOpen" class="flex items-center gap-2 focus:outline-none">

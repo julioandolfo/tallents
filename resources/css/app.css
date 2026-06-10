@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================================================
+   Tema escuro — ativado pela classe .dark no <html> (toggle Light/Dark/System)
+   Estas regras adaptam as classes utilitárias mais usadas, cobrindo todas as
+   páginas sem precisar adicionar variantes dark: em cada view.
+   ========================================================================== */
+[x-cloak] { display: none !important; }
+
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+.dark body { background-color: #0f172a; color: #e5e7eb; }
+
+/* Superfícies */
+.dark .bg-white { background-color: #1f2937; }
+.dark .bg-gray-50 { background-color: #111827; }
+.dark .bg-gray-100 { background-color: #0f172a; }
+
+/* Texto */
+.dark .text-gray-900 { color: #f3f4f6; }
+.dark .text-gray-800 { color: #e5e7eb; }
+.dark .text-gray-700 { color: #d1d5db; }
+.dark .text-gray-600 { color: #9ca3af; }
+.dark .text-gray-500 { color: #9ca3af; }
+
+/* Bordas e divisores */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 { border-color: #374151; }
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+/* Hovers neutros */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover { background-color: #374151; }
+
+/* Formulários */
+.dark input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
+.dark select,
+.dark textarea {
+    background-color: #1f2937;
+    border-color: #4b5563;
+    color: #f3f4f6;
+}
+.dark input::placeholder,
+.dark textarea::placeholder { color: #6b7280; }
+
+/* Cabeçalho de tabela */
+.dark table thead.bg-gray-50,
+.dark table .bg-gray-50 { background-color: #111827; }
