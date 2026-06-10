@@ -19,6 +19,11 @@ x-app-env: &app-env
   APP_NAME: "Tallents RH"
   APP_ENV: production
   APP_DEBUG: "false"
+  # Chave de criptografia estável. Pode (e idealmente deve) ser sobrescrita por
+  # um valor secreto definido no Coolify (Environment Variables → APP_KEY).
+  # Precisa ser fixa: gerar uma nova a cada deploy invalida sessões e dados
+  # criptografados.
+  APP_KEY: "${APP_KEY:-base64:+KxPHTr5lSmbNMcwXAKzI5nm8ru244KY3nqtfqGSJxs=}"
   APP_URL: "${SERVICE_FQDN_APP:-http://localhost}"
   APP_TIMEZONE: "America/Sao_Paulo"
   APP_LOCALE: pt_BR
