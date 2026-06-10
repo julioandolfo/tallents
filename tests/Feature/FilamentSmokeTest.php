@@ -28,7 +28,13 @@ class FilamentSmokeTest extends TestCase
             '/admin/setors',
             '/admin/ocorrencias',
             '/admin/hora-extras',
+            '/admin/promocaos',
+            '/admin/tipo-ocorrencias',
+            '/admin/tipo-bonuses',
+            '/admin/nivel-hierarquicos',
+            '/admin/fechamento-pagamentos',
             '/admin/usuarios',
+            '/admin/configuracoes',
         ];
         $falhas = [];
         foreach ($rotas as $url) {
