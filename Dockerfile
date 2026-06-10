@@ -24,10 +24,14 @@ RUN composer install \
     --no-scripts \
     --no-autoloader \
     --prefer-dist \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --ignore-platform-reqs
 
 COPY . .
-RUN composer dump-autoload --optimize --no-dev
+# --no-scripts/--ignore-platform-reqs: a imagem composer nao tem todas as
+# extensoes (ex.: intl exigida pelo Filament). O runtime tem; os assets do
+# painel sao publicados no boot pelo entrypoint (filament:assets).
+RUN composer dump-autoload --optimize --no-dev --no-scripts --ignore-platform-reqs
 
 
 # ─── Stage 3: Runtime — PHP-FPM + Nginx ───────────────────────────────────────
