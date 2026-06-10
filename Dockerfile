@@ -71,6 +71,13 @@ RUN docker-php-ext-configure gd \
         intl \
         opcache
 
+# Extensão Redis (phpredis) — necessária para CACHE/SESSION/QUEUE via Redis
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del .build-deps \
+    && rm -rf /tmp/pear
+
 # Configuração do PHP
 COPY docker/php/php.ini     /usr/local/etc/php/conf.d/app.ini
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
