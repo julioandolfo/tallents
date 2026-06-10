@@ -1,5 +1,7 @@
 #!/bin/sh
-set -e
+# Sem `set -e`: queremos que o servidor web (supervisord) sempre suba, mesmo se
+# uma etapa de bootstrap falhar. Assim o container fica "Up", o /up responde 200,
+# o Traefik roteia e os erros aparecem nos logs — em vez de um crash-loop.
 
 cd /var/www/html
 
@@ -22,7 +24,6 @@ _set() {
     fi
 }
 
-# Sobrescreve com o que vier do docker-compose / Coolify
 _set APP_NAME        "${APP_NAME:-Tallents RH}"
 _set APP_ENV         "${APP_ENV:-production}"
 _set APP_DEBUG       "${APP_DEBUG:-false}"
@@ -61,61 +62,67 @@ if [ -n "${APP_KEY}" ]; then
     _set APP_KEY "${APP_KEY}"
 elif [ -z "${CURRENT_KEY}" ]; then
     echo "🔑 Gerando APP_KEY..."
-    php artisan key:generate --force --ansi
+    php artisan key:generate --force --ansi || echo "⚠️  Falha ao gerar APP_KEY"
 fi
 echo "✅ APP_KEY pronto"
 
-# ─── 3. Aguarda banco ─────────────────────────────────────────────────────────
+# ─── 3. Aguarda banco (não aborta o container se demorar) ─────────────────────
 echo "⏳ Aguardando MySQL em ${DB_HOST:-mysql}..."
+DB_OK=0
 TRIES=0
-until php artisan db:show --no-interaction > /dev/null 2>&1; do
+while [ "$TRIES" -lt 60 ]; do
+    if php artisan db:show --no-interaction > /dev/null 2>&1; then
+        DB_OK=1
+        break
+    fi
     TRIES=$((TRIES + 1))
-    [ "$TRIES" -ge 30 ] && echo "❌ MySQL não respondeu em 60s" && exit 1
     sleep 2
 done
-echo "✅ MySQL disponível"
 
-# ─── 4. Migrations ────────────────────────────────────────────────────────────
-echo "📦 Migrations..."
-php artisan migrate --force --no-interaction
-echo "✅ Migrations OK"
+if [ "$DB_OK" = "1" ]; then
+    echo "✅ MySQL disponível"
 
-# ─── 5. Seeders (apenas primeira instalação) ──────────────────────────────────
-USER_COUNT=$(php artisan tinker --execute="echo \App\Models\Usuario::count();" 2>/dev/null | tail -1)
-if [ "${USER_COUNT}" = "0" ] || [ -z "${USER_COUNT}" ]; then
-    echo "🌱 Primeira instalação — rodando seeders..."
-    php artisan db:seed --force --no-interaction
-    echo ""
-    echo "  ┌───────────────────────────────────────────┐"
-    echo "  │  ✅ Instalação concluída!                  │"
-    echo "  │                                            │"
-    echo "  │  Acesso inicial:                           │"
-    echo "  │  E-mail : admin@tallents.com.br            │"
-    echo "  │  Senha  : Tallents@2024                    │"
-    echo "  │                                            │"
-    echo "  │  ⚠️  Troque a senha no primeiro acesso!    │"
-    echo "  └───────────────────────────────────────────┘"
-    echo ""
+    # ─── 4. Migrations ────────────────────────────────────────────────────────
+    echo "📦 Migrations..."
+    php artisan migrate --force --no-interaction || echo "⚠️  Migrations falharam — verifique os logs"
+
+    # ─── 5. Seeders (apenas primeira instalação) ──────────────────────────────
+    USER_COUNT=$(php artisan tinker --execute="echo \App\Models\Usuario::count();" 2>/dev/null | tail -1)
+    if [ "${USER_COUNT}" = "0" ] || [ -z "${USER_COUNT}" ]; then
+        echo "🌱 Primeira instalação — rodando seeders..."
+        php artisan db:seed --force --no-interaction || echo "⚠️  Seed falhou"
+        echo ""
+        echo "  ┌───────────────────────────────────────────┐"
+        echo "  │  ✅ Instalação concluída!                  │"
+        echo "  │  E-mail : admin@tallents.com.br            │"
+        echo "  │  Senha  : Tallents@2024                    │"
+        echo "  │  ⚠️  Troque a senha no primeiro acesso!    │"
+        echo "  └───────────────────────────────────────────┘"
+        echo ""
+    fi
+else
+    echo "⚠️  MySQL indisponível após 120s — subindo o servidor mesmo assim."
+    echo "    As migrations rodarão no próximo deploy/restart quando o banco responder."
 fi
 
 # ─── 6. Storage link ──────────────────────────────────────────────────────────
 php artisan storage:link --force > /dev/null 2>&1 || true
 echo "✅ Storage link OK"
 
-# ─── 7. Cache de produção ─────────────────────────────────────────────────────
+# ─── 7. Cache de produção (best-effort) ───────────────────────────────────────
 echo "⚡ Gerando caches..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
-echo "✅ Caches gerados"
+php artisan config:cache 2>/dev/null || echo "⚠️  config:cache falhou"
+php artisan route:cache  2>/dev/null || echo "⚠️  route:cache falhou"
+php artisan view:cache   2>/dev/null || echo "⚠️  view:cache falhou"
+php artisan event:cache  2>/dev/null || true
+echo "✅ Caches processados"
 
 # ─── 8. Permissões ────────────────────────────────────────────────────────────
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache 2>/dev/null || true
+chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
 echo ""
-echo "🚀 Pronto! Tallents RH no ar."
+echo "🚀 Subindo servidor (nginx + php-fpm)..."
 echo ""
 
 exec "$@"

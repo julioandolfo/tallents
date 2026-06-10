@@ -12,6 +12,10 @@ name: tallents-rh
 # ─────────────────────────────────────────────────────────────────────────────
 
 x-app-env: &app-env
+  # Variável mágica do Coolify: declara que o domínio configurado na UI deve
+  # ser roteado pelo Traefik para a porta 80 deste serviço (app). Sem isso o
+  # Traefik não cria rota e responde "404 page not found".
+  SERVICE_FQDN_APP_80: ""
   APP_NAME: "Tallents RH"
   APP_ENV: production
   APP_DEBUG: "false"
