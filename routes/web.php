@@ -17,7 +17,7 @@ use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Auth\LoginController;
 
-Route::get('/', fn() => redirect()->route('dashboard'));
+Route::get('/', fn() => redirect('/admin'));
 
 // Auth
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login')->middleware('guest');

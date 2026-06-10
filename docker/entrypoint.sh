@@ -128,6 +128,10 @@ fi
 php artisan storage:link --force > /dev/null 2>&1 || true
 echo "✅ Storage link OK"
 
+# ─── 6b. Assets do painel Filament ────────────────────────────────────────────
+php artisan filament:assets 2>/dev/null || true
+echo "✅ Assets do painel publicados"
+
 # ─── 7. Cache de produção (best-effort) ───────────────────────────────────────
 echo "⚡ Gerando caches..."
 php artisan config:cache 2>/dev/null || echo "⚠️  config:cache falhou"
