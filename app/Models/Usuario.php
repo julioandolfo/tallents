@@ -9,20 +9,12 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 
-class Usuario extends Authenticatable implements FilamentUser
+class Usuario extends Authenticatable
 {
     use HasFactory, SoftDeletes, Notifiable, HasRoles;
 
     protected $table = 'users';
-
-    /** Quem pode acessar o painel Filament: usuários ativos. */
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return (bool) $this->ativo;
-    }
 
     protected $fillable = [
         'name',
