@@ -103,6 +103,22 @@ if [ "$DB_OK" = "1" ]; then
         echo "  └───────────────────────────────────────────┘"
         echo ""
     fi
+
+    # ─── 5b. Importação dos dados do sistema antigo (uma única vez) ────────────
+    # A trava fica no volume persistente storage/app/public, então roda só no
+    # primeiro deploy — sem apagar/reimportar dados a cada redeploy.
+    LEGADO_DUMP="database/legado/privus_rh.sql"
+    LEGADO_MARKER="storage/app/public/.legado_migrado"
+    if [ -f "$LEGADO_DUMP" ] && [ ! -f "$LEGADO_MARKER" ]; then
+        echo "📥 Importando dados do sistema antigo (rh-privus)..."
+        if php artisan migrar:legado "$LEGADO_DUMP" --force --no-interaction; then
+            mkdir -p storage/app/public
+            date > "$LEGADO_MARKER"
+            echo "✅ Dados do sistema antigo importados."
+        else
+            echo "⚠️  Importação do legado falhou — verifique os logs."
+        fi
+    fi
 else
     echo "⚠️  MySQL indisponível após 120s — subindo o servidor mesmo assim."
     echo "    As migrations rodarão no próximo deploy/restart quando o banco responder."

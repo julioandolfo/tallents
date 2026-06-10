@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
  */
 class MigrarLegado extends Command
 {
-    protected $signature = 'migrar:legado {arquivo : Caminho do dump .sql do sistema antigo}';
+    protected $signature = 'migrar:legado {arquivo : Caminho do dump .sql do sistema antigo} {--force : Não pedir confirmação (uso em deploy automatizado)}';
     protected $description = 'Importa os dados do sistema antigo (rh-privus) para o app novo a partir de um dump .sql';
 
     /** @var array<int,int> mapa colaborador_id => empresa_id (para tabelas filhas sem empresa_id) */
@@ -42,7 +42,8 @@ class MigrarLegado extends Command
             return self::FAILURE;
         }
 
-        if (! $this->confirm('Isto vai APAGAR os dados atuais das tabelas de RH e substituir pelos do sistema antigo. Continuar?', true)) {
+        if (! $this->option('force')
+            && ! $this->confirm('Isto vai APAGAR os dados atuais das tabelas de RH e substituir pelos do sistema antigo. Continuar?', true)) {
             return self::SUCCESS;
         }
 
