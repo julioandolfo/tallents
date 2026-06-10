@@ -17,11 +17,14 @@ echo ""
 _set() {
     KEY="$1"; VAL="$2"
     [ -z "$VAL" ] && return
-    if grep -q "^${KEY}=" .env 2>/dev/null; then
-        sed -i "s|^${KEY}=.*|${KEY}=${VAL}|" .env
-    else
-        echo "${KEY}=${VAL}" >> .env
+    # Remove a linha existente e regrava com aspas. O dotenv do Laravel exige
+    # aspas em valores com espaço (ex.: APP_NAME="Tallents RH"); sem elas o
+    # parser falha com "unexpected whitespace" e toda requisição dá 500.
+    if [ -f .env ]; then
+        grep -v "^${KEY}=" .env > .env.tmp 2>/dev/null || true
+        mv .env.tmp .env
     fi
+    printf '%s="%s"\n' "$KEY" "$VAL" >> .env
 }
 
 _set APP_NAME        "${APP_NAME:-Tallents RH}"
