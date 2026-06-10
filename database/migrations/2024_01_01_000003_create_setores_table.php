@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
             $table->string('nome');
             $table->string('descricao')->nullable();
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
@@ -20,8 +21,9 @@ class PerfilController extends Controller
         $usuario = auth()->user();
 
         $data = $request->validate([
-            'nome' => 'required|string|max:255',
-            'foto' => 'nullable|image|max:2048',
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $usuario->id,
+            'foto'  => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('foto')) {
@@ -62,5 +64,27 @@ class PerfilController extends Controller
         return redirect()
             ->route('perfil.index')
             ->with('success', 'Senha alterada com sucesso!');
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ], [
+            'password.required' => 'Informe sua senha para confirmar a exclusão.',
+        ]);
+
+        $usuario = auth()->user();
+
+        if (! Hash::check($request->password, $usuario->password)) {
+            return back()->withErrors(['password' => 'Senha incorreta.']);
+        }
+
+        Auth::logout();
+        $usuario->delete();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Conta excluída.');
     }
 }

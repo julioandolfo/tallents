@@ -18,7 +18,11 @@ class TipoBonusController extends Controller
 
         $empresas = Empresa::where('ativa', true)->orderBy('nome')->get();
 
-        return view('tipos-bonus.index', compact('tiposBonus', 'empresas'));
+        return view('tipos-bonus.index', [
+            'tipos'      => $tiposBonus,
+            'tiposBonus' => $tiposBonus,
+            'empresas'   => $empresas,
+        ]);
     }
 
     public function create()
@@ -31,15 +35,17 @@ class TipoBonusController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'empresa_id' => 'required|exists:empresas,id',
-            'nome'       => 'required|string|max:255',
-            'descricao'  => 'nullable|string|max:1000',
-            'percentual' => 'nullable|numeric|min:0|max:100',
-            'fixo'       => 'nullable|numeric|min:0',
-            'ativo'      => 'boolean',
+            'empresa_id'   => 'nullable|exists:empresas,id',
+            'nome'         => 'required|string|max:255',
+            'descricao'    => 'nullable|string|max:1000',
+            'tipo_calculo' => 'nullable|string|max:50',
+            'percentual'   => 'nullable|numeric|min:0|max:100',
+            'fixo'         => 'nullable|numeric|min:0',
+            'ativo'        => 'boolean',
         ]);
 
-        $data['ativo'] = $request->boolean('ativo', true);
+        $data['empresa_id'] = $this->resolveEmpresaId($request);
+        $data['ativo']      = $request->boolean('ativo', true);
 
         TipoBonus::create($data);
 
@@ -50,9 +56,7 @@ class TipoBonusController extends Controller
 
     public function show(TipoBonus $tiposBonus)
     {
-        $tiposBonus->load('empresa');
-
-        return view('tipos-bonus.show', compact('tiposBonus'));
+        return redirect()->route('tipos-bonus.edit', $tiposBonus);
     }
 
     public function edit(TipoBonus $tiposBonus)
@@ -65,15 +69,17 @@ class TipoBonusController extends Controller
     public function update(Request $request, TipoBonus $tiposBonus)
     {
         $data = $request->validate([
-            'empresa_id' => 'required|exists:empresas,id',
-            'nome'       => 'required|string|max:255',
-            'descricao'  => 'nullable|string|max:1000',
-            'percentual' => 'nullable|numeric|min:0|max:100',
-            'fixo'       => 'nullable|numeric|min:0',
-            'ativo'      => 'boolean',
+            'empresa_id'   => 'nullable|exists:empresas,id',
+            'nome'         => 'required|string|max:255',
+            'descricao'    => 'nullable|string|max:1000',
+            'tipo_calculo' => 'nullable|string|max:50',
+            'percentual'   => 'nullable|numeric|min:0|max:100',
+            'fixo'         => 'nullable|numeric|min:0',
+            'ativo'        => 'boolean',
         ]);
 
-        $data['ativo'] = $request->boolean('ativo');
+        $data['empresa_id'] = $this->resolveEmpresaId($request, $tiposBonus->empresa_id);
+        $data['ativo']      = $request->boolean('ativo', true);
 
         $tiposBonus->update($data);
 

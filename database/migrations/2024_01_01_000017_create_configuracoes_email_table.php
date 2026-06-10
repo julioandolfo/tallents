@@ -10,13 +10,14 @@ return new class extends Migration
     {
         Schema::create('configuracoes_email', function (Blueprint $table) {
             $table->id();
-            $table->string('smtp_host');
+            $table->string('driver')->default('smtp');
+            $table->string('smtp_host')->nullable();
             $table->integer('smtp_port')->default(587);
-            $table->string('smtp_username');
-            $table->string('smtp_password');
-            $table->enum('smtp_encryption', ['tls', 'ssl', 'none'])->default('tls');
-            $table->string('from_email');
-            $table->string('from_name');
+            $table->string('smtp_username')->nullable();
+            $table->string('smtp_password')->nullable();
+            $table->string('smtp_encryption')->nullable()->default('tls');
+            $table->string('from_email')->nullable();
+            $table->string('from_name')->nullable();
             $table->timestamps();
         });
     }

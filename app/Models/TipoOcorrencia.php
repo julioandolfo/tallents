@@ -11,11 +11,19 @@ class TipoOcorrencia extends Model
 {
     use HasFactory;
 
+    protected $table = 'tipos_ocorrencias';
+
     protected $fillable = [
         'empresa_id',
         'nome',
         'descricao',
         'tipo',
+        'gravidade',
+        'ativo',
+    ];
+
+    protected $casts = [
+        'ativo' => 'boolean',
     ];
 
     public function empresa(): BelongsTo

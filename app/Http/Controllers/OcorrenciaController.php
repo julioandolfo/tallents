@@ -38,16 +38,26 @@ class OcorrenciaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'colaborador_id'    => 'required|exists:colaboradores,id',
-            'tipo_ocorrencia_id'=> 'required|exists:tipo_ocorrencias,id',
-            'data_ocorrencia'   => 'required|date',
-            'descricao'         => 'required|string|max:2000',
-            'observacoes'       => 'nullable|string|max:2000',
+            'colaborador_id'     => 'required|exists:colaboradores,id',
+            'tipo_ocorrencia_id' => 'required|exists:tipos_ocorrencias,id',
+            'data'               => 'required|date',
+            'gravidade'          => 'nullable|string|max:50',
+            'observacao'         => 'nullable|string|max:2000',
+            'notificar_colaborador' => 'boolean',
         ]);
 
-        $data['registrado_por'] = auth()->id();
+        $colaborador = Colaborador::findOrFail($data['colaborador_id']);
 
-        $ocorrencia = Ocorrencia::create($data);
+        $ocorrencia = Ocorrencia::create([
+            'empresa_id'            => $colaborador->empresa_id,
+            'colaborador_id'        => $colaborador->id,
+            'tipo_ocorrencia_id'    => $data['tipo_ocorrencia_id'],
+            'registrado_por'        => auth()->id(),
+            'data_ocorrencia'       => $data['data'],
+            'gravidade'             => $data['gravidade'] ?? null,
+            'descricao'             => $data['observacao'] ?? null,
+            'notificar_colaborador' => $request->boolean('notificar_colaborador'),
+        ]);
 
         return redirect()
             ->route('ocorrencias.show', $ocorrencia)
@@ -73,13 +83,24 @@ class OcorrenciaController extends Controller
     {
         $data = $request->validate([
             'colaborador_id'     => 'required|exists:colaboradores,id',
-            'tipo_ocorrencia_id' => 'required|exists:tipo_ocorrencias,id',
-            'data_ocorrencia'    => 'required|date',
-            'descricao'          => 'required|string|max:2000',
-            'observacoes'        => 'nullable|string|max:2000',
+            'tipo_ocorrencia_id' => 'required|exists:tipos_ocorrencias,id',
+            'data'               => 'required|date',
+            'gravidade'          => 'nullable|string|max:50',
+            'observacao'         => 'nullable|string|max:2000',
+            'notificar_colaborador' => 'boolean',
         ]);
 
-        $ocorrencia->update($data);
+        $colaborador = Colaborador::findOrFail($data['colaborador_id']);
+
+        $ocorrencia->update([
+            'empresa_id'            => $colaborador->empresa_id,
+            'colaborador_id'        => $colaborador->id,
+            'tipo_ocorrencia_id'    => $data['tipo_ocorrencia_id'],
+            'data_ocorrencia'       => $data['data'],
+            'gravidade'             => $data['gravidade'] ?? null,
+            'descricao'             => $data['observacao'] ?? null,
+            'notificar_colaborador' => $request->boolean('notificar_colaborador'),
+        ]);
 
         return redirect()
             ->route('ocorrencias.show', $ocorrencia)

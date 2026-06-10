@@ -13,6 +13,10 @@ return new class extends Migration
             $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
             $table->string('nome');
             $table->string('descricao')->nullable();
+            $table->string('tipo_calculo')->nullable();
+            $table->decimal('percentual', 5, 2)->nullable();
+            $table->decimal('fixo', 10, 2)->nullable();
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }

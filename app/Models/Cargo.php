@@ -15,12 +15,23 @@ class Cargo extends Model
     protected $fillable = [
         'empresa_id',
         'nome',
+        'descricao',
+        'nivel_hierarquico_id',
         'salario_base',
+        'salario_maximo',
+        'ativo',
     ];
 
     protected $casts = [
-        'salario_base' => 'decimal:2',
+        'salario_base'   => 'decimal:2',
+        'salario_maximo' => 'decimal:2',
+        'ativo'          => 'boolean',
     ];
+
+    public function nivelHierarquico(): BelongsTo
+    {
+        return $this->belongsTo(NivelHierarquico::class);
+    }
 
     public function empresa(): BelongsTo
     {

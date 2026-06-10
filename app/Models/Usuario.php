@@ -26,6 +26,7 @@ class Usuario extends Authenticatable
         'setor_id',
         'foto',
         'ativo',
+        'last_login_at',
     ];
 
     protected $hidden = [
@@ -37,7 +38,17 @@ class Usuario extends Authenticatable
         'password'          => 'hashed',
         'ativo'             => 'boolean',
         'email_verified_at' => 'datetime',
+        'last_login_at'     => 'datetime',
     ];
+
+    /**
+     * Alias em minúsculas do papel do usuário, usado pelas views (badges,
+     * selects de "perfil"). Ex.: ADMIN → admin.
+     */
+    public function getPerfilAttribute(): string
+    {
+        return strtolower((string) $this->role);
+    }
 
     public function empresa(): BelongsTo
     {

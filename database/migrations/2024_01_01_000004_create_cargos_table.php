@@ -12,7 +12,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
             $table->string('nome');
+            $table->text('descricao')->nullable();
+            $table->foreignId('nivel_hierarquico_id')->nullable()->constrained('niveis_hierarquicos')->nullOnDelete();
             $table->decimal('salario_base', 10, 2)->default(0);
+            $table->decimal('salario_maximo', 10, 2)->nullable();
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

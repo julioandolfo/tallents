@@ -32,11 +32,16 @@ class NivelHierarquicoController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'empresa_id' => 'required|exists:empresas,id',
+            'empresa_id' => 'nullable|exists:empresas,id',
             'nome'       => 'required|string|max:255',
-            'nivel'      => 'required|integer|min:1',
+            'ordem'      => 'nullable|integer|min:1',
+            'nivel'      => 'nullable|integer|min:1',
             'descricao'  => 'nullable|string|max:1000',
         ]);
+
+        $data['empresa_id'] = $this->resolveEmpresaId($request);
+        $data['nivel']      = $data['nivel'] ?? $data['ordem'] ?? 1;
+        unset($data['ordem']);
 
         NivelHierarquico::create($data);
 
@@ -47,9 +52,7 @@ class NivelHierarquicoController extends Controller
 
     public function show(NivelHierarquico $niveisHierarquico)
     {
-        $niveisHierarquico->load(['empresa', 'cargos']);
-
-        return view('niveis-hierarquicos.show', compact('niveisHierarquico'));
+        return redirect()->route('niveis-hierarquicos.edit', $niveisHierarquico);
     }
 
     public function edit(NivelHierarquico $niveisHierarquico)
@@ -62,11 +65,16 @@ class NivelHierarquicoController extends Controller
     public function update(Request $request, NivelHierarquico $niveisHierarquico)
     {
         $data = $request->validate([
-            'empresa_id' => 'required|exists:empresas,id',
+            'empresa_id' => 'nullable|exists:empresas,id',
             'nome'       => 'required|string|max:255',
-            'nivel'      => 'required|integer|min:1',
+            'ordem'      => 'nullable|integer|min:1',
+            'nivel'      => 'nullable|integer|min:1',
             'descricao'  => 'nullable|string|max:1000',
         ]);
+
+        $data['empresa_id'] = $this->resolveEmpresaId($request, $niveisHierarquico->empresa_id);
+        $data['nivel']      = $data['nivel'] ?? $data['ordem'] ?? $niveisHierarquico->nivel;
+        unset($data['ordem']);
 
         $niveisHierarquico->update($data);
 

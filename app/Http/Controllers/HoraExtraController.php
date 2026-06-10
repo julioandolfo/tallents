@@ -47,21 +47,34 @@ class HoraExtraController extends Controller
         $data = $request->validate([
             'colaborador_id' => 'required|exists:colaboradores,id',
             'data'           => 'required|date',
-            'horas'          => 'required|numeric|min:0.5|max:24',
-            'percentual'     => 'required|in:50,100',
-            'descricao'      => 'nullable|string|max:1000',
+            'quantidade'     => 'required|numeric|min:0.5|max:24',
+            'motivo'         => 'nullable|string|max:1000',
+            'observacao'     => 'nullable|string|max:1000',
+            'status'         => 'nullable|string|max:50',
         ]);
 
-        $colaborador = Colaborador::findOrFail($data['colaborador_id']);
+        $colaborador = Colaborador::with('empresa')->findOrFail($data['colaborador_id']);
 
         // Valor hora = salário / 220; valor extra = valor_hora * (1 + percentual/100) * horas
-        $valorHora = ($colaborador->salario ?? 0) / 220;
-        $fator     = 1 + ($data['percentual'] / 100);
-        $data['valor'] = round($valorHora * $fator * $data['horas'], 2);
-        $data['status'] = 'PENDENTE';
-        $data['registrado_por'] = auth()->id();
+        $percentual = $colaborador->empresa->percentual_hora_extra ?? 50;
+        $horas      = $data['quantidade'];
+        $valorHora  = ($colaborador->salario ?? 0) / 220;
+        $valor      = round($valorHora * (1 + $percentual / 100) * $horas, 2);
+        $status     = $data['status'] ?? 'pendente';
 
-        $horaExtra = HoraExtra::create($data);
+        $horaExtra = HoraExtra::create([
+            'empresa_id'     => $colaborador->empresa_id,
+            'colaborador_id' => $colaborador->id,
+            'registrado_por' => auth()->id(),
+            'data'           => $data['data'],
+            'horas'          => $horas,
+            'percentual'     => $percentual,
+            'valor'          => $valor,
+            'motivo'         => $data['motivo'] ?? null,
+            'observacao'     => $data['observacao'] ?? null,
+            'status'         => $status,
+            'aprovado'       => $status === 'aprovado',
+        ]);
 
         return redirect()
             ->route('horas-extras.show', $horaExtra)
@@ -79,7 +92,11 @@ class HoraExtraController extends Controller
     {
         $colaboradores = Colaborador::where('status', 'ATIVO')->orderBy('nome')->get();
 
-        return view('horas-extras.edit', compact('horasExtra', 'colaboradores'));
+        return view('horas-extras.edit', [
+            'horaExtra'     => $horasExtra,
+            'horasExtra'    => $horasExtra,
+            'colaboradores' => $colaboradores,
+        ]);
     }
 
     public function update(Request $request, HoraExtra $horasExtra)
@@ -87,18 +104,30 @@ class HoraExtraController extends Controller
         $data = $request->validate([
             'colaborador_id' => 'required|exists:colaboradores,id',
             'data'           => 'required|date',
-            'horas'          => 'required|numeric|min:0.5|max:24',
-            'percentual'     => 'required|in:50,100',
-            'descricao'      => 'nullable|string|max:1000',
-            'status'         => 'required|in:PENDENTE,APROVADO,RECUSADO',
+            'quantidade'     => 'required|numeric|min:0.5|max:24',
+            'motivo'         => 'nullable|string|max:1000',
+            'observacao'     => 'nullable|string|max:1000',
+            'status'         => 'nullable|string|max:50',
         ]);
 
-        $colaborador   = Colaborador::findOrFail($data['colaborador_id']);
-        $valorHora     = ($colaborador->salario ?? 0) / 220;
-        $fator         = 1 + ($data['percentual'] / 100);
-        $data['valor'] = round($valorHora * $fator * $data['horas'], 2);
+        $colaborador = Colaborador::with('empresa')->findOrFail($data['colaborador_id']);
+        $percentual  = $colaborador->empresa->percentual_hora_extra ?? 50;
+        $horas       = $data['quantidade'];
+        $valorHora   = ($colaborador->salario ?? 0) / 220;
+        $status      = $data['status'] ?? $horasExtra->status;
 
-        $horasExtra->update($data);
+        $horasExtra->update([
+            'empresa_id'     => $colaborador->empresa_id,
+            'colaborador_id' => $colaborador->id,
+            'data'           => $data['data'],
+            'horas'          => $horas,
+            'percentual'     => $percentual,
+            'valor'          => round($valorHora * (1 + $percentual / 100) * $horas, 2),
+            'motivo'         => $data['motivo'] ?? null,
+            'observacao'     => $data['observacao'] ?? null,
+            'status'         => $status,
+            'aprovado'       => $status === 'aprovado',
+        ]);
 
         return redirect()
             ->route('horas-extras.show', $horasExtra)

@@ -16,13 +16,27 @@ class Ocorrencia extends Model
         'tipo_ocorrencia_id',
         'registrado_por',
         'titulo',
+        'gravidade',
         'descricao',
         'data_ocorrencia',
+        'notificar_colaborador',
     ];
 
     protected $casts = [
-        'data_ocorrencia' => 'date',
+        'data_ocorrencia'       => 'date',
+        'notificar_colaborador' => 'boolean',
     ];
+
+    // Aliases usados pelas views (form usa "data"/"observacao").
+    public function getDataAttribute()
+    {
+        return $this->data_ocorrencia;
+    }
+
+    public function getObservacaoAttribute(): ?string
+    {
+        return $this->descricao;
+    }
 
     public function empresa(): BelongsTo
     {

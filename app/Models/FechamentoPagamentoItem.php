@@ -11,6 +11,8 @@ class FechamentoPagamentoItem extends Model
 {
     use HasFactory;
 
+    protected $table = 'fechamentos_pagamento_itens';
+
     protected $fillable = [
         'fechamento_id',
         'colaborador_id',

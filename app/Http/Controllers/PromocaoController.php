@@ -41,25 +41,34 @@ class PromocaoController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'colaborador_id'  => 'required|exists:colaboradores,id',
-            'cargo_novo_id'   => 'required|exists:cargos,id',
-            'data_promocao'   => 'required|date',
-            'salario_novo'    => 'required|numeric|min:0',
-            'motivo'          => 'nullable|string|max:2000',
+            'colaborador_id'    => 'required|exists:colaboradores,id',
+            'novo_cargo_id'     => 'required|exists:cargos,id',
+            'cargo_anterior_id' => 'nullable|exists:cargos,id',
+            'data'              => 'required|date',
+            'novo_salario'      => 'required|numeric|min:0',
+            'salario_anterior'  => 'nullable|numeric|min:0',
+            'motivo'            => 'nullable|string|max:2000',
         ]);
 
         $colaborador = Colaborador::findOrFail($data['colaborador_id']);
 
-        $data['cargo_anterior_id'] = $colaborador->cargo_id;
-        $data['salario_anterior']  = $colaborador->salario;
-        $data['registrado_por']    = auth()->id();
-
         DB::transaction(function () use ($data, $colaborador) {
-            $promocao = Promocao::create($data);
+            Promocao::create([
+                'empresa_id'        => $colaborador->empresa_id,
+                'colaborador_id'    => $colaborador->id,
+                'registrado_por'    => auth()->id(),
+                'tipo'              => 'PROMOCAO',
+                'cargo_anterior_id' => $data['cargo_anterior_id'] ?? $colaborador->cargo_id,
+                'cargo_novo_id'     => $data['novo_cargo_id'],
+                'salario_anterior'  => $data['salario_anterior'] ?? $colaborador->salario ?? 0,
+                'salario_novo'      => $data['novo_salario'],
+                'data_promocao'     => $data['data'],
+                'motivo'            => $data['motivo'] ?? null,
+            ]);
 
             $colaborador->update([
-                'cargo_id' => $data['cargo_novo_id'],
-                'salario'  => $data['salario_novo'],
+                'cargo_id' => $data['novo_cargo_id'],
+                'salario'  => $data['novo_salario'],
             ]);
         });
 

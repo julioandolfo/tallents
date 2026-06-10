@@ -10,6 +10,8 @@ class HoraExtra extends Model
 {
     use HasFactory;
 
+    protected $table = 'horas_extras';
+
     protected $fillable = [
         'empresa_id',
         'colaborador_id',
@@ -18,7 +20,9 @@ class HoraExtra extends Model
         'horas',
         'percentual',
         'valor',
+        'motivo',
         'observacao',
+        'status',
         'aprovado',
     ];
 
@@ -29,6 +33,12 @@ class HoraExtra extends Model
         'data'       => 'date',
         'aprovado'   => 'boolean',
     ];
+
+    // Alias usado pelas views (form usa "quantidade").
+    public function getQuantidadeAttribute()
+    {
+        return $this->horas;
+    }
 
     public function empresa(): BelongsTo
     {

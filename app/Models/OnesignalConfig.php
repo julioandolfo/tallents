@@ -9,6 +9,8 @@ class OnesignalConfig extends Model
 {
     use HasFactory;
 
+    protected $table = 'onesignal_config';
+
     protected $fillable = [
         'app_id',
         'rest_api_key',

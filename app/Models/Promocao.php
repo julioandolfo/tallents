@@ -10,6 +10,8 @@ class Promocao extends Model
 {
     use HasFactory;
 
+    protected $table = 'promocoes';
+
     protected $fillable = [
         'empresa_id',
         'colaborador_id',
@@ -28,6 +30,12 @@ class Promocao extends Model
         'salario_novo'     => 'decimal:2',
         'data_promocao'    => 'date',
     ];
+
+    // Alias usado pelas views (form usa "data").
+    public function getDataAttribute()
+    {
+        return $this->data_promocao;
+    }
 
     public function empresa(): BelongsTo
     {

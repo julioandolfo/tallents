@@ -10,6 +10,8 @@ class FechamentoPagamentoBonus extends Model
 {
     use HasFactory;
 
+    protected $table = 'fechamentos_pagamento_bonus';
+
     protected $fillable = [
         'fechamento_item_id',
         'colaborador_bonus_id',

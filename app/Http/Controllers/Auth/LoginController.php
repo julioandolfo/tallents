@@ -30,6 +30,7 @@ class LoginController extends Controller
             $request->boolean('remember')
         )) {
             $request->session()->regenerate();
+            Auth::user()->forceFill(['last_login_at' => now()])->save();
             return redirect()->intended(route('dashboard'));
         }
 

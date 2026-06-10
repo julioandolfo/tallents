@@ -17,7 +17,9 @@ return new class extends Migration
             $table->decimal('horas', 5, 2);
             $table->decimal('percentual', 5, 2)->default(50);
             $table->decimal('valor', 10, 2)->default(0);
+            $table->string('motivo')->nullable();
             $table->string('observacao')->nullable();
+            $table->string('status')->default('pendente');
             $table->boolean('aprovado')->default(false);
             $table->timestamps();
         });

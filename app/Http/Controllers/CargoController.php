@@ -33,15 +33,17 @@ class CargoController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'empresa_id'          => 'required|exists:empresas,id',
-            'nome'                => 'required|string|max:255',
-            'descricao'           => 'nullable|string|max:1000',
-            'salario_base'        => 'nullable|numeric|min:0',
-            'nivel_hierarquico_id'=> 'nullable|exists:nivel_hierarquicos,id',
-            'ativo'               => 'boolean',
+            'empresa_id'           => 'nullable|exists:empresas,id',
+            'nome'                 => 'required|string|max:255',
+            'descricao'            => 'nullable|string|max:1000',
+            'salario_base'         => 'nullable|numeric|min:0',
+            'salario_maximo'       => 'nullable|numeric|min:0',
+            'nivel_hierarquico_id' => 'nullable|exists:niveis_hierarquicos,id',
+            'ativo'                => 'boolean',
         ]);
 
-        $data['ativo'] = $request->boolean('ativo', true);
+        $data['empresa_id'] = $this->resolveEmpresaId($request);
+        $data['ativo']      = $request->boolean('ativo', true);
 
         Cargo::create($data);
 
@@ -52,9 +54,7 @@ class CargoController extends Controller
 
     public function show(Cargo $cargo)
     {
-        $cargo->load(['empresa', 'nivelHierarquico', 'colaboradores']);
-
-        return view('cargos.show', compact('cargo'));
+        return redirect()->route('cargos.edit', $cargo);
     }
 
     public function edit(Cargo $cargo)
@@ -68,15 +68,17 @@ class CargoController extends Controller
     public function update(Request $request, Cargo $cargo)
     {
         $data = $request->validate([
-            'empresa_id'           => 'required|exists:empresas,id',
+            'empresa_id'           => 'nullable|exists:empresas,id',
             'nome'                 => 'required|string|max:255',
             'descricao'            => 'nullable|string|max:1000',
             'salario_base'         => 'nullable|numeric|min:0',
-            'nivel_hierarquico_id' => 'nullable|exists:nivel_hierarquicos,id',
+            'salario_maximo'       => 'nullable|numeric|min:0',
+            'nivel_hierarquico_id' => 'nullable|exists:niveis_hierarquicos,id',
             'ativo'                => 'boolean',
         ]);
 
-        $data['ativo'] = $request->boolean('ativo');
+        $data['empresa_id'] = $this->resolveEmpresaId($request, $cargo->empresa_id);
+        $data['ativo']      = $request->boolean('ativo', true);
 
         $cargo->update($data);
 

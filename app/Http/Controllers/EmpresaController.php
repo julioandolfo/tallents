@@ -29,16 +29,7 @@ class EmpresaController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nome'          => 'required|string|max:255',
-            'cnpj'          => 'nullable|string|max:20',
-            'razao_social'  => 'nullable|string|max:255',
-            'email'         => 'nullable|email|max:255',
-            'telefone'      => 'nullable|string|max:20',
-            'endereco'      => 'nullable|string|max:500',
-            'logo'          => 'nullable|image|max:2048',
-            'ativa'         => 'boolean',
-        ]);
+        $data = $request->validate($this->rules());
 
         if ($request->hasFile('logo')) {
             $data['logo'] = $request->file('logo')->store('logos', 'public');
@@ -70,16 +61,7 @@ class EmpresaController extends Controller
 
     public function update(Request $request, Empresa $empresa)
     {
-        $data = $request->validate([
-            'nome'         => 'required|string|max:255',
-            'cnpj'         => 'nullable|string|max:20',
-            'razao_social' => 'nullable|string|max:255',
-            'email'        => 'nullable|email|max:255',
-            'telefone'     => 'nullable|string|max:20',
-            'endereco'     => 'nullable|string|max:500',
-            'logo'         => 'nullable|image|max:2048',
-            'ativa'        => 'boolean',
-        ]);
+        $data = $request->validate($this->rules());
 
         if ($request->hasFile('logo')) {
             if ($empresa->logo) {
@@ -88,13 +70,34 @@ class EmpresaController extends Controller
             $data['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
-        $data['ativa'] = $request->boolean('ativa');
+        $data['ativa'] = $request->boolean('ativa', true);
 
         $empresa->update($data);
 
         return redirect()
             ->route('empresas.show', $empresa)
             ->with('success', 'Empresa atualizada com sucesso!');
+    }
+
+    private function rules(): array
+    {
+        return [
+            'nome'         => 'required|string|max:255',
+            'razao_social' => 'nullable|string|max:255',
+            'cnpj'         => 'nullable|string|max:20',
+            'email'        => 'nullable|email|max:255',
+            'telefone'     => 'nullable|string|max:20',
+            'site'         => 'nullable|string|max:255',
+            'cep'          => 'nullable|string|max:10',
+            'logradouro'   => 'nullable|string|max:255',
+            'numero'       => 'nullable|string|max:20',
+            'complemento'  => 'nullable|string|max:255',
+            'bairro'       => 'nullable|string|max:100',
+            'cidade'       => 'nullable|string|max:100',
+            'estado'       => 'nullable|string|max:50',
+            'logo'         => 'nullable|image|max:2048',
+            'ativa'        => 'boolean',
+        ];
     }
 
     public function destroy(Empresa $empresa)

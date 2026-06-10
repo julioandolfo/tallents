@@ -48,9 +48,7 @@ class SetorController extends Controller
 
     public function show(Setor $setor)
     {
-        $setor->load(['empresa', 'colaboradores']);
-
-        return view('setores.show', compact('setor'));
+        return redirect()->route('setores.edit', $setor);
     }
 
     public function edit(Setor $setor)
@@ -69,7 +67,7 @@ class SetorController extends Controller
             'ativo'      => 'boolean',
         ]);
 
-        $data['ativo'] = $request->boolean('ativo');
+        $data['ativo'] = $request->boolean('ativo', true);
 
         $setor->update($data);
 

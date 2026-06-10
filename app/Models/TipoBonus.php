@@ -11,10 +11,22 @@ class TipoBonus extends Model
 {
     use HasFactory;
 
+    protected $table = 'tipos_bonus';
+
     protected $fillable = [
         'empresa_id',
         'nome',
         'descricao',
+        'tipo_calculo',
+        'percentual',
+        'fixo',
+        'ativo',
+    ];
+
+    protected $casts = [
+        'percentual' => 'decimal:2',
+        'fixo'       => 'decimal:2',
+        'ativo'      => 'boolean',
     ];
 
     public function empresa(): BelongsTo

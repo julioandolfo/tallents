@@ -18,7 +18,11 @@ class TipoOcorrenciaController extends Controller
 
         $empresas = Empresa::where('ativa', true)->orderBy('nome')->get();
 
-        return view('tipos-ocorrencias.index', compact('tiposOcorrencias', 'empresas'));
+        return view('tipos-ocorrencias.index', [
+            'tipos'    => $tiposOcorrencias,
+            'tiposOcorrencias' => $tiposOcorrencias,
+            'empresas' => $empresas,
+        ]);
     }
 
     public function create()
@@ -31,14 +35,15 @@ class TipoOcorrenciaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'empresa_id'  => 'required|exists:empresas,id',
+            'empresa_id'  => 'nullable|exists:empresas,id',
             'nome'        => 'required|string|max:255',
             'descricao'   => 'nullable|string|max:1000',
-            'gravidade'   => 'nullable|in:LEVE,MEDIA,GRAVE,GRAVISSIMA',
+            'gravidade'   => 'nullable|string|max:50',
             'ativo'       => 'boolean',
         ]);
 
-        $data['ativo'] = $request->boolean('ativo', true);
+        $data['empresa_id'] = $this->resolveEmpresaId($request);
+        $data['ativo']      = $request->boolean('ativo', true);
 
         TipoOcorrencia::create($data);
 
@@ -49,9 +54,7 @@ class TipoOcorrenciaController extends Controller
 
     public function show(TipoOcorrencia $tiposOcorrencia)
     {
-        $tiposOcorrencia->load('empresa');
-
-        return view('tipos-ocorrencias.show', compact('tiposOcorrencia'));
+        return redirect()->route('tipos-ocorrencias.edit', $tiposOcorrencia);
     }
 
     public function edit(TipoOcorrencia $tiposOcorrencia)
@@ -64,14 +67,15 @@ class TipoOcorrenciaController extends Controller
     public function update(Request $request, TipoOcorrencia $tiposOcorrencia)
     {
         $data = $request->validate([
-            'empresa_id' => 'required|exists:empresas,id',
+            'empresa_id' => 'nullable|exists:empresas,id',
             'nome'       => 'required|string|max:255',
             'descricao'  => 'nullable|string|max:1000',
-            'gravidade'  => 'nullable|in:LEVE,MEDIA,GRAVE,GRAVISSIMA',
+            'gravidade'  => 'nullable|string|max:50',
             'ativo'      => 'boolean',
         ]);
 
-        $data['ativo'] = $request->boolean('ativo');
+        $data['empresa_id'] = $this->resolveEmpresaId($request, $tiposOcorrencia->empresa_id);
+        $data['ativo']      = $request->boolean('ativo', true);
 
         $tiposOcorrencia->update($data);
 

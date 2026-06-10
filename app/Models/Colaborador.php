@@ -12,6 +12,8 @@ class Colaborador extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'colaboradores';
+
     protected $fillable = [
         'empresa_id',
         'setor_id',
@@ -21,11 +23,19 @@ class Colaborador extends Model
         'nome',
         'cpf',
         'rg',
+        'pis',
+        'ctps',
+        'matricula',
         'data_nascimento',
+        'sexo',
+        'estado_civil',
         'email',
+        'email_pessoal',
+        'email_login',
         'telefone',
         'celular',
         'tipo_contrato',
+        'carga_horaria',
         'data_admissao',
         'data_demissao',
         'salario',
@@ -53,6 +63,26 @@ class Colaborador extends Model
         'data_demissao'   => 'date',
         'status'          => 'string',
     ];
+
+    /**
+     * Alias do regime de trabalho usado pelas views; mapeia para a coluna
+     * tipo_contrato.
+     */
+    public function getRegimeTrabalhoAttribute(): ?string
+    {
+        return $this->tipo_contrato;
+    }
+
+    /**
+     * Usuário do sistema vinculado ao colaborador (quando há conta de acesso),
+     * resolvido pelo e-mail de login. Retorna null se não houver vínculo.
+     */
+    public function getUserAttribute(): ?Usuario
+    {
+        $email = $this->email_login ?: $this->email;
+
+        return $email ? Usuario::where('email', $email)->first() : null;
+    }
 
     public function empresa(): BelongsTo
     {

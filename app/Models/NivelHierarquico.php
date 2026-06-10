@@ -11,10 +11,13 @@ class NivelHierarquico extends Model
 {
     use HasFactory;
 
+    protected $table = 'niveis_hierarquicos';
+
     protected $fillable = [
         'empresa_id',
         'nome',
         'nivel',
+        'descricao',
     ];
 
     public function empresa(): BelongsTo

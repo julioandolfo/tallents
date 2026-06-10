@@ -9,7 +9,10 @@ class ConfiguracaoEmail extends Model
 {
     use HasFactory;
 
+    protected $table = 'configuracoes_email';
+
     protected $fillable = [
+        'driver',
         'smtp_host',
         'smtp_port',
         'smtp_username',

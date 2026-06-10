@@ -10,6 +10,8 @@ class ColaboradorBonus extends Model
 {
     use HasFactory;
 
+    protected $table = 'colaboradores_bonus';
+
     protected $fillable = [
         'colaborador_id',
         'tipo_bonus_id',

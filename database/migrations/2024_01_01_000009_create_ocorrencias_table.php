@@ -14,9 +14,11 @@ return new class extends Migration
             $table->foreignId('colaborador_id')->constrained('colaboradores')->cascadeOnDelete();
             $table->foreignId('tipo_ocorrencia_id')->nullable()->constrained('tipos_ocorrencias')->nullOnDelete();
             $table->foreignId('registrado_por')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('titulo');
+            $table->string('titulo')->nullable();
+            $table->string('gravidade')->nullable();
             $table->text('descricao')->nullable();
             $table->date('data_ocorrencia');
+            $table->boolean('notificar_colaborador')->default(false);
             $table->timestamps();
         });
     }

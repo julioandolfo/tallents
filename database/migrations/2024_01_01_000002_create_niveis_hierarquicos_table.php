@@ -12,7 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
             $table->string('nome');
-            $table->integer('nivel');
+            $table->integer('nivel')->default(1);
+            $table->text('descricao')->nullable();
             $table->timestamps();
         });
     }

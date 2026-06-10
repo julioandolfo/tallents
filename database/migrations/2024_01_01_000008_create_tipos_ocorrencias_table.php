@@ -13,7 +13,9 @@ return new class extends Migration
             $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
             $table->string('nome');
             $table->string('descricao')->nullable();
-            $table->enum('tipo', ['POSITIVA', 'NEGATIVA', 'NEUTRA'])->default('NEUTRA');
+            $table->string('tipo')->nullable();
+            $table->string('gravidade')->nullable();
+            $table->boolean('ativo')->default(true);
             $table->timestamps();
         });
     }

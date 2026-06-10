@@ -12,10 +12,17 @@ class Setor extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'setores';
+
     protected $fillable = [
         'empresa_id',
         'nome',
         'descricao',
+        'ativo',
+    ];
+
+    protected $casts = [
+        'ativo' => 'boolean',
     ];
 
     public function empresa(): BelongsTo
