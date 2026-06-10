@@ -15,14 +15,15 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'login'    => 'required',
+            'email'    => 'required',
             'password' => 'required',
         ], [
-            'login.required'    => 'Informe seu e-mail ou CPF.',
+            'email.required'    => 'Informe seu e-mail ou CPF.',
             'password.required' => 'Informe sua senha.',
         ]);
 
-        $login = preg_replace('/[^0-9a-zA-Z@._-]/', '', $request->login);
+        // O formulário usa o campo "email", mas o valor pode ser e-mail ou CPF.
+        $login = preg_replace('/[^0-9a-zA-Z@._-]/', '', $request->input('email'));
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'cpf';
 
         if (Auth::attempt(
@@ -34,7 +35,7 @@ class LoginController extends Controller
             return redirect()->intended(route('dashboard'));
         }
 
-        return back()->withErrors(['login' => 'Credenciais inválidas.'])->withInput();
+        return back()->withErrors(['email' => 'Credenciais inválidas.'])->withInput();
     }
 
     public function logout(Request $request)

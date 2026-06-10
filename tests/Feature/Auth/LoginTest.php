@@ -27,7 +27,7 @@ class LoginTest extends TestCase
         ]);
 
         $res = $this->post(route('login'), [
-            'login'    => 'teste@tallents.com.br',
+            'email'    => 'teste@tallents.com.br',
             'password' => 'segredo123',
         ]);
 
@@ -46,9 +46,9 @@ class LoginTest extends TestCase
         ]);
 
         $this->post(route('login'), [
-            'login'    => 'teste@tallents.com.br',
+            'email'    => 'teste@tallents.com.br',
             'password' => 'senha-errada',
-        ])->assertSessionHasErrors('login');
+        ])->assertSessionHasErrors('email');
 
         $this->assertGuest();
     }
@@ -64,9 +64,9 @@ class LoginTest extends TestCase
         ]);
 
         $this->post(route('login'), [
-            'login'    => 'inativo@tallents.com.br',
+            'email'    => 'inativo@tallents.com.br',
             'password' => 'segredo123',
-        ])->assertSessionHasErrors('login');
+        ])->assertSessionHasErrors('email');
 
         $this->assertGuest();
     }
