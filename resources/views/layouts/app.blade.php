@@ -11,7 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="h-full dark:bg-slate-900" x-data="{ sidebarOpen: false }">
+<body class="h-full" x-data="{ sidebarOpen: false }">
     <div class="flex h-screen overflow-hidden">
         <!-- Overlay mobile -->
         <div x-show="sidebarOpen"
@@ -59,7 +59,7 @@
         <!-- CONTEÚDO PRINCIPAL -->
         <div class="flex flex-col flex-1 overflow-hidden lg:pl-64">
             <!-- Header -->
-            <header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10 shrink-0">
+            <header class="app-topbar z-10 shrink-0">
                 <div class="flex items-center justify-between h-16 px-4 sm:px-6">
                     <button @click="sidebarOpen = true" class="lg:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

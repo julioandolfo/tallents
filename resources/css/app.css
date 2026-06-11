@@ -3,74 +3,75 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   Tema escuro — ativado pela classe .dark no <html> (toggle Light/Dark/System)
-   Estas regras adaptam as classes utilitárias mais usadas, cobrindo todas as
-   páginas sem precisar adicionar variantes dark: em cada view.
+   Base
    ========================================================================== */
 [x-cloak] { display: none !important; }
 
-/* Tipografia/render mais suaves */
 body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-/* Scrollbar moderna e discreta */
+/* Scrollbar discreta */
 * { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
 *::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
 *::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
 *::-webkit-scrollbar-track { background: transparent; }
-.dark * { scrollbar-color: #475569 transparent; }
-.dark *::-webkit-scrollbar-thumb { background-color: #475569; }
+.dark * { scrollbar-color: #404040 transparent; }
+.dark *::-webkit-scrollbar-thumb { background-color: #404040; }
 
 html { color-scheme: light; }
-html.dark { color-scheme: dark; }
+html.dark { color-scheme: dark; background-color: #0a0a0a; }
 
-.dark body { background-color: #0f172a; color: #e5e7eb; }
+/* ==========================================================================
+   Tema escuro — tons NEUTROS (preto/cinza), não azulado.
+   Adapta as classes utilitárias mais usadas, cobrindo todas as páginas.
+   ========================================================================== */
+.dark body { background-color: #0a0a0a; color: #e5e5e5; }
 
 /* Superfícies */
-.dark .bg-white { background-color: #1f2937; }
-.dark .bg-gray-50 { background-color: #111827; }
-.dark .bg-gray-100 { background-color: #0f172a; }
+.dark .bg-white { background-color: #171717; }
+.dark .bg-gray-50 { background-color: #0f0f0f; }
+.dark .bg-gray-100 { background-color: #0a0a0a; }
 
 /* Texto */
-.dark .text-gray-900 { color: #f3f4f6; }
-.dark .text-gray-800 { color: #e5e7eb; }
-.dark .text-gray-700 { color: #d1d5db; }
-.dark .text-gray-600 { color: #9ca3af; }
-.dark .text-gray-500 { color: #9ca3af; }
+.dark .text-gray-900 { color: #f5f5f5; }
+.dark .text-gray-800 { color: #e5e5e5; }
+.dark .text-gray-700 { color: #d4d4d4; }
+.dark .text-gray-600 { color: #a3a3a3; }
+.dark .text-gray-500 { color: #a3a3a3; }
 
 /* Bordas e divisores */
 .dark .border-gray-100,
 .dark .border-gray-200,
-.dark .border-gray-300 { border-color: #374151; }
+.dark .border-gray-300 { border-color: #262626; }
 .dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
-.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: #262626; }
 
 /* Hovers neutros */
 .dark .hover\:bg-gray-50:hover,
-.dark .hover\:bg-gray-100:hover { background-color: #374151; }
+.dark .hover\:bg-gray-100:hover { background-color: #262626; }
 
 /* Formulários */
 .dark input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
 .dark select,
 .dark textarea {
-    background-color: #1f2937;
-    border-color: #4b5563;
-    color: #f3f4f6;
+    background-color: #171717;
+    border-color: #404040;
+    color: #f5f5f5;
 }
 .dark input::placeholder,
-.dark textarea::placeholder { color: #6b7280; }
+.dark textarea::placeholder { color: #737373; }
 
 /* Cabeçalho de tabela */
 .dark table thead.bg-gray-50,
-.dark table .bg-gray-50 { background-color: #111827; }
+.dark table .bg-gray-50 { background-color: #0f0f0f; }
 
 /* ==========================================================================
-   Sidebar adaptável (estilo Filament): clara no tema claro, escura no escuro.
+   Sidebar adaptável (clara no claro, preta no escuro — estilo Filament)
    ========================================================================== */
 .app-sidebar { background-color: #ffffff; border-right: 1px solid #e5e7eb; }
 .app-sidebar-accent { background-color: #f8fafc; }
-.dark .app-sidebar { background-color: #0f172a; border-right-color: #1e293b; }
-.dark .app-sidebar-accent { background-color: rgba(30, 41, 59, .5); }
+.dark .app-sidebar { background-color: #0a0a0a; border-right-color: #262626; }
+.dark .app-sidebar-accent { background-color: #171717; }
 
 .nav-link { color: #4b5563; }
 .nav-link svg { color: #9ca3af; }
@@ -79,9 +80,15 @@ html.dark { color-scheme: dark; }
 .nav-link.active { background-color: #eef2ff; color: #4338ca; }
 .nav-link.active svg { color: #4f46e5; }
 
-.dark .nav-link { color: #cbd5e1; }
-.dark .nav-link svg { color: #64748b; }
-.dark .nav-link:hover { background-color: rgba(255, 255, 255, .08); color: #ffffff; }
-.dark .nav-link:hover svg { color: #cbd5e1; }
+.dark .nav-link { color: #a3a3a3; }
+.dark .nav-link svg { color: #737373; }
+.dark .nav-link:hover { background-color: #262626; color: #ffffff; }
+.dark .nav-link:hover svg { color: #d4d4d4; }
 .dark .nav-link.active { background-color: #4f46e5; color: #ffffff; }
 .dark .nav-link.active svg { color: #ffffff; }
+
+/* ==========================================================================
+   Topbar (cabeçalho) — classe própria para não herdar bg-white translúcido
+   ========================================================================== */
+.app-topbar { background-color: #ffffff; border-bottom: 1px solid #e5e7eb; }
+.dark .app-topbar { background-color: #171717; border-bottom-color: #262626; }
