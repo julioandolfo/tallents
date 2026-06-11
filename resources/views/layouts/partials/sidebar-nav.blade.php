@@ -102,6 +102,29 @@
     </div>
 </div>
 
+{{-- Ciclo de Vida --}}
+<div class="pt-4">
+    <p class="px-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Ciclo de Vida</p>
+    <div class="mt-2 space-y-1">
+        <a href="{{ route('onboarding.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('onboarding.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Onboarding
+        </a>
+        <a href="{{ route('demissoes.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('demissoes.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            Desligamentos
+        </a>
+    </div>
+</div>
+
 {{-- Administração --}}
 @if(auth()->check() && method_exists(auth()->user(), 'isAdmin') && (auth()->user()->isAdmin() || auth()->user()->isRH()))
 <div class="pt-4">

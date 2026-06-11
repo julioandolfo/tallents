@@ -19,6 +19,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Portal\PortalController;
 use App\Http\Controllers\AdvertenciaController;
 use App\Http\Controllers\BancoHorasController;
+use App\Http\Controllers\DemissaoController;
+use App\Http\Controllers\OnboardingController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -57,6 +59,13 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::delete('banco-horas/movimentacoes/{movimentacao}', [BancoHorasController::class, 'remover'])->name('banco-horas.movimentacoes.destroy');
     Route::resource('horas-extras', HoraExtraController::class)->parameters(['horas-extras' => 'horasExtra']);
     Route::resource('promocoes', PromocaoController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->parameters(['promocoes' => 'promocao']);
+
+    // Ciclo de vida: desligamentos e onboarding
+    Route::resource('demissoes', DemissaoController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->parameters(['demissoes' => 'demissao']);
+    Route::resource('onboarding', OnboardingController::class)->only(['index', 'create', 'store', 'show', 'update', 'destroy']);
+    Route::post('onboarding/{onboarding}/tarefas', [OnboardingController::class, 'adicionarTarefa'])->name('onboarding.tarefas.store');
+    Route::patch('onboarding/tarefas/{tarefa}', [OnboardingController::class, 'alternarTarefa'])->name('onboarding.tarefas.toggle');
+    Route::delete('onboarding/tarefas/{tarefa}', [OnboardingController::class, 'removerTarefa'])->name('onboarding.tarefas.destroy');
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);

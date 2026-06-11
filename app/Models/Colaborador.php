@@ -152,4 +152,14 @@ class Colaborador extends Model
     {
         return $this->hasMany(ColaboradorBonus::class);
     }
+
+    public function demissoes(): HasMany
+    {
+        return $this->hasMany(Demissao::class)->latest('data_desligamento');
+    }
+
+    public function onboardings(): HasMany
+    {
+        return $this->hasMany(Onboarding::class)->latest('data_inicio');
+    }
 }
