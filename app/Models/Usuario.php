@@ -24,6 +24,7 @@ class Usuario extends Authenticatable
         'role',
         'empresa_id',
         'setor_id',
+        'colaborador_id',
         'foto',
         'ativo',
         'last_login_at',
@@ -53,6 +54,17 @@ class Usuario extends Authenticatable
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class);
+    }
+
+    public function colaborador(): BelongsTo
+    {
+        return $this->belongsTo(Colaborador::class);
+    }
+
+    /** Rota do painel inicial conforme o papel do usuário. */
+    public function painelRoute(): string
+    {
+        return $this->role === 'COLABORADOR' ? 'portal.index' : 'dashboard';
     }
 
     public function setor(): BelongsTo

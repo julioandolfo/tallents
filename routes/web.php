@@ -16,16 +16,24 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Portal\PortalController;
 
-Route::get('/', fn() => redirect()->route('dashboard'));
+Route::get('/', fn() => auth()->check()
+    ? redirect()->route(auth()->user()->painelRoute())
+    : redirect()->route('login'));
 
 // Auth
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Autenticado
-Route::middleware(['auth'])->group(function () {
+// ─── Portal do Colaborador (autoatendimento) ─────────────────────────────────
+Route::middleware(['auth'])->prefix('portal')->name('portal.')->group(function () {
+    Route::get('/', [PortalController::class, 'index'])->name('index');
+});
+
+// ─── Área administrativa (RH / Admin / Gestor) ───────────────────────────────
+Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Os parâmetros explícitos garantem que o nome do parâmetro da rota

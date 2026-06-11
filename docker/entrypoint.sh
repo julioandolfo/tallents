@@ -119,6 +119,11 @@ if [ "$DB_OK" = "1" ]; then
             echo "⚠️  Importação do legado falhou — verifique os logs."
         fi
     fi
+
+    # ─── 5c. (Re)vincula usuários aos colaboradores (idempotente, todo deploy) ──
+    if [ -f "$LEGADO_DUMP" ]; then
+        php artisan migrar:legado "$LEGADO_DUMP" --apenas-vinculos --force 2>/dev/null || true
+    fi
 else
     echo "⚠️  MySQL indisponível após 120s — subindo o servidor mesmo assim."
     echo "    As migrations rodarão no próximo deploy/restart quando o banco responder."

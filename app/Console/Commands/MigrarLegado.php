@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
  */
 class MigrarLegado extends Command
 {
-    protected $signature = 'migrar:legado {arquivo : Caminho do dump .sql do sistema antigo} {--force : Não pedir confirmação (uso em deploy automatizado)}';
+    protected $signature = 'migrar:legado {arquivo : Caminho do dump .sql do sistema antigo} {--force : Não pedir confirmação (uso em deploy automatizado)} {--apenas-vinculos : Apenas vincula users.colaborador_id a partir do dump (não reimporta nada)}';
     protected $description = 'Importa os dados do sistema antigo (rh-privus) para o app novo a partir de um dump .sql';
 
     /** @var array<int,int> mapa colaborador_id => empresa_id (para tabelas filhas sem empresa_id) */
@@ -40,6 +40,13 @@ class MigrarLegado extends Command
         if ($sql === false || $sql === '') {
             $this->error('Não foi possível ler o arquivo (vazio?).');
             return self::FAILURE;
+        }
+
+        // Modo leve: só (re)vincula users.colaborador_id, sem apagar/reimportar.
+        if ($this->option('apenas-vinculos')) {
+            $n = $this->vincularColaboradores($sql);
+            $this->info("✅ Vínculos atualizados: {$n} usuário(s) ligado(s) ao colaborador.");
+            return self::SUCCESS;
         }
 
         if (! $this->option('force')
@@ -252,13 +259,14 @@ class MigrarLegado extends Command
                 'email'         => $r['email'],
                 'password'      => $r['senha_hash'],
                 'role'          => $r['role'] ?: 'COLABORADOR',
-                'empresa_id'    => $this->intOrNull($r['empresa_id']),
-                'setor_id'      => $this->intOrNull($r['setor_id']),
-                'foto'          => $r['foto'],
-                'ativo'         => $this->ativo($r['status']),
-                'last_login_at' => $r['ultimo_login'] ?: null,
-                'created_at'    => $r['created_at'],
-                'updated_at'    => $r['updated_at'],
+                'empresa_id'     => $this->intOrNull($r['empresa_id']),
+                'setor_id'       => $this->intOrNull($r['setor_id']),
+                'colaborador_id' => $this->intOrNull($r['colaborador_id'] ?? null),
+                'foto'           => $r['foto'],
+                'ativo'          => $this->ativo($r['status']),
+                'last_login_at'  => $r['ultimo_login'] ?: null,
+                'created_at'     => $r['created_at'],
+                'updated_at'     => $r['updated_at'],
             ];
         }
         $this->inserir('users', $out);
@@ -381,6 +389,25 @@ class MigrarLegado extends Command
     }
 
     // ───────────────────────── Helpers ─────────────────────────
+
+    /**
+     * (Re)vincula users.colaborador_id a partir do dump, sem reimportar dados.
+     * Só liga quando o colaborador correspondente existe.
+     */
+    private function vincularColaboradores(string $sql): int
+    {
+        $colabIds = DB::table('colaboradores')->pluck('id')->flip();
+        $count = 0;
+        foreach ($this->extract($sql, 'usuarios') as $r) {
+            $userId  = (int) ($r['id'] ?? 0);
+            $colabId = $this->intOrNull($r['colaborador_id'] ?? null);
+            if (! $userId || ! $colabId || ! $colabIds->has($colabId)) {
+                continue;
+            }
+            $count += DB::table('users')->where('id', $userId)->update(['colaborador_id' => $colabId]);
+        }
+        return $count;
+    }
 
     private function limparDestino(): void
     {

@@ -32,7 +32,7 @@ class LoginController extends Controller
         )) {
             $request->session()->regenerate();
             Auth::user()->forceFill(['last_login_at' => now()])->save();
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route(Auth::user()->painelRoute()));
         }
 
         return back()->withErrors(['email' => 'Credenciais inválidas.'])->withInput();
