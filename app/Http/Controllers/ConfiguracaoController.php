@@ -19,7 +19,7 @@ class ConfiguracaoController extends Controller
             'mail_port'         => $configEmail->smtp_port        ?? 587,
             'mail_username'     => $configEmail->smtp_username    ?? '',
             'mail_encryption'   => $configEmail->smtp_encryption  ?? 'tls',
-            'mail_from_name'    => $configEmail->from_name        ?? 'Tallents RH',
+            'mail_from_name'    => $configEmail->from_name        ?? 'Tallents Gestão',
             'mail_from_address' => $configEmail->from_email       ?? '',
             'empresa_nome'      => $empresa->nome     ?? '',
             'empresa_cnpj'      => $empresa->cnpj     ?? '',
@@ -57,7 +57,7 @@ class ConfiguracaoController extends Controller
             'smtp_username'   => $data['mail_username'] ?? null,
             'smtp_encryption' => $data['mail_encryption'] ?? 'tls',
             'from_email'      => $data['mail_from_address'] ?? null,
-            'from_name'       => $data['mail_from_name'] ?? 'Tallents RH',
+            'from_name'       => $data['mail_from_name'] ?? 'Tallents Gestão',
         ];
 
         // Só sobrescreve a senha quando informada (o campo fica vazio na edição).

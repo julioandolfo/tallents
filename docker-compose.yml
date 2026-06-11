@@ -16,7 +16,7 @@ x-app-env: &app-env
   # ser roteado pelo Traefik para a porta 80 deste serviço (app). Sem isso o
   # Traefik não cria rota e responde "404 page not found".
   SERVICE_FQDN_APP_80: ""
-  APP_NAME: "Tallents RH"
+  APP_NAME: "Tallents Gestão"
   APP_ENV: production
   APP_DEBUG: "false"
   # Chave de criptografia estável. Pode (e idealmente deve) ser sobrescrita por
@@ -59,7 +59,7 @@ x-app-env: &app-env
   MAIL_USERNAME: "${MAIL_USERNAME:-}"
   MAIL_PASSWORD: "${MAIL_PASSWORD:-}"
   MAIL_FROM_ADDRESS: "${MAIL_FROM_ADDRESS:-noreply@tallents.com.br}"
-  MAIL_FROM_NAME: "Tallents RH"
+  MAIL_FROM_NAME: "Tallents Gestão"
 
 services:
   # ─── Aplicação Laravel ───────────────────────────────────────────────────────

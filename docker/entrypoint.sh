@@ -7,7 +7,7 @@ cd /var/www/html
 
 echo ""
 echo "╔══════════════════════════════════════╗"
-echo "║         Tallents RH — Deploy         ║"
+echo "║         Tallents Gestão — Deploy         ║"
 echo "╚══════════════════════════════════════╝"
 echo ""
 
@@ -18,7 +18,7 @@ _set() {
     KEY="$1"; VAL="$2"
     [ -z "$VAL" ] && return
     # Remove a linha existente e regrava com aspas. O dotenv do Laravel exige
-    # aspas em valores com espaço (ex.: APP_NAME="Tallents RH"); sem elas o
+    # aspas em valores com espaço (ex.: APP_NAME="Tallents Gestão"); sem elas o
     # parser falha com "unexpected whitespace" e toda requisição dá 500.
     if [ -f .env ]; then
         grep -v "^${KEY}=" .env > .env.tmp 2>/dev/null || true
@@ -27,7 +27,7 @@ _set() {
     printf '%s="%s"\n' "$KEY" "$VAL" >> .env
 }
 
-_set APP_NAME        "${APP_NAME:-Tallents RH}"
+_set APP_NAME        "${APP_NAME:-Tallents Gestão}"
 _set APP_ENV         "${APP_ENV:-production}"
 _set APP_DEBUG       "${APP_DEBUG:-false}"
 _set APP_URL         "${APP_URL:-http://localhost}"
@@ -55,7 +55,7 @@ _set MAIL_PORT       "${MAIL_PORT:-587}"
 _set MAIL_USERNAME   "${MAIL_USERNAME:-}"
 _set MAIL_PASSWORD   "${MAIL_PASSWORD:-}"
 _set MAIL_FROM_ADDRESS "${MAIL_FROM_ADDRESS:-noreply@tallents.com.br}"
-_set MAIL_FROM_NAME  "Tallents RH"
+_set MAIL_FROM_NAME  "Tallents Gestão"
 
 echo "✅ Variáveis configuradas"
 
