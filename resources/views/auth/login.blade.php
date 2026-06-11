@@ -14,7 +14,7 @@
                     <rect x="27.5" y="17" width="9" height="31" rx="4.5"/>
                 </svg>
             </div>
-            <h1 class="text-2xl font-bold text-white">Tallents RH</h1>
+            <h1 class="text-2xl font-bold text-white">Tallents Gestão</h1>
             <p class="text-indigo-200 text-sm mt-1">Gestão de Recursos Humanos</p>
         </div>
 
@@ -129,7 +129,7 @@
 
     <!-- Rodapé -->
     <p class="text-center text-indigo-200 text-xs mt-6">
-        &copy; {{ date('Y') }} Tallents RH — Todos os direitos reservados
+        &copy; {{ date('Y') }} Tallents Gestão — Todos os direitos reservados
     </p>
 </div>
 @endsection

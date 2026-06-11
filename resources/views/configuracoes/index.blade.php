@@ -81,7 +81,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Remetente</label>
-                                <input type="text" name="mail_from_name" value="{{ $config['mail_from_name'] ?? 'Tallents RH' }}"
+                                <input type="text" name="mail_from_name" value="{{ $config['mail_from_name'] ?? 'Tallents Gestão' }}"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             </div>
                             <div>
@@ -120,7 +120,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome da Empresa</label>
-                                <input type="text" name="empresa_nome" value="{{ $config['empresa_nome'] ?? 'Tallents RH' }}"
+                                <input type="text" name="empresa_nome" value="{{ $config['empresa_nome'] ?? 'Tallents Gestão' }}"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             </div>
                             <div>
@@ -151,7 +151,7 @@
                     <dl class="space-y-3">
                         <div class="flex justify-between py-2 border-b border-gray-50">
                             <dt class="text-sm text-gray-500">Versão</dt>
-                            <dd class="text-sm font-medium text-gray-900">Tallents RH v1.0.0</dd>
+                            <dd class="text-sm font-medium text-gray-900">Tallents Gestão v1.0.0</dd>
                         </div>
                         <div class="flex justify-between py-2 border-b border-gray-50">
                             <dt class="text-sm text-gray-500">PHP</dt>

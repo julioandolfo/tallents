@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <title>@yield('title', 'Dashboard') — Tallents RH</title>
+    <title>@yield('title', 'Dashboard') — Tallents Gestão</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet">
     @include('layouts.partials.theme-head')
@@ -23,14 +23,14 @@
         <!-- SIDEBAR DESKTOP -->
         <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 app-sidebar z-50">
             <div class="flex items-center h-16 px-4 app-sidebar-accent shrink-0">
-                <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8 mr-2.5" alt="Tallents RH">
-                <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">RH</span></span>
+                <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8 mr-2.5" alt="Tallents Gestão">
+                <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">Gestão</span></span>
             </div>
             <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
                 @include('layouts.partials.sidebar-nav')
             </nav>
             <div class="px-4 py-3 app-sidebar-accent shrink-0">
-                <p class="text-xs text-gray-500">Tallents RH v1.0</p>
+                <p class="text-xs text-gray-500">Tallents Gestão v1.0</p>
             </div>
         </div>
 
@@ -40,8 +40,8 @@
              x-cloak>
             <div class="flex items-center justify-between h-16 px-4 app-sidebar-accent shrink-0">
                 <span class="flex items-center">
-                    <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8 mr-2.5" alt="Tallents RH">
-                    <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">RH</span></span>
+                    <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8 mr-2.5" alt="Tallents Gestão">
+                    <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">Gestão</span></span>
                 </span>
                 <button @click="sidebarOpen = false" class="text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,7 +53,7 @@
                 @include('layouts.partials.sidebar-nav')
             </nav>
             <div class="px-4 py-3 app-sidebar-accent shrink-0">
-                <p class="text-xs text-gray-500">Tallents RH v1.0</p>
+                <p class="text-xs text-gray-500">Tallents Gestão v1.0</p>
             </div>
         </div>
 
