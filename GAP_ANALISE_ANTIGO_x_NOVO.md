@@ -27,10 +27,8 @@ Configuração de e-mail · Templates de e-mail · **+ todos os dados importados
 
 ## ❌ Módulos inteiros que faltam (não existem no novo)
 
-### 1. LMS / Universidade Corporativa (treinamentos)
-Cursos, aulas, categorias, certificados, progresso do colaborador, cursos
-obrigatórios + regras + alertas, comentários/favoritos, player com auditoria e
-segurança (anti-fraude). *(15 tabelas)*
+### 1. ~~LMS / Universidade Corporativa (treinamentos)~~ — ❌ FORA DE ESCOPO
+> Removido do plano a pedido. (cursos, aulas, certificados, progresso, etc.)
 
 ### 2. Gamificação + Loja de recompensas
 Pontos (config, histórico, total), **badges/conquistas**, e **Loja** (produtos,
@@ -87,7 +85,8 @@ Preferências de dashboard.
 3. **Comunicação** (comunicados + mural/feed) — alto uso, baixo esforço.
 4. **Onboarding** + **Demissões** (ciclo de vida do colaborador).
 5. **Recrutamento (ATS)** — módulo grande, alto valor.
-6. **LMS** (treinamentos) — módulo grande.
-7. **Feedback/Avaliações/PDI**.
-8. **Gamificação + Loja**.
-9. **Chat interno**, **Contratos/Assinatura**, **Integrações** (WhatsApp/Slack/IA).
+6. **Feedback/Avaliações/PDI**.
+7. **Gamificação + Loja**.
+8. **Chat interno**, **Contratos/Assinatura**, **Integrações** (WhatsApp/Slack/IA).
+
+> ❌ **Fora de escopo:** LMS / Cursos (removido a pedido).
