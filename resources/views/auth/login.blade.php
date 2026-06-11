@@ -9,9 +9,9 @@
         <!-- Header do Card -->
         <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-8 text-center">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-full mb-4">
-                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <svg class="h-8 w-8 text-white" viewBox="0 0 64 64" fill="currentColor">
+                    <rect x="16" y="17" width="32" height="9" rx="4.5"/>
+                    <rect x="27.5" y="17" width="9" height="31" rx="4.5"/>
                 </svg>
             </div>
             <h1 class="text-2xl font-bold text-white">Tallents RH</h1>

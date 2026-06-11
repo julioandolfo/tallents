@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <title>@yield('title', 'Dashboard') — Tallents RH</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet">
@@ -22,10 +23,7 @@
         <!-- SIDEBAR DESKTOP -->
         <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 app-sidebar z-50">
             <div class="flex items-center h-16 px-4 app-sidebar-accent shrink-0">
-                <svg class="h-7 w-7 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
+                <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8 mr-2.5" alt="Tallents RH">
                 <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">RH</span></span>
             </div>
             <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
@@ -41,7 +39,10 @@
              :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
              x-cloak>
             <div class="flex items-center justify-between h-16 px-4 app-sidebar-accent shrink-0">
-                <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">RH</span></span>
+                <span class="flex items-center">
+                    <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8 mr-2.5" alt="Tallents RH">
+                    <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">RH</span></span>
+                </span>
                 <button @click="sidebarOpen = false" class="text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
