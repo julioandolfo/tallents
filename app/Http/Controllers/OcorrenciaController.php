@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 use App\Models\Colaborador;
 use App\Models\Empresa;
 use App\Models\Ocorrencia;
+use App\Models\OcorrenciaAnexo;
+use App\Models\OcorrenciaComentario;
 use App\Models\TipoOcorrencia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class OcorrenciaController extends Controller
 {
@@ -59,6 +62,8 @@ class OcorrenciaController extends Controller
             'notificar_colaborador' => $request->boolean('notificar_colaborador'),
         ]);
 
+        $ocorrencia->registrarHistorico('Ocorrência registrada');
+
         return redirect()
             ->route('ocorrencias.show', $ocorrencia)
             ->with('success', 'Ocorrência registrada com sucesso!');
@@ -66,7 +71,10 @@ class OcorrenciaController extends Controller
 
     public function show(Ocorrencia $ocorrencia)
     {
-        $ocorrencia->load(['colaborador.empresa', 'tipoOcorrencia', 'registradoPor']);
+        $ocorrencia->load([
+            'colaborador.empresa', 'tipoOcorrencia', 'registradoPor',
+            'anexos.usuario', 'comentarios.usuario', 'historico.usuario',
+        ]);
 
         return view('ocorrencias.show', compact('ocorrencia'));
     }
@@ -102,6 +110,8 @@ class OcorrenciaController extends Controller
             'notificar_colaborador' => $request->boolean('notificar_colaborador'),
         ]);
 
+        $ocorrencia->registrarHistorico('Ocorrência atualizada');
+
         return redirect()
             ->route('ocorrencias.show', $ocorrencia)
             ->with('success', 'Ocorrência atualizada com sucesso!');
@@ -109,10 +119,67 @@ class OcorrenciaController extends Controller
 
     public function destroy(Ocorrencia $ocorrencia)
     {
+        foreach ($ocorrencia->anexos as $anexo) {
+            Storage::disk('public')->delete($anexo->caminho);
+        }
+
         $ocorrencia->delete();
 
         return redirect()
             ->route('ocorrencias.index')
             ->with('success', 'Ocorrência removida com sucesso!');
+    }
+
+    // ─── Comentários ──────────────────────────────────────────────────────────
+    public function adicionarComentario(Request $request, Ocorrencia $ocorrencia)
+    {
+        $data = $request->validate(['comentario' => 'required|string|max:2000']);
+
+        $ocorrencia->comentarios()->create([
+            'usuario_id' => auth()->id(),
+            'comentario' => $data['comentario'],
+        ]);
+        $ocorrencia->registrarHistorico('Comentário adicionado');
+
+        return back()->with('success', 'Comentário adicionado.');
+    }
+
+    public function removerComentario(OcorrenciaComentario $comentario)
+    {
+        $ocorrencia = $comentario->ocorrencia;
+        $comentario->delete();
+        $ocorrencia?->registrarHistorico('Comentário removido');
+
+        return back()->with('success', 'Comentário removido.');
+    }
+
+    // ─── Anexos ───────────────────────────────────────────────────────────────
+    public function adicionarAnexo(Request $request, Ocorrencia $ocorrencia)
+    {
+        $request->validate(['arquivo' => 'required|file|max:5120']); // 5 MB
+
+        $file = $request->file('arquivo');
+        $caminho = $file->store("ocorrencias/{$ocorrencia->id}", 'public');
+
+        $ocorrencia->anexos()->create([
+            'usuario_id'    => auth()->id(),
+            'nome_original' => $file->getClientOriginalName(),
+            'caminho'       => $caminho,
+            'mime'          => $file->getClientMimeType(),
+            'tamanho'       => $file->getSize(),
+        ]);
+        $ocorrencia->registrarHistorico('Anexo adicionado', $file->getClientOriginalName());
+
+        return back()->with('success', 'Anexo enviado.');
+    }
+
+    public function removerAnexo(OcorrenciaAnexo $anexo)
+    {
+        $ocorrencia = $anexo->ocorrencia;
+        Storage::disk('public')->delete($anexo->caminho);
+        $anexo->delete();
+        $ocorrencia?->registrarHistorico('Anexo removido');
+
+        return back()->with('success', 'Anexo removido.');
     }
 }

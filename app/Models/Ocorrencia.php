@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ocorrencia extends Model
 {
@@ -56,5 +57,30 @@ class Ocorrencia extends Model
     public function registradoPor(): BelongsTo
     {
         return $this->belongsTo(Usuario::class, 'registrado_por');
+    }
+
+    public function anexos(): HasMany
+    {
+        return $this->hasMany(OcorrenciaAnexo::class)->latest();
+    }
+
+    public function comentarios(): HasMany
+    {
+        return $this->hasMany(OcorrenciaComentario::class)->oldest();
+    }
+
+    public function historico(): HasMany
+    {
+        return $this->hasMany(OcorrenciaHistorico::class)->latest();
+    }
+
+    /** Registra um evento no histórico da ocorrência. */
+    public function registrarHistorico(string $acao, ?string $detalhe = null): void
+    {
+        $this->historico()->create([
+            'usuario_id' => auth()->id(),
+            'acao'       => $acao,
+            'detalhe'    => $detalhe,
+        ]);
     }
 }

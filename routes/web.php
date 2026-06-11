@@ -44,6 +44,10 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::resource('setores', SetorController::class)->parameters(['setores' => 'setor']);
     Route::resource('cargos', CargoController::class);
     Route::resource('ocorrencias', OcorrenciaController::class);
+    Route::post('ocorrencias/{ocorrencia}/comentarios', [OcorrenciaController::class, 'adicionarComentario'])->name('ocorrencias.comentarios.store');
+    Route::delete('ocorrencias/comentarios/{comentario}', [OcorrenciaController::class, 'removerComentario'])->name('ocorrencias.comentarios.destroy');
+    Route::post('ocorrencias/{ocorrencia}/anexos', [OcorrenciaController::class, 'adicionarAnexo'])->name('ocorrencias.anexos.store');
+    Route::delete('ocorrencias/anexos/{anexo}', [OcorrenciaController::class, 'removerAnexo'])->name('ocorrencias.anexos.destroy');
     Route::resource('horas-extras', HoraExtraController::class)->parameters(['horas-extras' => 'horasExtra']);
     Route::resource('promocoes', PromocaoController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->parameters(['promocoes' => 'promocao']);
     Route::resource('fechamentos', FechamentoPagamentoController::class);
