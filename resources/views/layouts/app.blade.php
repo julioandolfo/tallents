@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full bg-gray-100">
+<html lang="pt-BR" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,29 +20,29 @@
              @click="sidebarOpen = false"></div>
 
         <!-- SIDEBAR DESKTOP -->
-        <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-slate-900 z-50">
-            <div class="flex items-center h-16 px-4 bg-slate-800/40 shrink-0">
-                <svg class="h-7 w-7 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 app-sidebar z-50">
+            <div class="flex items-center h-16 px-4 app-sidebar-accent shrink-0">
+                <svg class="h-7 w-7 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
-                <span class="text-white font-bold text-xl">Tallents <span class="text-indigo-400">RH</span></span>
+                <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">RH</span></span>
             </div>
             <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
                 @include('layouts.partials.sidebar-nav')
             </nav>
-            <div class="px-4 py-3 bg-slate-800/40 shrink-0">
+            <div class="px-4 py-3 app-sidebar-accent shrink-0">
                 <p class="text-xs text-gray-500">Tallents RH v1.0</p>
             </div>
         </div>
 
         <!-- SIDEBAR MOBILE -->
-        <div class="flex flex-col w-64 bg-slate-900 fixed inset-y-0 z-50 transition-transform duration-300 lg:hidden"
+        <div class="flex flex-col w-64 app-sidebar fixed inset-y-0 z-50 transition-transform duration-300 lg:hidden"
              :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
              x-cloak>
-            <div class="flex items-center justify-between h-16 px-4 bg-slate-800/40 shrink-0">
-                <span class="text-white font-bold text-xl">Tallents <span class="text-indigo-400">RH</span></span>
-                <button @click="sidebarOpen = false" class="text-gray-400 hover:text-white focus:outline-none">
+            <div class="flex items-center justify-between h-16 px-4 app-sidebar-accent shrink-0">
+                <span class="text-gray-900 dark:text-white font-bold text-xl">Tallents <span class="text-indigo-600 dark:text-indigo-400">RH</span></span>
+                <button @click="sidebarOpen = false" class="text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -51,7 +51,7 @@
             <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
                 @include('layouts.partials.sidebar-nav')
             </nav>
-            <div class="px-4 py-3 bg-slate-800/40 shrink-0">
+            <div class="px-4 py-3 app-sidebar-accent shrink-0">
                 <p class="text-xs text-gray-500">Tallents RH v1.0</p>
             </div>
         </div>
