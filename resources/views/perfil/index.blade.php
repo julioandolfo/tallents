@@ -17,7 +17,7 @@
 }">
 
     <!-- Card de perfil -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
         <div class="bg-gradient-to-r from-indigo-600 to-purple-600 h-20"></div>
         <div class="px-6 pb-6">
             <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4 -mt-10">
@@ -45,7 +45,7 @@
     <div class="space-y-6">
 
         <!-- Dados Pessoais -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900">Informações Pessoais</h3>
             </div>
@@ -88,7 +88,7 @@
         </div>
 
         <!-- Alterar Senha -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900">Alterar Senha</h3>
             </div>

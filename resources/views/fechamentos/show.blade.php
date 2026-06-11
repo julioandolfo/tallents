@@ -31,20 +31,20 @@
     <!-- Resumo -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
         @foreach([
-            ['label' => 'Colaboradores', 'value' => $fechamento->total_colaboradores ?? 0, 'color' => 'indigo'],
-            ['label' => 'Ocorrências', 'value' => $fechamento->total_ocorrencias ?? 0, 'color' => 'orange'],
-            ['label' => 'Horas Extras', 'value' => ($fechamento->total_horas_extras ?? 0) . 'h', 'color' => 'purple'],
-            ['label' => 'Promoções', 'value' => $fechamento->total_promocoes ?? 0, 'color' => 'green'],
+            ['label' => 'Colaboradores', 'value' => $fechamento->total_colaboradores ?? 0, 'cls' => 'text-indigo-600'],
+            ['label' => 'Ocorrências', 'value' => $fechamento->total_ocorrencias ?? 0, 'cls' => 'text-orange-600'],
+            ['label' => 'Horas Extras', 'value' => ($fechamento->total_horas_extras ?? 0) . 'h', 'cls' => 'text-purple-600'],
+            ['label' => 'Promoções', 'value' => $fechamento->total_promocoes ?? 0, 'cls' => 'text-green-600'],
         ] as $stat)
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center">
             <p class="text-sm text-gray-500">{{ $stat['label'] }}</p>
-            <p class="text-2xl font-bold text-{{ $stat['color'] }}-600 mt-1">{{ $stat['value'] }}</p>
+            <p class="text-2xl font-bold {{ $stat['cls'] }} mt-1">{{ $stat['value'] }}</p>
         </div>
         @endforeach
     </div>
 
     <!-- Colaboradores incluídos -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-base font-semibold text-gray-900">Colaboradores no Fechamento</h3>
         </div>

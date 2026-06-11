@@ -40,7 +40,7 @@
     </div>
 
     {{-- Card Principal - Identificação --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="bg-gradient-to-r from-indigo-600 to-purple-600 h-24"></div>
         <div class="px-6 pb-6">
             <div class="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12">
@@ -106,7 +106,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {{-- Dados Pessoais --}}
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900">Dados Pessoais</h3>
             </div>
@@ -130,7 +130,7 @@
         </div>
 
         {{-- Dados de Contrato --}}
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900">Dados de Contrato</h3>
             </div>
@@ -152,7 +152,7 @@
         </div>
 
         {{-- Endereço --}}
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900">Endereço</h3>
             </div>
@@ -171,7 +171,7 @@
         </div>
 
         {{-- Resumo de RH --}}
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-base font-semibold text-gray-900">Resumo RH</h3>
             </div>
@@ -193,7 +193,7 @@
     </div>
 
     {{-- Histórico de Ocorrências --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h3 class="text-base font-semibold text-gray-900">Ocorrências</h3>
             <a href="{{ route('ocorrencias.create', ['colaborador_id' => $colaborador->id]) }}"
@@ -231,7 +231,7 @@
     </div>
 
     {{-- Horas Extras --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h3 class="text-base font-semibold text-gray-900">Horas Extras</h3>
             <a href="{{ route('horas-extras.create', ['colaborador_id' => $colaborador->id]) }}"
@@ -273,7 +273,7 @@
     </div>
 
     {{-- Histórico de Promoções --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h3 class="text-base font-semibold text-gray-900">Histórico de Promoções</h3>
             <a href="{{ route('promocoes.create', ['colaborador_id' => $colaborador->id]) }}"

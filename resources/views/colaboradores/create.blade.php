@@ -35,7 +35,7 @@
         @csrf
 
         <!-- Abas -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-4">
             <div class="flex overflow-x-auto border-b border-gray-200">
                 @foreach([
                     ['key' => 'pessoal',   'label' => 'Dados Pessoais'],

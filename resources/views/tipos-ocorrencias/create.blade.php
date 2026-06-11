@@ -16,7 +16,7 @@
 
     <form method="POST" action="{{ route('tipos-ocorrencias.store') }}">
         @csrf
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome <span class="text-red-500">*</span></label>
                 <input type="text" name="nome" value="{{ old('nome') }}" required

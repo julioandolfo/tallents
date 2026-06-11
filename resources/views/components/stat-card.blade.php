@@ -1,5 +1,5 @@
 @props(['label', 'value', 'icon', 'color' => 'indigo', 'trend' => null, 'trendLabel' => null])
-<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
     <div class="flex items-center justify-between">
         <div>
             <p class="text-sm font-medium text-gray-500">{{ $label }}</p>

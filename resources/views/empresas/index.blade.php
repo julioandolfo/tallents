@@ -18,7 +18,7 @@
     </div>
 
     <!-- Filtro -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
         <form method="GET" action="{{ route('empresas.index') }}" class="flex gap-3">
             <div class="flex-1">
                 <input type="text" name="busca" value="{{ request('busca') }}"
@@ -31,7 +31,7 @@
     </div>
 
     <!-- Tabela -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>

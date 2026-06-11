@@ -18,7 +18,7 @@
         @csrf
         @method('PUT')
 
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
             <div>
                 <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Dados da Empresa</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

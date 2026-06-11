@@ -17,7 +17,7 @@
     <form method="POST" action="{{ route('usuarios.update', $usuario) }}">
         @csrf
         @method('PUT')
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
                 <input type="text" name="name" value="{{ old('name', $usuario->name) }}" required

@@ -19,7 +19,7 @@
     </div>
 
     {{-- Filtros --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
         <form method="GET" action="{{ route('colaboradores.index') }}" class="flex flex-wrap gap-3 items-end">
             <div class="flex-1 min-w-[200px]">
                 <label class="block text-xs font-medium text-gray-600 mb-1">Buscar</label>
@@ -71,7 +71,7 @@
     </div>
 
     {{-- Tabela --}}
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">

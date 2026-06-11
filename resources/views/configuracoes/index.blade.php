@@ -39,7 +39,7 @@
                     @method('PUT')
                     <input type="hidden" name="secao" value="email">
 
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
                         <h3 class="text-base font-semibold text-gray-900 mb-4">Configurações de E-mail (SMTP)</h3>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -114,7 +114,7 @@
                     @method('PUT')
                     <input type="hidden" name="secao" value="empresa">
 
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
                         <h3 class="text-base font-semibold text-gray-900 mb-4">Dados da Empresa</h3>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -146,7 +146,7 @@
 
             <!-- Aba Sistema -->
             <div x-show="activeTab === 'sistema'" x-cloak>
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="text-base font-semibold text-gray-900 mb-4">Informações do Sistema</h3>
                     <dl class="space-y-3">
                         <div class="flex justify-between py-2 border-b border-gray-50">
