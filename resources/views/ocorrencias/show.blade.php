@@ -13,6 +13,10 @@
             </svg>
         </a>
         <div class="flex-1"></div>
+        <a href="{{ route('advertencias.create', ['ocorrencia_id' => $ocorrencia->id]) }}"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">
+            Gerar advertência
+        </a>
         <a href="{{ route('ocorrencias.edit', $ocorrencia) }}"
            class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition">
             Editar

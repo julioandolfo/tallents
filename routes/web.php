@@ -17,6 +17,7 @@ use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Portal\PortalController;
+use App\Http\Controllers\AdvertenciaController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -48,6 +49,7 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::delete('ocorrencias/comentarios/{comentario}', [OcorrenciaController::class, 'removerComentario'])->name('ocorrencias.comentarios.destroy');
     Route::post('ocorrencias/{ocorrencia}/anexos', [OcorrenciaController::class, 'adicionarAnexo'])->name('ocorrencias.anexos.store');
     Route::delete('ocorrencias/anexos/{anexo}', [OcorrenciaController::class, 'removerAnexo'])->name('ocorrencias.anexos.destroy');
+    Route::resource('advertencias', AdvertenciaController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::resource('horas-extras', HoraExtraController::class)->parameters(['horas-extras' => 'horasExtra']);
     Route::resource('promocoes', PromocaoController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->parameters(['promocoes' => 'promocao']);
     Route::resource('fechamentos', FechamentoPagamentoController::class);

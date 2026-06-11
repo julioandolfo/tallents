@@ -119,6 +119,11 @@ class Colaborador extends Model
         return $this->hasMany(Ocorrencia::class);
     }
 
+    public function advertencias(): HasMany
+    {
+        return $this->hasMany(Advertencia::class)->latest('data');
+    }
+
     public function horasExtras(): HasMany
     {
         return $this->hasMany(HoraExtra::class);
