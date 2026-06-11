@@ -77,8 +77,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    networks:
-      - tallents
     labels:
       - "coolify.managed=true"
 
@@ -99,8 +97,6 @@ services:
       timeout: 5s
       retries: 10
       start_period: 40s
-    networks:
-      - tallents
 
   # ─── Redis 7 ─────────────────────────────────────────────────────────────────
   redis:
@@ -121,14 +117,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    networks:
-      - tallents
 
 volumes:
   mysql_data:
   redis_data:
   storage_uploads:
-
-networks:
-  tallents:
-    driver: bridge
