@@ -18,6 +18,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Portal\PortalController;
 use App\Http\Controllers\AdvertenciaController;
+use App\Http\Controllers\BancoHorasController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -50,6 +51,10 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::post('ocorrencias/{ocorrencia}/anexos', [OcorrenciaController::class, 'adicionarAnexo'])->name('ocorrencias.anexos.store');
     Route::delete('ocorrencias/anexos/{anexo}', [OcorrenciaController::class, 'removerAnexo'])->name('ocorrencias.anexos.destroy');
     Route::resource('advertencias', AdvertenciaController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+    Route::get('banco-horas', [BancoHorasController::class, 'index'])->name('banco-horas.index');
+    Route::get('banco-horas/{colaborador}', [BancoHorasController::class, 'extrato'])->name('banco-horas.extrato');
+    Route::post('banco-horas/{colaborador}', [BancoHorasController::class, 'lancar'])->name('banco-horas.lancar');
+    Route::delete('banco-horas/movimentacoes/{movimentacao}', [BancoHorasController::class, 'remover'])->name('banco-horas.movimentacoes.destroy');
     Route::resource('horas-extras', HoraExtraController::class)->parameters(['horas-extras' => 'horasExtra']);
     Route::resource('promocoes', PromocaoController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->parameters(['promocoes' => 'promocao']);
     Route::resource('fechamentos', FechamentoPagamentoController::class);

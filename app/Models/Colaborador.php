@@ -124,6 +124,20 @@ class Colaborador extends Model
         return $this->hasMany(Advertencia::class)->latest('data');
     }
 
+    public function movimentacoesBanco(): HasMany
+    {
+        return $this->hasMany(BancoHorasMovimentacao::class)->latest('data');
+    }
+
+    /** Saldo do banco de horas (créditos - débitos), em horas. */
+    public function saldoBancoHoras(): float
+    {
+        $cred = (float) $this->movimentacoesBanco()->where('tipo', 'CREDITO')->sum('horas');
+        $deb  = (float) $this->movimentacoesBanco()->where('tipo', 'DEBITO')->sum('horas');
+
+        return round($cred - $deb, 2);
+    }
+
     public function horasExtras(): HasMany
     {
         return $this->hasMany(HoraExtra::class);
