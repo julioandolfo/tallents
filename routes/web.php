@@ -26,6 +26,8 @@ use App\Http\Controllers\FormacaoController;
 use App\Http\Controllers\ComunicadoController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\VagaController;
+use App\Http\Controllers\CandidatoController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -82,6 +84,13 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::resource('comunicados', ComunicadoController::class);
     Route::resource('eventos', EventoController::class)->except(['show']);
     Route::resource('documentos', DocumentoController::class)->except(['show']);
+
+    // Recrutamento (ATS): vagas e candidatos (funil/kanban)
+    Route::resource('vagas', VagaController::class);
+    Route::post('vagas/{vaga}/candidatos', [CandidatoController::class, 'store'])->name('candidatos.store');
+    Route::patch('candidatos/{candidato}/mover', [CandidatoController::class, 'mover'])->name('candidatos.mover');
+    Route::patch('candidatos/{candidato}', [CandidatoController::class, 'update'])->name('candidatos.update');
+    Route::delete('candidatos/{candidato}', [CandidatoController::class, 'destroy'])->name('candidatos.destroy');
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);
