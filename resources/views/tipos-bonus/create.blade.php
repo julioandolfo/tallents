@@ -29,11 +29,28 @@
                     <option value="percentual" {{ old('tipo_calculo') == 'percentual' ? 'selected' : '' }}>Percentual (%)</option>
                 </select>
             </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Valor Fixo (R$)</label>
+                    <input type="number" step="0.01" min="0" name="fixo" value="{{ old('fixo') }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Percentual (%)</label>
+                    <input type="number" step="0.01" min="0" max="100" name="percentual" value="{{ old('percentual') }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
                 <textarea name="descricao" rows="3"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('descricao') }}</textarea>
             </div>
+            <label class="flex items-center gap-2 text-sm text-gray-700">
+                <input type="hidden" name="ativo" value="0">
+                <input type="checkbox" name="ativo" value="1" {{ old('ativo', true) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                Tipo de bônus ativo
+            </label>
         </div>
         <div class="flex items-center justify-end gap-3 mt-4">
             <a href="{{ route('tipos-bonus.index') }}" class="px-5 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">Cancelar</a>
