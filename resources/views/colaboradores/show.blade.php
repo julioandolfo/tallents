@@ -314,5 +314,117 @@
         </div>
     </div>
 
+    {{-- Dependentes --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200" x-data="{ open: false }">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Dependentes</h3>
+            <button @click="open = !open" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Adicionar</button>
+        </div>
+
+        <div x-show="open" x-cloak class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <form method="POST" action="{{ route('dependentes.store', $colaborador) }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                @csrf
+                <input type="text" name="nome" required placeholder="Nome *" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <select name="parentesco" required class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    @foreach(\App\Models\Dependente::PARENTESCOS as $k => $v)<option value="{{ $k }}">{{ $v }}</option>@endforeach
+                </select>
+                <input type="date" name="data_nascimento" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" name="cpf" placeholder="CPF" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <label class="flex items-center gap-2 text-sm text-gray-600"><input type="checkbox" name="dependente_ir" value="1" class="rounded border-gray-300 text-indigo-600"> Dependente p/ IR</label>
+                <div class="sm:col-span-2 lg:col-span-3 flex justify-end"><button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg">Salvar</button></div>
+            </form>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nome</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Parentesco</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nascimento</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">IR</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->dependentes as $dep)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ $dep->nome }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ $dep->parentescoLabel() }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($dep->data_nascimento)->format('d/m/Y') ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm">{!! $dep->dependente_ir ? '<span class="text-emerald-600">Sim</span>' : '<span class="text-gray-400">Não</span>' !!}</td>
+                            <td class="px-6 py-3 text-right">
+                                <form method="POST" action="{{ route('dependentes.destroy', $dep) }}" x-data @submit.prevent="if(confirm('Remover dependente?')) $el.submit()">
+                                    @csrf @method('DELETE')
+                                    <button class="p-1.5 text-gray-400 hover:text-red-600 rounded"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="px-6 py-6 text-center text-sm text-gray-400">Nenhum dependente cadastrado</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Formação acadêmica --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200" x-data="{ open: false }">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Formação acadêmica</h3>
+            <button @click="open = !open" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Adicionar</button>
+        </div>
+
+        <div x-show="open" x-cloak class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <form method="POST" action="{{ route('formacoes.store', $colaborador) }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                @csrf
+                <select name="nivel" required class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    @foreach(\App\Models\Formacao::NIVEIS as $k => $v)<option value="{{ $k }}">{{ $v }}</option>@endforeach
+                </select>
+                <input type="text" name="curso" required placeholder="Curso *" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" name="instituicao" placeholder="Instituição" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <select name="situacao" required class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    @foreach(\App\Models\Formacao::SITUACOES as $k => $v)<option value="{{ $k }}" {{ $k === 'CONCLUIDO' ? 'selected' : '' }}>{{ $v }}</option>@endforeach
+                </select>
+                <input type="number" name="ano_conclusao" min="1950" max="2100" placeholder="Ano conclusão" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <div class="sm:col-span-2 lg:col-span-3 flex justify-end"><button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg">Salvar</button></div>
+            </form>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nível</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Curso</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Instituição</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Situação</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ano</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->formacoes as $form)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ $form->nivelLabel() }}</td>
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ $form->curso }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ $form->instituicao ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ $form->situacaoLabel() }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ $form->ano_conclusao ?? '—' }}</td>
+                            <td class="px-6 py-3 text-right">
+                                <form method="POST" action="{{ route('formacoes.destroy', $form) }}" x-data @submit.prevent="if(confirm('Remover formação?')) $el.submit()">
+                                    @csrf @method('DELETE')
+                                    <button class="p-1.5 text-gray-400 hover:text-red-600 rounded"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6" class="px-6 py-6 text-center text-sm text-gray-400">Nenhuma formação cadastrada</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 @endsection

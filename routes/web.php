@@ -21,6 +21,8 @@ use App\Http\Controllers\AdvertenciaController;
 use App\Http\Controllers\BancoHorasController;
 use App\Http\Controllers\DemissaoController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\DependenteController;
+use App\Http\Controllers\FormacaoController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -44,6 +46,11 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     // (singularização) coincida com a variável tipada no controller, para o
     // route-model binding implícito funcionar em show/edit/update/destroy.
     Route::resource('colaboradores', ColaboradorController::class)->parameters(['colaboradores' => 'colaborador']);
+    // Dependentes e formações (geridos na ficha do colaborador)
+    Route::post('colaboradores/{colaborador}/dependentes', [DependenteController::class, 'store'])->name('dependentes.store');
+    Route::delete('dependentes/{dependente}', [DependenteController::class, 'destroy'])->name('dependentes.destroy');
+    Route::post('colaboradores/{colaborador}/formacoes', [FormacaoController::class, 'store'])->name('formacoes.store');
+    Route::delete('formacoes/{formacao}', [FormacaoController::class, 'destroy'])->name('formacoes.destroy');
     Route::resource('empresas', EmpresaController::class);
     Route::resource('setores', SetorController::class)->parameters(['setores' => 'setor']);
     Route::resource('cargos', CargoController::class);

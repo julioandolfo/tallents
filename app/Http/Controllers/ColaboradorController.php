@@ -72,6 +72,8 @@ class ColaboradorController extends Controller
             'horasExtras',
             'promocoes',
             'bonus.tipoBonus',
+            'dependentes',
+            'formacoes',
         ])->loadCount(['ocorrencias', 'horasExtras', 'promocoes']);
 
         return view('colaboradores.show', compact('colaborador'));

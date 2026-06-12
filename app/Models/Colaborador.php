@@ -162,4 +162,14 @@ class Colaborador extends Model
     {
         return $this->hasMany(Onboarding::class)->latest('data_inicio');
     }
+
+    public function dependentes(): HasMany
+    {
+        return $this->hasMany(Dependente::class);
+    }
+
+    public function formacoes(): HasMany
+    {
+        return $this->hasMany(Formacao::class)->orderByDesc('ano_conclusao');
+    }
 }
