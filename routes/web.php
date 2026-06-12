@@ -31,6 +31,10 @@ use App\Http\Controllers\CandidatoController;
 use App\Http\Controllers\AvaliacaoController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PdiController;
+use App\Http\Controllers\RecompensaController;
+use App\Http\Controllers\PontoController;
+use App\Http\Controllers\ResgateController;
+use App\Http\Controllers\Portal\LojaController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -45,6 +49,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->prefix('portal')->name('portal.')->group(function () {
     Route::get('/', [PortalController::class, 'index'])->name('index');
     Route::get('/mural', [PortalController::class, 'mural'])->name('mural');
+    Route::get('/loja', [LojaController::class, 'index'])->name('loja');
+    Route::post('/loja/{recompensa}/resgatar', [LojaController::class, 'resgatar'])->name('loja.resgatar');
 });
 
 // ─── Área administrativa (RH / Admin / Gestor) ───────────────────────────────
@@ -102,6 +108,15 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::post('pdis/{pdi}/acoes', [PdiController::class, 'adicionarAcao'])->name('pdis.acoes.store');
     Route::patch('pdis/acoes/{acao}', [PdiController::class, 'alternarAcao'])->name('pdis.acoes.toggle');
     Route::delete('pdis/acoes/{acao}', [PdiController::class, 'removerAcao'])->name('pdis.acoes.destroy');
+
+    // Gamificação: recompensas, pontos e resgates
+    Route::resource('recompensas', RecompensaController::class)->except(['show']);
+    Route::get('pontos', [PontoController::class, 'index'])->name('pontos.index');
+    Route::get('pontos/{colaborador}', [PontoController::class, 'extrato'])->name('pontos.extrato');
+    Route::post('pontos/{colaborador}', [PontoController::class, 'lancar'])->name('pontos.lancar');
+    Route::delete('pontos/movimentacoes/{movimentacao}', [PontoController::class, 'remover'])->name('pontos.movimentacoes.destroy');
+    Route::get('resgates', [ResgateController::class, 'index'])->name('resgates.index');
+    Route::patch('resgates/{resgate}', [ResgateController::class, 'update'])->name('resgates.update');
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);

@@ -187,4 +187,20 @@ class Colaborador extends Model
     {
         return $this->hasMany(Pdi::class)->latest('id');
     }
+
+    public function pontosMovimentacoes(): HasMany
+    {
+        return $this->hasMany(PontoMovimentacao::class)->latest('id');
+    }
+
+    public function resgates(): HasMany
+    {
+        return $this->hasMany(Resgate::class)->latest('id');
+    }
+
+    /** Saldo de pontos de gamificação do colaborador. */
+    public function saldoPontos(): int
+    {
+        return (int) $this->pontosMovimentacoes()->sum('pontos');
+    }
 }
