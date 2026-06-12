@@ -53,23 +53,47 @@
         </div>
     @endif
 
-    {{-- Em breve (próximos módulos do portal) --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 class="text-base font-semibold text-gray-900 mb-4">Em breve no seu portal</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            @foreach([
-                ['Mural', 'M7 8h10M7 12h6m-6 4h10M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z'],
-                ['Comunicados', 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z'],
-                ['Loja de Pontos', 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'],
-                ['Meu PDI', 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2'],
-            ] as [$label, $icon])
-                <div class="flex flex-col items-center gap-2 p-4 rounded-xl border border-dashed border-gray-200 text-gray-400">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="{{ $icon }}"/>
-                    </svg>
-                    <span class="text-xs text-center">{{ $label }}</span>
-                </div>
-            @endforeach
+    {{-- Mural + agenda --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h3 class="text-base font-semibold text-gray-900">Comunicados</h3>
+                <a href="{{ route('portal.mural') }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Ver mural →</a>
+            </div>
+            <div class="divide-y divide-gray-100">
+                @forelse($comunicados as $com)
+                    <div class="px-6 py-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <x-ui.badge :color="$com->cor()">{{ $com->categoriaLabel() }}</x-ui.badge>
+                            <span class="text-xs text-gray-400">{{ optional($com->publicado_em ?? $com->created_at)->format('d/m/Y') }}</span>
+                        </div>
+                        <p class="text-sm font-medium text-gray-900">{{ $com->titulo }}</p>
+                        <p class="text-sm text-gray-600 line-clamp-2">{{ \Illuminate\Support\Str::limit(strip_tags($com->conteudo), 140) }}</p>
+                    </div>
+                @empty
+                    <div class="px-6 py-8 text-center text-sm text-gray-400">Nenhum comunicado por enquanto</div>
+                @endforelse
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-100"><h3 class="text-base font-semibold text-gray-900">Próximos eventos</h3></div>
+            <div class="divide-y divide-gray-100">
+                @forelse($eventos as $ev)
+                    <div class="px-6 py-3 flex items-start gap-3">
+                        <div class="flex-shrink-0 w-11 text-center">
+                            <div class="text-lg font-bold text-gray-900 leading-none">{{ $ev->inicio->format('d') }}</div>
+                            <div class="text-[11px] uppercase text-gray-500">{{ $ev->inicio->translatedFormat('M') }}</div>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-gray-900">{{ $ev->titulo }}</p>
+                            <p class="text-xs text-gray-500">{{ $ev->inicio->format('H:i') }}{{ $ev->local ? ' · ' . $ev->local : '' }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="px-6 py-8 text-center text-sm text-gray-400">Nenhum evento agendado</div>
+                @endforelse
+            </div>
         </div>
     </div>
 </div>

@@ -23,6 +23,9 @@ use App\Http\Controllers\DemissaoController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\DependenteController;
 use App\Http\Controllers\FormacaoController;
+use App\Http\Controllers\ComunicadoController;
+use App\Http\Controllers\EventoController;
+use App\Http\Controllers\DocumentoController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -36,6 +39,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // ─── Portal do Colaborador (autoatendimento) ─────────────────────────────────
 Route::middleware(['auth'])->prefix('portal')->name('portal.')->group(function () {
     Route::get('/', [PortalController::class, 'index'])->name('index');
+    Route::get('/mural', [PortalController::class, 'mural'])->name('mural');
 });
 
 // ─── Área administrativa (RH / Admin / Gestor) ───────────────────────────────
@@ -73,6 +77,11 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::post('onboarding/{onboarding}/tarefas', [OnboardingController::class, 'adicionarTarefa'])->name('onboarding.tarefas.store');
     Route::patch('onboarding/tarefas/{tarefa}', [OnboardingController::class, 'alternarTarefa'])->name('onboarding.tarefas.toggle');
     Route::delete('onboarding/tarefas/{tarefa}', [OnboardingController::class, 'removerTarefa'])->name('onboarding.tarefas.destroy');
+
+    // Comunicação: comunicados (mural), eventos e documentos/manual
+    Route::resource('comunicados', ComunicadoController::class);
+    Route::resource('eventos', EventoController::class)->except(['show']);
+    Route::resource('documentos', DocumentoController::class)->except(['show']);
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);

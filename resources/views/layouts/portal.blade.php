@@ -18,10 +18,16 @@
         <header class="app-topbar sticky top-0 z-20">
             <div class="max-w-5xl mx-auto px-4 sm:px-6">
                 <div class="flex items-center justify-between h-16">
-                    <a href="{{ route('portal.index') }}" class="flex items-center gap-2.5">
-                        <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8" alt="Tallents Gestão">
-                        <span class="text-gray-900 dark:text-white font-bold text-lg hidden sm:block">Tallents <span class="text-indigo-600 dark:text-indigo-400">Gestão</span></span>
-                    </a>
+                    <div class="flex items-center gap-6">
+                        <a href="{{ route('portal.index') }}" class="flex items-center gap-2.5">
+                            <img src="{{ asset('logo-icon.svg') }}" class="h-8 w-8" alt="Tallents Gestão">
+                            <span class="text-gray-900 dark:text-white font-bold text-lg hidden sm:block">Tallents <span class="text-indigo-600 dark:text-indigo-400">Gestão</span></span>
+                        </a>
+                        <nav class="flex items-center gap-1">
+                            <a href="{{ route('portal.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request()->routeIs('portal.index') ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' }}">Painel</a>
+                            <a href="{{ route('portal.mural') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request()->routeIs('portal.mural') ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' }}">Mural</a>
+                        </nav>
+                    </div>
 
                     <div class="flex items-center gap-3" x-data="{ userMenuOpen: false }">
                         @include('layouts.partials.theme-switcher')

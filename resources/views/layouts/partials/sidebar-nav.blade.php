@@ -125,6 +125,37 @@
     </div>
 </div>
 
+{{-- Comunicação --}}
+<div class="pt-4">
+    <p class="px-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Comunicação</p>
+    <div class="mt-2 space-y-1">
+        <a href="{{ route('comunicados.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('comunicados.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+            </svg>
+            Comunicados
+        </a>
+        <a href="{{ route('eventos.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('eventos.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            Eventos
+        </a>
+        <a href="{{ route('documentos.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('documentos.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Documentos
+        </a>
+    </div>
+</div>
+
 {{-- Administração --}}
 @if(auth()->check() && method_exists(auth()->user(), 'isAdmin') && (auth()->user()->isAdmin() || auth()->user()->isRH()))
 <div class="pt-4">
