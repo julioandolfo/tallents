@@ -96,5 +96,22 @@
             </div>
         </div>
     </div>
+
+    @if($colaborador && $feedbacks->isNotEmpty())
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-100"><h3 class="text-base font-semibold text-gray-900">Meus feedbacks</h3></div>
+            <div class="divide-y divide-gray-100">
+                @foreach($feedbacks as $fb)
+                    <div class="px-6 py-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <x-ui.badge :color="$fb->cor()">{{ $fb->tipoLabel() }}</x-ui.badge>
+                            <span class="text-xs text-gray-400">{{ optional($fb->data)->format('d/m/Y') }}</span>
+                        </div>
+                        <p class="text-sm text-gray-700 whitespace-pre-line">{{ $fb->mensagem }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>
 @endsection

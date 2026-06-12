@@ -28,6 +28,9 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\VagaController;
 use App\Http\Controllers\CandidatoController;
+use App\Http\Controllers\AvaliacaoController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\PdiController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -91,6 +94,14 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::patch('candidatos/{candidato}/mover', [CandidatoController::class, 'mover'])->name('candidatos.mover');
     Route::patch('candidatos/{candidato}', [CandidatoController::class, 'update'])->name('candidatos.update');
     Route::delete('candidatos/{candidato}', [CandidatoController::class, 'destroy'])->name('candidatos.destroy');
+
+    // Desempenho: avaliações, feedbacks e PDI
+    Route::resource('avaliacoes', AvaliacaoController::class)->parameters(['avaliacoes' => 'avaliacao']);
+    Route::resource('feedbacks', FeedbackController::class)->only(['index', 'create', 'store', 'destroy']);
+    Route::resource('pdis', PdiController::class)->only(['index', 'create', 'store', 'show', 'update', 'destroy']);
+    Route::post('pdis/{pdi}/acoes', [PdiController::class, 'adicionarAcao'])->name('pdis.acoes.store');
+    Route::patch('pdis/acoes/{acao}', [PdiController::class, 'alternarAcao'])->name('pdis.acoes.toggle');
+    Route::delete('pdis/acoes/{acao}', [PdiController::class, 'removerAcao'])->name('pdis.acoes.destroy');
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);

@@ -32,7 +32,16 @@ class PortalController extends Controller
         $comunicados = $this->comunicadosVisiveis($colaborador)->take(4)->get();
         $eventos = $this->eventosVisiveis($colaborador)->proximos()->take(4)->get();
 
-        return view('portal.index', compact('usuario', 'colaborador', 'ocorrencias', 'horasExtrasMes', 'comunicados', 'eventos'));
+        $feedbacks = collect();
+        if ($colaborador) {
+            $feedbacks = $colaborador->feedbacks()
+                ->where('visivel_colaborador', true)
+                ->latest('data')
+                ->take(3)
+                ->get();
+        }
+
+        return view('portal.index', compact('usuario', 'colaborador', 'ocorrencias', 'horasExtrasMes', 'comunicados', 'eventos', 'feedbacks'));
     }
 
     /** Mural completo: comunicados e próximos eventos. */

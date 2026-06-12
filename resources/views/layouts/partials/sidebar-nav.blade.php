@@ -125,6 +125,37 @@
     </div>
 </div>
 
+{{-- Desempenho --}}
+<div class="pt-4">
+    <p class="px-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Desempenho</p>
+    <div class="mt-2 space-y-1">
+        <a href="{{ route('avaliacoes.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('avaliacoes.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+            </svg>
+            Avaliações
+        </a>
+        <a href="{{ route('feedbacks.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('feedbacks.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            Feedbacks
+        </a>
+        <a href="{{ route('pdis.index') }}"
+           class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('pdis.*') ? 'active' : '' }}">
+            <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+            </svg>
+            PDI
+        </a>
+    </div>
+</div>
+
 {{-- Recrutamento --}}
 <div class="pt-4">
     <p class="px-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Recrutamento</p>

@@ -172,4 +172,19 @@ class Colaborador extends Model
     {
         return $this->hasMany(Formacao::class)->orderByDesc('ano_conclusao');
     }
+
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(Feedback::class)->latest('data');
+    }
+
+    public function avaliacoes(): HasMany
+    {
+        return $this->hasMany(Avaliacao::class)->latest('id');
+    }
+
+    public function pdis(): HasMany
+    {
+        return $this->hasMany(Pdi::class)->latest('id');
+    }
 }
