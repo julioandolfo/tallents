@@ -35,6 +35,7 @@ use App\Http\Controllers\RecompensaController;
 use App\Http\Controllers\PontoController;
 use App\Http\Controllers\ResgateController;
 use App\Http\Controllers\Portal\LojaController;
+use App\Http\Controllers\IntegracaoController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -123,6 +124,9 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::resource('tipos-ocorrencias', TipoOcorrenciaController::class)->parameters(['tipos-ocorrencias' => 'tiposOcorrencia']);
     Route::resource('niveis-hierarquicos', NivelHierarquicoController::class)->parameters(['niveis-hierarquicos' => 'niveisHierarquico']);
     Route::resource('usuarios', UsuarioController::class);
+
+    Route::get('/integracoes', [IntegracaoController::class, 'index'])->name('integracoes.index');
+    Route::put('/integracoes/{provider}', [IntegracaoController::class, 'update'])->name('integracoes.update');
 
     Route::get('/configuracoes', [ConfiguracaoController::class, 'index'])->name('configuracoes.index');
     Route::put('/configuracoes', [ConfiguracaoController::class, 'update'])->name('configuracoes.update');
