@@ -20,12 +20,22 @@ class Ocorrencia extends Model
         'gravidade',
         'descricao',
         'data_ocorrencia',
+        'hora_ocorrencia',
+        'tempo_atraso_minutos',
+        'tipo_ponto',
         'notificar_colaborador',
     ];
 
     protected $casts = [
         'data_ocorrencia'       => 'date',
+        'tempo_atraso_minutos'  => 'integer',
         'notificar_colaborador' => 'boolean',
+    ];
+
+    public const TIPOS_PONTO = [
+        'ENTRADA'   => 'Entrada',
+        'SAIDA'     => 'Saída',
+        'INTERVALO' => 'Intervalo',
     ];
 
     // Aliases usados pelas views (form usa "data"/"observacao").

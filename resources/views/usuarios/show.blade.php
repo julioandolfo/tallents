@@ -29,7 +29,9 @@
 
         <dl class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div><dt class="text-gray-500">Perfil</dt><dd class="text-gray-900">{{ ucfirst($usuario->perfil) }}</dd></div>
+            <div><dt class="text-gray-500">CPF</dt><dd class="text-gray-900">{{ $usuario->cpf ?: '—' }}</dd></div>
             <div><dt class="text-gray-500">Situação</dt><dd class="text-gray-900">{{ $usuario->ativo ? 'Ativo' : 'Inativo' }}</dd></div>
+            <div><dt class="text-gray-500">Colaborador vinculado</dt><dd class="text-gray-900">{{ optional($usuario->colaborador)->nome ?: '—' }}</dd></div>
             <div><dt class="text-gray-500">Último acesso</dt><dd class="text-gray-900">{{ $usuario->last_login_at ? $usuario->last_login_at->diffForHumans() : 'Nunca' }}</dd></div>
             <div><dt class="text-gray-500">Empresas</dt><dd class="text-gray-900">{{ $usuario->empresas->pluck('nome')->join(', ') ?: '—' }}</dd></div>
         </dl>

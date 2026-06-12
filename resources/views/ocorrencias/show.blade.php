@@ -31,8 +31,14 @@
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div><dt class="text-gray-500">Colaborador</dt><dd class="text-gray-900">{{ optional($ocorrencia->colaborador)->nome ?: '—' }}</dd></div>
             <div><dt class="text-gray-500">Tipo</dt><dd class="text-gray-900">{{ optional($ocorrencia->tipoOcorrencia)->nome ?: '—' }}</dd></div>
-            <div><dt class="text-gray-500">Data</dt><dd class="text-gray-900">{{ optional($ocorrencia->data_ocorrencia)->format('d/m/Y') }}</dd></div>
+            <div><dt class="text-gray-500">Data</dt><dd class="text-gray-900">{{ optional($ocorrencia->data_ocorrencia)->format('d/m/Y') }}{{ $ocorrencia->hora_ocorrencia ? ' às ' . \Illuminate\Support\Str::substr($ocorrencia->hora_ocorrencia, 0, 5) : '' }}</dd></div>
             <div><dt class="text-gray-500">Gravidade</dt><dd class="text-gray-900">{{ $ocorrencia->gravidade ? ucfirst($ocorrencia->gravidade) : '—' }}</dd></div>
+            @if(!is_null($ocorrencia->tempo_atraso_minutos))
+                <div><dt class="text-gray-500">Tempo de atraso</dt><dd class="text-gray-900">{{ $ocorrencia->tempo_atraso_minutos }} min</dd></div>
+            @endif
+            @if($ocorrencia->tipo_ponto)
+                <div><dt class="text-gray-500">Tipo de ponto</dt><dd class="text-gray-900">{{ \App\Models\Ocorrencia::TIPOS_PONTO[$ocorrencia->tipo_ponto] ?? $ocorrencia->tipo_ponto }}</dd></div>
+            @endif
             <div class="sm:col-span-2"><dt class="text-gray-500">Descrição</dt><dd class="text-gray-900 whitespace-pre-line">{{ $ocorrencia->descricao ?: '—' }}</dd></div>
             <div><dt class="text-gray-500">Registrado por</dt><dd class="text-gray-900">{{ optional($ocorrencia->registradoPor)->name ?: '—' }}</dd></div>
         </dl>

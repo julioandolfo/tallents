@@ -22,20 +22,44 @@
                 <input type="text" name="nome" value="{{ old('nome') }}" required
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Gravidade Padrão</label>
-                <select name="gravidade" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="">Selecione</option>
-                    <option value="leve" {{ old('gravidade') == 'leve' ? 'selected' : '' }}>Leve</option>
-                    <option value="media" {{ old('gravidade') == 'media' ? 'selected' : '' }}>Média</option>
-                    <option value="grave" {{ old('gravidade') == 'grave' ? 'selected' : '' }}>Grave</option>
-                    <option value="gravissima" {{ old('gravidade') == 'gravissima' ? 'selected' : '' }}>Gravíssima</option>
-                </select>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                    <select name="categoria" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Selecione</option>
+                        @foreach(\App\Models\TipoOcorrencia::CATEGORIAS as $k => $v)
+                            <option value="{{ $k }}" {{ old('categoria') == $k ? 'selected' : '' }}>{{ $v }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Gravidade Padrão</label>
+                    <select name="gravidade" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Selecione</option>
+                        <option value="leve" {{ old('gravidade') == 'leve' ? 'selected' : '' }}>Leve</option>
+                        <option value="media" {{ old('gravidade') == 'media' ? 'selected' : '' }}>Média</option>
+                        <option value="grave" {{ old('gravidade') == 'grave' ? 'selected' : '' }}>Grave</option>
+                        <option value="gravissima" {{ old('gravidade') == 'gravissima' ? 'selected' : '' }}>Gravíssima</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
                 <textarea name="descricao" rows="3"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('descricao') }}</textarea>
+            </div>
+            <div class="border border-gray-100 rounded-lg p-3 bg-gray-50 space-y-2">
+                <p class="text-xs font-semibold text-gray-500 uppercase">Campos de ponto/atraso ao registrar</p>
+                <label class="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="hidden" name="permite_tempo_atraso" value="0">
+                    <input type="checkbox" name="permite_tempo_atraso" value="1" {{ old('permite_tempo_atraso') ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                    Solicitar <strong>tempo de atraso</strong> (minutos)
+                </label>
+                <label class="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="hidden" name="permite_tipo_ponto" value="0">
+                    <input type="checkbox" name="permite_tipo_ponto" value="1" {{ old('permite_tipo_ponto') ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                    Solicitar <strong>tipo de ponto</strong> (entrada/saída/intervalo)
+                </label>
             </div>
             <div class="flex items-center gap-3">
                 <input type="checkbox" name="ativo" id="ativo" value="1" {{ old('ativo', '1') ? 'checked' : '' }}

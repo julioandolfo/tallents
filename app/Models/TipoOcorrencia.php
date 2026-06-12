@@ -18,13 +18,30 @@ class TipoOcorrencia extends Model
         'nome',
         'descricao',
         'tipo',
+        'categoria',
+        'permite_tempo_atraso',
+        'permite_tipo_ponto',
         'gravidade',
         'ativo',
     ];
 
     protected $casts = [
-        'ativo' => 'boolean',
+        'ativo'                => 'boolean',
+        'permite_tempo_atraso' => 'boolean',
+        'permite_tipo_ponto'   => 'boolean',
     ];
+
+    public const CATEGORIAS = [
+        'ATRASO' => 'Atraso',
+        'FALTA'  => 'Falta',
+        'PONTO'  => 'Ponto',
+        'OUTROS' => 'Outros',
+    ];
+
+    public function categoriaLabel(): string
+    {
+        return self::CATEGORIAS[$this->categoria] ?? ($this->categoria ?: '—');
+    }
 
     public function empresa(): BelongsTo
     {

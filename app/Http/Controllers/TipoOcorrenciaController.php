@@ -38,12 +38,17 @@ class TipoOcorrenciaController extends Controller
             'empresa_id'  => 'nullable|exists:empresas,id',
             'nome'        => 'required|string|max:255',
             'descricao'   => 'nullable|string|max:1000',
+            'categoria'   => 'nullable|in:ATRASO,FALTA,PONTO,OUTROS',
+            'permite_tempo_atraso' => 'boolean',
+            'permite_tipo_ponto'   => 'boolean',
             'gravidade'   => 'nullable|string|max:50',
             'ativo'       => 'boolean',
         ]);
 
         $data['empresa_id'] = $this->resolveEmpresaId($request);
         $data['ativo']      = $request->boolean('ativo', true);
+        $data['permite_tempo_atraso'] = $request->boolean('permite_tempo_atraso');
+        $data['permite_tipo_ponto']   = $request->boolean('permite_tipo_ponto');
 
         TipoOcorrencia::create($data);
 
@@ -70,12 +75,17 @@ class TipoOcorrenciaController extends Controller
             'empresa_id' => 'nullable|exists:empresas,id',
             'nome'       => 'required|string|max:255',
             'descricao'  => 'nullable|string|max:1000',
+            'categoria'  => 'nullable|in:ATRASO,FALTA,PONTO,OUTROS',
+            'permite_tempo_atraso' => 'boolean',
+            'permite_tipo_ponto'   => 'boolean',
             'gravidade'  => 'nullable|string|max:50',
             'ativo'      => 'boolean',
         ]);
 
         $data['empresa_id'] = $this->resolveEmpresaId($request, $tiposOcorrencia->empresa_id);
         $data['ativo']      = $request->boolean('ativo', true);
+        $data['permite_tempo_atraso'] = $request->boolean('permite_tempo_atraso');
+        $data['permite_tipo_ponto']   = $request->boolean('permite_tipo_ponto');
 
         $tiposOcorrencia->update($data);
 
