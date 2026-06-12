@@ -17,6 +17,15 @@
     Quadros (Kanban)
 </a>
 
+<a href="{{ route('chat.index') }}"
+   class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('chat.*') ? 'active' : '' }}">
+    <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+    </svg>
+    Chat
+</a>
+
 {{-- Cadastros --}}
 <div class="pt-4">
     <p class="px-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Cadastros</p>

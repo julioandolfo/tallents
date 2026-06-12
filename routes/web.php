@@ -40,6 +40,7 @@ use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\Portal\ContratoPortalController;
 use App\Http\Controllers\QuadroController;
 use App\Http\Controllers\TarefaController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -59,6 +60,14 @@ Route::middleware(['auth'])->prefix('portal')->name('portal.')->group(function (
     Route::get('/contratos', [ContratoPortalController::class, 'index'])->name('contratos.index');
     Route::get('/contratos/{contrato}', [ContratoPortalController::class, 'show'])->name('contratos.show');
     Route::post('/contratos/{contrato}/assinar', [ContratoPortalController::class, 'assinar'])->name('contratos.assinar');
+});
+
+// ─── Chat interno (todos os usuários autenticados) ───────────────────────────
+Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
+    Route::get('/', [ChatController::class, 'index'])->name('index');
+    Route::get('/conversa/{conversa}', [ChatController::class, 'show'])->name('show');
+    Route::post('/iniciar/{usuario}', [ChatController::class, 'iniciar'])->name('iniciar');
+    Route::post('/conversa/{conversa}/enviar', [ChatController::class, 'enviar'])->name('enviar');
 });
 
 // ─── Área administrativa (RH / Admin / Gestor) ───────────────────────────────
