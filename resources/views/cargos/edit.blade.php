@@ -19,6 +19,15 @@
         @method('PUT')
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
             <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+                <select name="empresa_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Todas / não vinculado</option>
+                    @foreach($empresas ?? [] as $empresa)
+                        <option value="{{ $empresa->id }}" {{ old('empresa_id', $cargo->empresa_id) == $empresa->id ? 'selected' : '' }}>{{ $empresa->nome }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Cargo <span class="text-red-500">*</span></label>
                 <input type="text" name="nome" value="{{ old('nome', $cargo->nome) }}" required
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -32,16 +41,28 @@
                     @endforeach
                 </select>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Salário Base (R$)</label>
-                <input type="number" name="salario_base" value="{{ old('salario_base', $cargo->salario_base) }}" step="0.01" min="0"
-                       class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Salário Base (R$)</label>
+                    <input type="number" name="salario_base" value="{{ old('salario_base', $cargo->salario_base) }}" step="0.01" min="0"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Salário Máximo (R$)</label>
+                    <input type="number" name="salario_maximo" value="{{ old('salario_maximo', $cargo->salario_maximo) }}" step="0.01" min="0"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
                 <textarea name="descricao" rows="3"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('descricao', $cargo->descricao) }}</textarea>
             </div>
+            <label class="flex items-center gap-2 text-sm text-gray-700">
+                <input type="hidden" name="ativo" value="0">
+                <input type="checkbox" name="ativo" value="1" {{ old('ativo', $cargo->ativo) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                Cargo ativo
+            </label>
         </div>
         <div class="flex items-center justify-end gap-3 mt-4">
             <a href="{{ route('cargos.index') }}" class="px-5 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">Cancelar</a>

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Colaborador;
 use App\Models\Empresa;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
@@ -26,21 +27,23 @@ class UsuarioController extends Controller
     public function create()
     {
         $empresas = Empresa::where('ativa', true)->orderBy('nome')->get();
+        $colaboradores = Colaborador::orderBy('nome')->get();
 
-        return view('usuarios.create', compact('empresas'));
+        return view('usuarios.create', compact('empresas', 'colaboradores'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'         => 'required|string|max:255',
-            'email'        => 'required|email|max:255|unique:users,email',
-            'cpf'          => 'nullable|string|max:20|unique:users,cpf',
-            'password'     => 'required|string|min:8|confirmed',
-            'perfil'       => 'required|string',
-            'empresa_ids'  => 'nullable|array',
-            'empresa_ids.*'=> 'exists:empresas,id',
-            'ativo'        => 'boolean',
+            'name'           => 'required|string|max:255',
+            'email'          => 'required|email|max:255|unique:users,email',
+            'cpf'            => 'nullable|string|max:20|unique:users,cpf',
+            'password'       => 'required|string|min:8|confirmed',
+            'perfil'         => 'required|string',
+            'colaborador_id' => 'nullable|exists:colaboradores,id',
+            'empresa_ids'    => 'nullable|array',
+            'empresa_ids.*'  => 'exists:empresas,id',
+            'ativo'          => 'boolean',
         ]);
 
         $data['password'] = Hash::make($data['password']);
@@ -70,22 +73,24 @@ class UsuarioController extends Controller
 
     public function edit(Usuario $usuario)
     {
+        $colaboradores = Colaborador::orderBy('nome')->get();
         $empresas = Empresa::where('ativa', true)->orderBy('nome')->get();
 
-        return view('usuarios.edit', compact('usuario', 'empresas'));
+        return view('usuarios.edit', compact('usuario', 'empresas', 'colaboradores'));
     }
 
     public function update(Request $request, Usuario $usuario)
     {
         $data = $request->validate([
-            'name'         => 'required|string|max:255',
-            'email'        => 'required|email|max:255|unique:users,email,' . $usuario->id,
-            'cpf'          => 'nullable|string|max:20|unique:users,cpf,' . $usuario->id,
-            'password'     => 'nullable|string|min:8|confirmed',
-            'perfil'       => 'required|string',
-            'empresa_ids'  => 'nullable|array',
-            'empresa_ids.*'=> 'exists:empresas,id',
-            'ativo'        => 'boolean',
+            'name'           => 'required|string|max:255',
+            'email'          => 'required|email|max:255|unique:users,email,' . $usuario->id,
+            'cpf'            => 'nullable|string|max:20|unique:users,cpf,' . $usuario->id,
+            'password'       => 'nullable|string|min:8|confirmed',
+            'perfil'         => 'required|string',
+            'colaborador_id' => 'nullable|exists:colaboradores,id',
+            'empresa_ids'    => 'nullable|array',
+            'empresa_ids.*'  => 'exists:empresas,id',
+            'ativo'          => 'boolean',
         ]);
 
         if (!empty($data['password'])) {

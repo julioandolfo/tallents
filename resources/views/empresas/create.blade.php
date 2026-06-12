@@ -80,6 +80,11 @@
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Bairro</label>
+                        <input type="text" name="bairro" value="{{ old('bairro') }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
                         <input type="text" name="cidade" value="{{ old('cidade') }}"
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -93,6 +98,27 @@
                             @endforeach
                         </select>
                     </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-4">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Configurações</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Percentual de Hora Extra (%)</label>
+                        <input type="number" step="0.01" min="0" name="percentual_hora_extra" value="{{ old('percentual_hora_extra', 50) }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <p class="text-xs text-gray-400 mt-1">Adicional aplicado no cálculo de horas extras.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
+                        <input type="file" name="logo" accept="image/*" class="w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:text-sm file:font-medium">
+                    </div>
+                    <label class="flex items-center gap-2 text-sm text-gray-700 sm:col-span-2">
+                        <input type="hidden" name="ativa" value="0">
+                        <input type="checkbox" name="ativa" value="1" {{ old('ativa', true) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                        Empresa ativa
+                    </label>
                 </div>
             </div>
         </div>

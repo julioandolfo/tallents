@@ -18,6 +18,15 @@
         @csrf
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
             <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+                <select name="empresa_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Todas / não vinculado</option>
+                    @foreach($empresas ?? [] as $empresa)
+                        <option value="{{ $empresa->id }}" {{ old('empresa_id') == $empresa->id ? 'selected' : '' }}>{{ $empresa->nome }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Cargo <span class="text-red-500">*</span></label>
                 <input type="text" name="nome" value="{{ old('nome') }}" required
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -46,6 +55,11 @@
                 <textarea name="descricao" rows="3"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('descricao') }}</textarea>
             </div>
+            <label class="flex items-center gap-2 text-sm text-gray-700">
+                <input type="hidden" name="ativo" value="0">
+                <input type="checkbox" name="ativo" value="1" {{ old('ativo', true) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                Cargo ativo
+            </label>
         </div>
         <div class="flex items-center justify-end gap-3 mt-4">
             <a href="{{ route('cargos.index') }}" class="px-5 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">Cancelar</a>

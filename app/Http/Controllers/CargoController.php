@@ -25,9 +25,9 @@ class CargoController extends Controller
     public function create()
     {
         $empresas = Empresa::where('ativa', true)->orderBy('nome')->get();
-        $niveis   = NivelHierarquico::orderBy('nivel')->get();
+        $niveisHierarquicos = NivelHierarquico::orderBy('nivel')->get();
 
-        return view('cargos.create', compact('empresas', 'niveis'));
+        return view('cargos.create', compact('empresas', 'niveisHierarquicos'));
     }
 
     public function store(Request $request)
@@ -60,9 +60,9 @@ class CargoController extends Controller
     public function edit(Cargo $cargo)
     {
         $empresas = Empresa::where('ativa', true)->orderBy('nome')->get();
-        $niveis   = NivelHierarquico::where('empresa_id', $cargo->empresa_id)->orderBy('nivel')->get();
+        $niveisHierarquicos = NivelHierarquico::where('empresa_id', $cargo->empresa_id)->orderBy('nivel')->get();
 
-        return view('cargos.edit', compact('cargo', 'empresas', 'niveis'));
+        return view('cargos.edit', compact('cargo', 'empresas', 'niveisHierarquicos'));
     }
 
     public function update(Request $request, Cargo $cargo)

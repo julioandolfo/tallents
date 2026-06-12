@@ -95,6 +95,7 @@ class EmpresaController extends Controller
             'bairro'       => 'nullable|string|max:100',
             'cidade'       => 'nullable|string|max:100',
             'estado'       => 'nullable|string|max:50',
+            'percentual_hora_extra' => 'nullable|numeric|min:0|max:1000',
             'logo'         => 'nullable|image|max:2048',
             'ativa'        => 'boolean',
         ];
