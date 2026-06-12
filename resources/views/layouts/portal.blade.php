@@ -27,6 +27,7 @@
                             <a href="{{ route('portal.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request()->routeIs('portal.index') ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' }}">Painel</a>
                             <a href="{{ route('portal.mural') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request()->routeIs('portal.mural') ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' }}">Mural</a>
                             <a href="{{ route('portal.loja') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request()->routeIs('portal.loja') ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' }}">Loja</a>
+                            <a href="{{ route('portal.contratos.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request()->routeIs('portal.contratos.*') ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' }}">Contratos</a>
                         </nav>
                     </div>
 

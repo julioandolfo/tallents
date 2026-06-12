@@ -36,6 +36,8 @@ use App\Http\Controllers\PontoController;
 use App\Http\Controllers\ResgateController;
 use App\Http\Controllers\Portal\LojaController;
 use App\Http\Controllers\IntegracaoController;
+use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\Portal\ContratoPortalController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -52,6 +54,9 @@ Route::middleware(['auth'])->prefix('portal')->name('portal.')->group(function (
     Route::get('/mural', [PortalController::class, 'mural'])->name('mural');
     Route::get('/loja', [LojaController::class, 'index'])->name('loja');
     Route::post('/loja/{recompensa}/resgatar', [LojaController::class, 'resgatar'])->name('loja.resgatar');
+    Route::get('/contratos', [ContratoPortalController::class, 'index'])->name('contratos.index');
+    Route::get('/contratos/{contrato}', [ContratoPortalController::class, 'show'])->name('contratos.show');
+    Route::post('/contratos/{contrato}/assinar', [ContratoPortalController::class, 'assinar'])->name('contratos.assinar');
 });
 
 // ─── Área administrativa (RH / Admin / Gestor) ───────────────────────────────
@@ -118,6 +123,10 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::delete('pontos/movimentacoes/{movimentacao}', [PontoController::class, 'remover'])->name('pontos.movimentacoes.destroy');
     Route::get('resgates', [ResgateController::class, 'index'])->name('resgates.index');
     Route::patch('resgates/{resgate}', [ResgateController::class, 'update'])->name('resgates.update');
+
+    // Contratos e assinatura digital (gestão)
+    Route::resource('contratos', ContratoController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+    Route::patch('contratos/{contrato}/status', [ContratoController::class, 'status'])->name('contratos.status');
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);

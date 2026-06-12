@@ -203,4 +203,9 @@ class Colaborador extends Model
     {
         return (int) $this->pontosMovimentacoes()->sum('pontos');
     }
+
+    public function contratos(): HasMany
+    {
+        return $this->hasMany(Contrato::class)->latest('id');
+    }
 }
