@@ -118,8 +118,10 @@
                     ['label' => 'Sexo', 'value' => ['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro'][$colaborador->sexo ?? ''] ?? '—'],
                     ['label' => 'Estado Civil', 'value' => ucfirst($colaborador->estado_civil ?? '—')],
                     ['label' => 'Telefone', 'value' => $colaborador->telefone ?? '—'],
+                    ['label' => 'Celular', 'value' => $colaborador->celular ?? '—'],
                     ['label' => 'E-mail Pessoal', 'value' => $colaborador->email_pessoal ?? '—'],
                     ['label' => 'PIS/PASEP', 'value' => $colaborador->pis ?? '—'],
+                    ['label' => 'CTPS', 'value' => $colaborador->ctps ?? '—'],
                 ] as $item)
                 <div class="flex justify-between py-1 border-b border-gray-50 last:border-0">
                     <dt class="text-sm text-gray-500">{{ $item['label'] }}</dt>
@@ -142,6 +144,8 @@
                     ['label' => 'Regime', 'value' => $colaborador->regime_trabalho ?? '—'],
                     ['label' => 'Carga Horária', 'value' => ($colaborador->carga_horaria ?? '—') . 'h/semana'],
                     ['label' => 'Nível Hierárquico', 'value' => $colaborador->nivelHierarquico->nome ?? '—'],
+                    ['label' => 'Líder / Gestor', 'value' => $colaborador->lider->nome ?? '—'],
+                    ['label' => 'Setor', 'value' => $colaborador->setor->nome ?? '—'],
                 ] as $item)
                 <div class="flex justify-between py-1 border-b border-gray-50 last:border-0">
                     <dt class="text-sm text-gray-500">{{ $item['label'] }}</dt>
@@ -169,6 +173,45 @@
                 @endif
             </div>
         </div>
+
+        {{-- Dados Bancários --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-base font-semibold text-gray-900">Dados Bancários e Financeiros</h3>
+            </div>
+            <dl class="px-6 py-4 space-y-3">
+                @php $temBanco = $colaborador->banco || $colaborador->pix || $colaborador->conta || $colaborador->cnpj; @endphp
+                @if($temBanco)
+                    @foreach([
+                        ['label' => 'Banco', 'value' => $colaborador->banco ?? '—'],
+                        ['label' => 'Agência', 'value' => $colaborador->agencia ?? '—'],
+                        ['label' => 'Conta', 'value' => $colaborador->conta ?? '—'],
+                        ['label' => 'Tipo de Conta', 'value' => ['CORRENTE' => 'Corrente', 'POUPANCA' => 'Poupança'][$colaborador->tipo_conta ?? ''] ?? '—'],
+                        ['label' => 'Chave PIX', 'value' => $colaborador->pix ?? '—'],
+                        ['label' => 'CNPJ', 'value' => $colaborador->cnpj ?? '—'],
+                    ] as $item)
+                    <div class="flex justify-between py-1 border-b border-gray-50 last:border-0">
+                        <dt class="text-sm text-gray-500">{{ $item['label'] }}</dt>
+                        <dd class="text-sm font-medium text-gray-900">{{ $item['value'] }}</dd>
+                    </div>
+                    @endforeach
+                @else
+                    <p class="text-sm text-gray-400">Nenhum dado bancário cadastrado</p>
+                @endif
+            </dl>
+        </div>
+
+        {{-- Observações --}}
+        @if($colaborador->observacoes)
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 lg:col-span-2">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-base font-semibold text-gray-900">Observações</h3>
+            </div>
+            <div class="px-6 py-4">
+                <p class="text-sm text-gray-700 whitespace-pre-line">{{ $colaborador->observacoes }}</p>
+            </div>
+        </div>
+        @endif
 
         {{-- Resumo de RH --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">

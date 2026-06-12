@@ -50,6 +50,12 @@ class Colaborador extends Model
         'cidade',
         'estado',
         'observacoes',
+        'banco',
+        'agencia',
+        'conta',
+        'tipo_conta',
+        'pix',
+        'cnpj',
     ];
 
     protected $hidden = [
