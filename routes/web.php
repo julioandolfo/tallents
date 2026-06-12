@@ -38,6 +38,8 @@ use App\Http\Controllers\Portal\LojaController;
 use App\Http\Controllers\IntegracaoController;
 use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\Portal\ContratoPortalController;
+use App\Http\Controllers\QuadroController;
+use App\Http\Controllers\TarefaController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -127,6 +129,13 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     // Contratos e assinatura digital (gestão)
     Route::resource('contratos', ContratoController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::patch('contratos/{contrato}/status', [ContratoController::class, 'status'])->name('contratos.status');
+
+    // Quadros Kanban de tarefas
+    Route::resource('quadros', QuadroController::class)->only(['index', 'store', 'show', 'destroy']);
+    Route::post('quadros/{quadro}/tarefas', [TarefaController::class, 'store'])->name('tarefas.store');
+    Route::patch('tarefas/{tarefa}/mover', [TarefaController::class, 'mover'])->name('tarefas.mover');
+    Route::patch('tarefas/{tarefa}', [TarefaController::class, 'update'])->name('tarefas.update');
+    Route::delete('tarefas/{tarefa}', [TarefaController::class, 'destroy'])->name('tarefas.destroy');
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);

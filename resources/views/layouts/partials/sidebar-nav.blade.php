@@ -8,6 +8,15 @@
     Dashboard
 </a>
 
+<a href="{{ route('quadros.index') }}"
+   class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 {{ request()->routeIs('quadros.*') ? 'active' : '' }}">
+    <svg class="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+    </svg>
+    Quadros (Kanban)
+</a>
+
 {{-- Cadastros --}}
 <div class="pt-4">
     <p class="px-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Cadastros</p>
