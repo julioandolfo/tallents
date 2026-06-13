@@ -24,6 +24,8 @@ class FechamentoPagamento extends Model
         'total_bonus',
         'total_geral',
         'observacoes',
+        'fechado_por',
+        'fechado_em',
     ];
 
     protected $casts = [

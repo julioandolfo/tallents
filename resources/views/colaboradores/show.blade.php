@@ -469,5 +469,60 @@
         </div>
     </div>
 
+    {{-- Bônus do colaborador --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200" x-data="{ open: false }">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Bônus</h3>
+            <button @click="open = !open" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Adicionar</button>
+        </div>
+
+        <div x-show="open" x-cloak class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <form method="POST" action="{{ route('colaboradores.bonus.store', $colaborador) }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                @csrf
+                <select name="tipo_bonus_id" required class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Tipo de bônus *</option>
+                    @foreach($tiposBonus ?? [] as $tb)<option value="{{ $tb->id }}">{{ $tb->nome }}</option>@endforeach
+                </select>
+                <input type="number" step="0.01" min="0" name="valor" required placeholder="Valor (R$) *" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="date" name="data_inicio" title="Início da vigência" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="date" name="data_fim" title="Fim da vigência" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" name="observacoes" placeholder="Observações" class="lg:col-span-3 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <div class="flex justify-end"><button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg">Salvar</button></div>
+            </form>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tipo</th>
+                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Valor</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Vigência</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->bonus as $b)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ optional($b->tipoBonus)->nome ?? '—' }}</td>
+                            <td class="px-6 py-3 text-right text-sm text-gray-900">R$ {{ number_format($b->valor, 2, ',', '.') }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($b->data_inicio)->format('d/m/Y') ?? '—' }} — {{ optional($b->data_fim)->format('d/m/Y') ?? 'sem fim' }}</td>
+                            <td class="px-6 py-3 text-sm">{!! $b->ativo ? '<span class="text-emerald-600">Ativo</span>' : '<span class="text-gray-400">Inativo</span>' !!}</td>
+                            <td class="px-6 py-3 text-right">
+                                <form method="POST" action="{{ route('colaboradores.bonus.destroy', $b) }}" x-data @submit.prevent="if(confirm('Remover bônus?')) $el.submit()">
+                                    @csrf @method('DELETE')
+                                    <button class="p-1.5 text-gray-400 hover:text-red-600 rounded"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="px-6 py-6 text-center text-sm text-gray-400">Nenhum bônus cadastrado</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 @endsection

@@ -84,6 +84,8 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::delete('dependentes/{dependente}', [DependenteController::class, 'destroy'])->name('dependentes.destroy');
     Route::post('colaboradores/{colaborador}/formacoes', [FormacaoController::class, 'store'])->name('formacoes.store');
     Route::delete('formacoes/{formacao}', [FormacaoController::class, 'destroy'])->name('formacoes.destroy');
+    Route::post('colaboradores/{colaborador}/bonus', [\App\Http\Controllers\BonusColaboradorController::class, 'store'])->name('colaboradores.bonus.store');
+    Route::delete('colaboradores-bonus/{bonus}', [\App\Http\Controllers\BonusColaboradorController::class, 'destroy'])->name('colaboradores.bonus.destroy');
     Route::resource('empresas', EmpresaController::class);
     Route::resource('setores', SetorController::class)->parameters(['setores' => 'setor']);
     Route::resource('cargos', CargoController::class);
@@ -150,6 +152,8 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::delete('tarefas/{tarefa}', [TarefaController::class, 'destroy'])->name('tarefas.destroy');
     Route::resource('fechamentos', FechamentoPagamentoController::class);
     Route::post('fechamentos/{fechamento}/fechar', [FechamentoPagamentoController::class, 'fechar'])->name('fechamentos.fechar');
+    Route::post('fechamentos/{fechamento}/reabrir', [FechamentoPagamentoController::class, 'reabrir'])->name('fechamentos.reabrir');
+    Route::put('fechamentos/itens/{item}', [FechamentoPagamentoController::class, 'atualizarItem'])->name('fechamentos.itens.update');
     Route::resource('tipos-bonus', TipoBonusController::class)->parameters(['tipos-bonus' => 'tiposBonus']);
     Route::resource('tipos-ocorrencias', TipoOcorrenciaController::class)->parameters(['tipos-ocorrencias' => 'tiposOcorrencia']);
     Route::resource('niveis-hierarquicos', NivelHierarquicoController::class)->parameters(['niveis-hierarquicos' => 'niveisHierarquico']);

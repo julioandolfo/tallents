@@ -85,7 +85,9 @@ class ColaboradorController extends Controller
             'formacoes',
         ])->loadCount(['ocorrencias', 'horasExtras', 'promocoes']);
 
-        return view('colaboradores.show', compact('colaborador'));
+        $tiposBonus = \App\Models\TipoBonus::where('ativo', true)->orderBy('nome')->get();
+
+        return view('colaboradores.show', compact('colaborador', 'tiposBonus'));
     }
 
     public function edit(Colaborador $colaborador)

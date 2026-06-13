@@ -19,15 +19,30 @@ class FechamentoPagamentoItem extends Model
         'salario_base',
         'total_horas_extras',
         'total_bonus',
+        'descontos',
+        'adicionais',
         'total',
+        'observacoes',
     ];
 
     protected $casts = [
         'salario_base'      => 'decimal:2',
         'total_horas_extras' => 'decimal:2',
         'total_bonus'       => 'decimal:2',
+        'descontos'         => 'decimal:2',
+        'adicionais'        => 'decimal:2',
         'total'             => 'decimal:2',
     ];
+
+    /** Recalcula o total: salário + HE + bônus − descontos + adicionais. */
+    public function recalcular(): void
+    {
+        $this->total = (float) $this->salario_base
+            + (float) $this->total_horas_extras
+            + (float) $this->total_bonus
+            - (float) $this->descontos
+            + (float) $this->adicionais;
+    }
 
     public function fechamento(): BelongsTo
     {

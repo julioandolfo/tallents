@@ -66,7 +66,11 @@ class FechamentoPagamentoController extends Controller
     {
         $fechamento->load(['empresa', 'itens.colaborador', 'criadoPor', 'fechadoPor']);
 
-        return view('fechamentos.show', compact('fechamento'));
+        // Colaboradores ativos da empresa, para seleção ao processar.
+        $ativos = Colaborador::where('empresa_id', $fechamento->empresa_id)
+            ->where('status', 'ATIVO')->orderBy('nome')->get();
+
+        return view('fechamentos.show', compact('fechamento', 'ativos'));
     }
 
     public function edit(FechamentoPagamento $fechamento)
@@ -109,47 +113,60 @@ class FechamentoPagamentoController extends Controller
                 ->with('error', 'Este fechamento já foi processado.');
         }
 
-        DB::transaction(function () use ($fechamento) {
-            $empresa = $fechamento->empresa;
-            $mes     = $fechamento->mes;
-            $ano     = $fechamento->ano;
+        // Colaboradores selecionados (checkbox); vazio = todos os ativos da empresa.
+        $selecionados = (array) $request->input('colaborador_ids', []);
 
-            // Remove itens anteriores se houver
+        DB::transaction(function () use ($fechamento, $selecionados) {
+            $empresa = $fechamento->empresa;
+            $mes     = (int) $fechamento->mes;
+            $ano     = (int) $fechamento->ano;
+
+            // Preserva ajustes manuais (descontos/adicionais/obs) por colaborador
+            // antes de recalcular as bases.
+            $ajustes = $fechamento->itens()->get()
+                ->keyBy('colaborador_id')
+                ->map(fn($i) => ['descontos' => (float) $i->descontos, 'adicionais' => (float) $i->adicionais, 'observacoes' => $i->observacoes]);
+
             $fechamento->itens()->delete();
 
             $totalGeral = 0;
 
-            // Busca colaboradores ativos da empresa
             $colaboradores = Colaborador::where('empresa_id', $empresa->id)
                 ->where('status', 'ATIVO')
+                ->when(! empty($selecionados), fn($q) => $q->whereIn('id', $selecionados))
                 ->get();
 
             foreach ($colaboradores as $colaborador) {
-                $salario = $colaborador->salario ?? 0;
+                $salario = (float) ($colaborador->salario ?? 0);
 
-                // Horas extras aprovadas do mês
-                $totalHorasExtras = HoraExtra::where('colaborador_id', $colaborador->id)
+                // Horas extras aprovadas do mês de referência.
+                $totalHorasExtras = (float) HoraExtra::where('colaborador_id', $colaborador->id)
                     ->where('status', 'APROVADO')
                     ->whereMonth('data', $mes)
                     ->whereYear('data', $ano)
                     ->sum('valor');
 
-                // Bônus ativos
-                $totalBonus = ColaboradorBonus::where('colaborador_id', $colaborador->id)
-                    ->where('ativo', true)
-                    ->whereMonth('created_at', $mes)
-                    ->whereYear('created_at', $ano)
+                // Bônus vigentes no mês (por janela de datas, não por created_at).
+                $totalBonus = (float) ColaboradorBonus::where('colaborador_id', $colaborador->id)
+                    ->vigentesEm($mes, $ano)
                     ->sum('valor');
 
-                $totalColaborador = $salario + $totalHorasExtras + $totalBonus;
-                $totalGeral      += $totalColaborador;
+                $ajuste     = $ajustes[$colaborador->id] ?? ['descontos' => 0, 'adicionais' => 0, 'observacoes' => null];
+                $descontos  = (float) $ajuste['descontos'];
+                $adicionais = (float) $ajuste['adicionais'];
+
+                $total = $salario + $totalHorasExtras + $totalBonus - $descontos + $adicionais;
+                $totalGeral += $total;
 
                 $fechamento->itens()->create([
-                    'colaborador_id'   => $colaborador->id,
-                    'salario'          => $salario,
-                    'horas_extras'     => $totalHorasExtras,
-                    'bonus'            => $totalBonus,
-                    'total'            => $totalColaborador,
+                    'colaborador_id'     => $colaborador->id,
+                    'salario_base'       => $salario,
+                    'total_horas_extras' => $totalHorasExtras,
+                    'total_bonus'        => $totalBonus,
+                    'descontos'          => $descontos,
+                    'adicionais'         => $adicionais,
+                    'total'              => $total,
+                    'observacoes'        => $ajuste['observacoes'],
                 ]);
             }
 
@@ -174,6 +191,43 @@ class FechamentoPagamentoController extends Controller
         return redirect()
             ->route('fechamentos.show', $fechamento)
             ->with('success', 'Fechamento processado com sucesso!');
+    }
+
+    /** Edita descontos/adicionais/observações de um item e recalcula totais. */
+    public function atualizarItem(Request $request, \App\Models\FechamentoPagamentoItem $item)
+    {
+        $fechamento = $item->fechamento;
+
+        if ($fechamento->status === 'FECHADO') {
+            return back()->with('error', 'Fechamento já processado — reabra para editar.');
+        }
+
+        $data = $request->validate([
+            'descontos'   => 'nullable|numeric|min:0',
+            'adicionais'  => 'nullable|numeric|min:0',
+            'observacoes' => 'nullable|string|max:500',
+        ]);
+
+        $item->descontos   = $data['descontos'] ?? 0;
+        $item->adicionais  = $data['adicionais'] ?? 0;
+        $item->observacoes = $data['observacoes'] ?? null;
+        $item->recalcular();
+        $item->save();
+
+        // Recalcula o total geral do fechamento.
+        $fechamento->update(['total_geral' => $fechamento->itens()->sum('total')]);
+
+        return back()->with('success', 'Item atualizado.');
+    }
+
+    /** Reabre um fechamento FECHADO para edição. */
+    public function reabrir(FechamentoPagamento $fechamento)
+    {
+        if ($fechamento->status === 'FECHADO') {
+            $fechamento->update(['status' => 'ABERTO', 'fechado_por' => null, 'fechado_em' => null]);
+        }
+
+        return back()->with('success', 'Fechamento reaberto para edição.');
     }
 
     public function destroy(FechamentoPagamento $fechamento)
