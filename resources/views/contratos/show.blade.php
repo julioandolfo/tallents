@@ -4,47 +4,72 @@
 @section('page-title', 'Contrato')
 
 @section('content')
-<div class="space-y-4 py-4 max-w-3xl">
-    <div class="flex items-center justify-between">
+<div class="space-y-4 py-4 max-w-4xl mx-auto">
+    <div class="flex items-center justify-between gap-2 flex-wrap">
         <a href="{{ route('contratos.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
         </a>
-        @if($contrato->status !== 'CANCELADO')
-            <form method="POST" action="{{ route('contratos.status', $contrato) }}" x-data @submit.prevent="if(confirm('Cancelar contrato?')) $el.submit()">
-                @csrf @method('PATCH')
-                <input type="hidden" name="status" value="CANCELADO">
-                <button class="px-4 py-2 bg-white border border-red-300 hover:bg-red-50 text-red-700 text-sm font-medium rounded-lg transition">Cancelar contrato</button>
-            </form>
-        @endif
+        <div class="flex items-center gap-2 flex-wrap">
+            <a href="{{ route('contratos.preview', $contrato) }}" class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">Pré-visualizar</a>
+            <a href="{{ route('contratos.pdf', $contrato) }}" class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">PDF</a>
+            @if($contrato->status === 'PENDENTE')
+                <form method="POST" action="{{ route('contratos.autentique', $contrato) }}" x-data @submit.prevent="if(confirm('Enviar este contrato para assinatura via Autentique?')) $el.submit()">
+                    @csrf
+                    <button class="px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition">Enviar p/ Autentique</button>
+                </form>
+            @endif
+            @if($contrato->autentique_document_id && $contrato->status !== 'ASSINADO')
+                <form method="POST" action="{{ route('contratos.sincronizar', $contrato) }}">
+                    @csrf
+                    <button class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">Sincronizar status</button>
+                </form>
+            @endif
+            @if($contrato->status !== 'CANCELADO' && $contrato->status !== 'ASSINADO')
+                <form method="POST" action="{{ route('contratos.status', $contrato) }}" x-data @submit.prevent="if(confirm('Cancelar contrato?')) $el.submit()">
+                    @csrf @method('PATCH')
+                    <input type="hidden" name="status" value="CANCELADO">
+                    <button class="px-3 py-2 bg-white border border-red-300 hover:bg-red-50 text-red-700 text-sm font-medium rounded-lg transition">Cancelar</button>
+                </form>
+            @endif
+        </div>
     </div>
 
-    @if(session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm">{{ session('success') }}</div>
-    @endif
+    @if(session('success'))<div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm">{{ session('success') }}</div>@endif
+    @if(session('error'))<div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">{{ session('error') }}</div>@endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center gap-2 mb-2">
+        <div class="flex items-center gap-2 mb-2 flex-wrap">
             <x-ui.badge :color="$contrato->cor()">{{ $contrato->statusLabel() }}</x-ui.badge>
             <span class="text-xs text-gray-400">{{ $contrato->tipoLabel() }}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ $contrato->metodoLabel() }}</span>
         </div>
         <h1 class="text-xl font-bold text-gray-900">{{ $contrato->titulo }}</h1>
         <p class="mt-1 text-sm text-gray-500">{{ optional($contrato->colaborador)->nome ?? '—' }} · Criado por {{ optional($contrato->criadoPor)->name ?? 'Sistema' }}</p>
 
         @if($contrato->status === 'ASSINADO')
             <div class="mt-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm">
-                ✓ Assinado em {{ $contrato->assinado_em->format('d/m/Y H:i') }} · IP {{ $contrato->assinatura_ip }}
+                ✓ Assinado @if($contrato->assinado_em) em {{ $contrato->assinado_em->format('d/m/Y H:i') }} @endif
+                @if($contrato->metodo_assinatura === 'INTERNO' && $contrato->assinatura_ip) · IP {{ $contrato->assinatura_ip }} @endif
+                @if($contrato->metodo_assinatura === 'AUTENTIQUE') · via Autentique @endif
+            </div>
+        @endif
+
+        @if($contrato->metodo_assinatura === 'AUTENTIQUE' && $contrato->autentique_signature_url && $contrato->status !== 'ASSINADO')
+            <div class="mt-3 bg-violet-50 border border-violet-200 text-violet-800 px-4 py-3 rounded-lg text-sm">
+                Enviado para assinatura @if($contrato->enviado_assinatura_em) em {{ $contrato->enviado_assinatura_em->format('d/m/Y H:i') }} @endif.
+                <a href="{{ $contrato->autentique_signature_url }}" target="_blank" rel="noopener" class="font-medium underline">Abrir página de assinatura</a>
             </div>
         @endif
 
         @if($contrato->arquivoUrl())
             <a href="{{ $contrato->arquivoUrl() }}" target="_blank" class="mt-3 inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 font-medium">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                Abrir arquivo
+                Abrir arquivo anexado
             </a>
         @endif
 
         @if($contrato->conteudo)
-            <div class="mt-5 text-sm text-gray-700 whitespace-pre-line leading-relaxed border-t border-gray-100 pt-5">{{ $contrato->conteudo }}</div>
+            <div class="mt-5 text-sm text-gray-700 whitespace-pre-line leading-relaxed border-t border-gray-100 pt-5 text-justify">{{ $contrato->conteudoRenderizado() }}</div>
         @endif
     </div>
 </div>

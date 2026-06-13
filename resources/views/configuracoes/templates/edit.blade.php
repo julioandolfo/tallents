@@ -24,7 +24,8 @@
             <textarea name="corpo" rows="12" required
                       class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ old('corpo', $template->corpo) }}</textarea>
             @if($template->variaveis)
-                <p class="text-xs text-gray-500 mt-1">Variáveis disponíveis: <code class="text-indigo-600">{{ collect(explode(',', $template->variaveis))->map(fn($v) => '{{ '.trim($v).' }}')->implode(', ') }}</code></p>
+                @php $varsHint = collect(explode(',', $template->variaveis))->map(fn($v) => '{'.'{ '.trim($v).' }'.'}')->implode(', '); @endphp
+                <p class="text-xs text-gray-500 mt-1">Variáveis disponíveis: <code class="text-indigo-600">{{ $varsHint }}</code></p>
             @endif
         </div>
         <label class="flex items-center gap-2 text-sm text-gray-700">

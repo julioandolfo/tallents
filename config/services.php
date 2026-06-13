@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // Autentique — assinatura eletrônica de contratos (https://autentique.com.br).
+    'autentique' => [
+        'token'   => env('AUTENTIQUE_TOKEN'),
+        'sandbox' => (bool) env('AUTENTIQUE_SANDBOX', true),
+        'webhook_secret' => env('AUTENTIQUE_WEBHOOK_SECRET'),
+    ],
+
 ];

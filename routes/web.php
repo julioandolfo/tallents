@@ -63,6 +63,9 @@ Route::middleware(['auth'])->prefix('portal')->name('portal.')->group(function (
     Route::post('/contratos/{contrato}/assinar', [ContratoPortalController::class, 'assinar'])->name('contratos.assinar');
 });
 
+// ─── Webhook público da Autentique (sem auth/CSRF) ───────────────────────────
+Route::post('/webhooks/autentique', [\App\Http\Controllers\AutentiqueWebhookController::class, 'handle'])->name('webhooks.autentique');
+
 // ─── Endpoints AJAX para os formulários (sessão web) ─────────────────────────
 Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
     Route::get('/setores', [\App\Http\Controllers\Api\SetorApiController::class, 'index'])->name('setores');
@@ -162,6 +165,10 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     // Contratos e assinatura digital (gestão)
     Route::resource('contratos', ContratoController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::patch('contratos/{contrato}/status', [ContratoController::class, 'status'])->name('contratos.status');
+    Route::get('contratos/{contrato}/preview', [ContratoController::class, 'preview'])->name('contratos.preview');
+    Route::get('contratos/{contrato}/pdf', [ContratoController::class, 'pdf'])->name('contratos.pdf');
+    Route::post('contratos/{contrato}/autentique', [ContratoController::class, 'enviarAutentique'])->name('contratos.autentique');
+    Route::post('contratos/{contrato}/sincronizar', [ContratoController::class, 'sincronizar'])->name('contratos.sincronizar');
 
     // Quadros Kanban de tarefas
     Route::resource('quadros', QuadroController::class)->only(['index', 'store', 'show', 'destroy']);

@@ -28,13 +28,24 @@
         @endif
 
         @if($contrato->conteudo)
-            <div class="mt-5 text-sm text-gray-700 whitespace-pre-line leading-relaxed border-t border-gray-100 pt-5 max-h-96 overflow-y-auto">{{ $contrato->conteudo }}</div>
+            <div class="mt-5 text-sm text-gray-700 whitespace-pre-line leading-relaxed border-t border-gray-100 pt-5 max-h-96 overflow-y-auto text-justify">{{ $contrato->conteudoRenderizado() }}</div>
         @endif
     </div>
 
     @if($contrato->status === 'ASSINADO')
         <div class="bg-green-50 border border-green-200 text-green-800 px-5 py-4 rounded-xl text-sm">
-            ✓ Você assinou este documento em {{ $contrato->assinado_em->format('d/m/Y \à\s H:i') }}.
+            ✓ Documento assinado @if($contrato->assinado_em) em {{ $contrato->assinado_em->format('d/m/Y \à\s H:i') }} @endif.
+        </div>
+    @elseif($contrato->status === 'PENDENTE' && $contrato->metodo_assinatura === 'AUTENTIQUE')
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+            <h3 class="text-base font-semibold text-gray-900 mb-2">Assinatura eletrônica</h3>
+            <p class="text-sm text-gray-500 mb-4">Este documento usa assinatura eletrônica via Autentique. Você também recebeu o link por e-mail.</p>
+            @if($contrato->autentique_signature_url)
+                <a href="{{ $contrato->autentique_signature_url }}" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition">Assinar via Autentique</a>
+            @else
+                <p class="text-sm text-gray-400">Aguarde — o link de assinatura está sendo gerado.</p>
+            @endif
         </div>
     @elseif($contrato->status === 'PENDENTE')
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

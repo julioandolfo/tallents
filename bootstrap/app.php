@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
 
+        // Webhooks externos não enviam token CSRF.
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/*',
+        ]);
+
         $middleware->alias([
             'papel'      => \App\Http\Middleware\EnsureRole::class,
             'role'       => \Spatie\Permission\Middleware\RoleMiddleware::class,
