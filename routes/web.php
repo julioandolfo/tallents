@@ -41,6 +41,7 @@ use App\Http\Controllers\Portal\ContratoPortalController;
 use App\Http\Controllers\QuadroController;
 use App\Http\Controllers\TarefaController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\OrganogramaController;
 
 Route::get('/', fn() => auth()->check()
     ? redirect()->route(auth()->user()->painelRoute())
@@ -86,6 +87,8 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::resource('empresas', EmpresaController::class);
     Route::resource('setores', SetorController::class)->parameters(['setores' => 'setor']);
     Route::resource('cargos', CargoController::class);
+    Route::get('relatorios/ocorrencias', [OcorrenciaController::class, 'relatorio'])->name('ocorrencias.relatorio');
+    Route::get('organograma', [OrganogramaController::class, 'index'])->name('organograma.index');
     Route::resource('ocorrencias', OcorrenciaController::class);
     Route::post('ocorrencias/{ocorrencia}/comentarios', [OcorrenciaController::class, 'adicionarComentario'])->name('ocorrencias.comentarios.store');
     Route::delete('ocorrencias/comentarios/{comentario}', [OcorrenciaController::class, 'removerComentario'])->name('ocorrencias.comentarios.destroy');

@@ -142,6 +142,41 @@ class OcorrenciaController extends Controller
             ->with('success', 'Ocorrência removida com sucesso!');
     }
 
+    /** Relatório agregado de ocorrências (por tipo, gravidade e colaborador). */
+    public function relatorio(Request $request)
+    {
+        $base = Ocorrencia::query()
+            ->when($request->empresa_id, fn($q, $v) => $q->where('empresa_id', $v))
+            ->when($request->colaborador_id, fn($q, $v) => $q->where('colaborador_id', $v))
+            ->when($request->tipo_ocorrencia_id, fn($q, $v) => $q->where('tipo_ocorrencia_id', $v))
+            ->when($request->data_inicio, fn($q, $v) => $q->whereDate('data_ocorrencia', '>=', $v))
+            ->when($request->data_fim, fn($q, $v) => $q->whereDate('data_ocorrencia', '<=', $v));
+
+        $total = (clone $base)->count();
+
+        $porGravidade = (clone $base)->selectRaw('gravidade, COUNT(*) as total')
+            ->groupBy('gravidade')->pluck('total', 'gravidade');
+
+        $porTipo = (clone $base)->with('tipoOcorrencia')
+            ->selectRaw('tipo_ocorrencia_id, COUNT(*) as total')
+            ->groupBy('tipo_ocorrencia_id')->orderByDesc('total')->get();
+
+        $porColaborador = (clone $base)->with('colaborador')
+            ->selectRaw('colaborador_id, COUNT(*) as total')
+            ->groupBy('colaborador_id')->orderByDesc('total')->take(15)->get();
+
+        $totalAtraso = (clone $base)->sum('tempo_atraso_minutos');
+
+        $empresas         = Empresa::where('ativa', true)->orderBy('nome')->get();
+        $tiposOcorrencias = TipoOcorrencia::orderBy('nome')->get();
+        $colaboradores    = Colaborador::orderBy('nome')->get();
+
+        return view('ocorrencias.relatorio', compact(
+            'total', 'porGravidade', 'porTipo', 'porColaborador', 'totalAtraso',
+            'empresas', 'tiposOcorrencias', 'colaboradores'
+        ));
+    }
+
     // ─── Comentários ──────────────────────────────────────────────────────────
     public function adicionarComentario(Request $request, Ocorrencia $ocorrencia)
     {
