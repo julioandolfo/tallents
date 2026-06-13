@@ -58,6 +58,12 @@ class ColaboradorController extends Controller
         $colaborador = Colaborador::create($payload);
         $this->sincronizarAcesso($colaborador, $request);
 
+        // E-mail de boas-vindas (best-effort; só envia se o SMTP estiver configurado).
+        app(\App\Services\EmailService::class)->enviar(
+            $colaborador->emailContato(),
+            new \App\Mail\ColaboradorBoasVindas($colaborador->load(['empresa', 'cargo', 'setor']), $request->input('email_login'))
+        );
+
         return redirect()
             ->route('colaboradores.show', $colaborador)
             ->with('success', 'Colaborador cadastrado com sucesso!');

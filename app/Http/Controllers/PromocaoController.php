@@ -52,8 +52,10 @@ class PromocaoController extends Controller
 
         $colaborador = Colaborador::findOrFail($data['colaborador_id']);
 
-        DB::transaction(function () use ($data, $colaborador) {
-            Promocao::create([
+        $promocao = null;
+
+        DB::transaction(function () use ($data, $colaborador, &$promocao) {
+            $promocao = Promocao::create([
                 'empresa_id'        => $colaborador->empresa_id,
                 'colaborador_id'    => $colaborador->id,
                 'registrado_por'    => auth()->id(),
@@ -71,6 +73,14 @@ class PromocaoController extends Controller
                 'salario'  => $data['novo_salario'],
             ]);
         });
+
+        // Notifica o colaborador da promoção por e-mail (best-effort).
+        if ($promocao) {
+            app(\App\Services\EmailService::class)->enviar(
+                $colaborador->emailContato(),
+                new \App\Mail\PromocaoRegistrada($promocao->load(['colaborador', 'cargoNovo']))
+            );
+        }
 
         return redirect()
             ->route('promocoes.index')

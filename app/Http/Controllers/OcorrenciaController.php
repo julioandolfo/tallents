@@ -71,6 +71,14 @@ class OcorrenciaController extends Controller
 
         $ocorrencia->registrarHistorico('Ocorrência registrada');
 
+        // Notifica o colaborador por e-mail, se solicitado (best-effort).
+        if ($ocorrencia->notificar_colaborador) {
+            app(\App\Services\EmailService::class)->enviar(
+                $colaborador->emailContato(),
+                new \App\Mail\OcorrenciaRegistrada($ocorrencia->load(['colaborador', 'tipoOcorrencia']))
+            );
+        }
+
         return redirect()
             ->route('ocorrencias.show', $ocorrencia)
             ->with('success', 'Ocorrência registrada com sucesso!');

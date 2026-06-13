@@ -92,18 +92,25 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between mt-4">
-                        <button type="button"
-                                class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            Testar Envio
-                        </button>
+                    <div class="flex items-center justify-end mt-4">
                         <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition">
                             Salvar Configurações
                         </button>
                     </div>
+                </form>
+
+                {{-- Teste de envio (formulário próprio, fora do form de configuração) --}}
+                <form method="POST" action="{{ route('configuracoes.email.testar') }}" class="mt-4 pt-4 border-t border-gray-100 flex flex-wrap items-end gap-3">
+                    @csrf
+                    <div class="flex-1 min-w-[220px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Enviar e-mail de teste para</label>
+                        <input type="email" name="email_teste" required value="{{ old('email_teste', auth()->user()->email) }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        Testar Envio
+                    </button>
                 </form>
             </div>
 

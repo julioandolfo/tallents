@@ -90,6 +90,12 @@ class Colaborador extends Model
         return $email ? Usuario::where('email', $email)->first() : null;
     }
 
+    /** Melhor e-mail para contato/notificações do colaborador. */
+    public function emailContato(): ?string
+    {
+        return $this->email_pessoal ?: ($this->email_login ?: $this->email);
+    }
+
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class);

@@ -72,6 +72,23 @@ class ConfiguracaoController extends Controller
             ->with('success', 'Configurações de e-mail salvas com sucesso!');
     }
 
+    /** Envia um e-mail de teste para validar o SMTP configurado. */
+    public function testarEmail(Request $request, \App\Services\EmailService $email)
+    {
+        $data = $request->validate(['email_teste' => 'required|email']);
+
+        if (! $email->habilitado()) {
+            return back()->with('error', 'Configure o SMTP (host e e-mail remetente) antes de testar.');
+        }
+
+        $ok = $email->enviar($data['email_teste'], new \App\Mail\EmailTeste());
+
+        return back()->with(
+            $ok ? 'success' : 'error',
+            $ok ? "E-mail de teste enviado para {$data['email_teste']}." : 'Falha ao enviar — verifique as credenciais SMTP (veja os logs).'
+        );
+    }
+
     private function updateEmpresa(Request $request)
     {
         $data = $request->validate([

@@ -161,6 +161,16 @@ class FechamentoPagamentoController extends Controller
             ]);
         });
 
+        // Envia o demonstrativo de pagamento a cada colaborador (best-effort).
+        $email = app(\App\Services\EmailService::class);
+        if ($email->habilitado()) {
+            foreach ($fechamento->itens()->with(['colaborador', 'fechamento'])->get() as $item) {
+                if ($item->colaborador) {
+                    $email->enviar($item->colaborador->emailContato(), new \App\Mail\FechamentoColaborador($item));
+                }
+            }
+        }
+
         return redirect()
             ->route('fechamentos.show', $fechamento)
             ->with('success', 'Fechamento processado com sucesso!');
