@@ -5,7 +5,7 @@
         <select name="colaborador_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="">Selecione</option>
             @foreach($colaboradores as $c)
-                <option value="{{ $c->id }}" {{ old('colaborador_id', $avaliacao->colaborador_id ?? '') == $c->id ? 'selected' : '' }}>{{ $c->nome }}</option>
+                <option value="{{ $c->id }}" {{ old('colaborador_id', $avaliacao->colaborador_id ?? ($colaboradorId ?? '')) == $c->id ? 'selected' : '' }}>{{ $c->nome }}</option>
             @endforeach
         </select>
     </div>

@@ -595,5 +595,191 @@
         </div>
     </div>
 
+    {{-- Advertências --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Advertências</h3>
+            <a href="{{ route('advertencias.create', ['colaborador_id' => $colaborador->id]) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Nova advertência</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50"><tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Data</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tipo</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Motivo</th>
+                    <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Suspensão</th>
+                    <th class="px-6 py-3"></th>
+                </tr></thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->advertencias as $adv)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($adv->data)->format('d/m/Y') ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ ucfirst(strtolower($adv->tipo ?? '—')) }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600 truncate max-w-xs">{{ $adv->motivo }}</td>
+                            <td class="px-6 py-3 text-right text-sm text-gray-600">{{ $adv->dias_suspensao ? $adv->dias_suspensao.' dia(s)' : '—' }}</td>
+                            <td class="px-6 py-3 text-right"><a href="{{ route('advertencias.show', $adv) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Ver</a></td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="px-6 py-6 text-center text-sm text-gray-400">Nenhuma advertência</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Avaliações de desempenho --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Avaliações de Desempenho</h3>
+            <a href="{{ route('avaliacoes.create', ['colaborador_id' => $colaborador->id]) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Nova avaliação</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50"><tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ciclo</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Avaliador</th>
+                    <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Nota</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                    <th class="px-6 py-3"></th>
+                </tr></thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->avaliacoes as $av)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ $av->ciclo ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($av->avaliador)->name ?? '—' }}</td>
+                            <td class="px-6 py-3 text-right text-sm text-gray-900">{{ $av->nota_geral !== null ? number_format($av->nota_geral, 1, ',', '.') : '—' }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ ucfirst(strtolower($av->status ?? '—')) }}</td>
+                            <td class="px-6 py-3 text-right"><a href="{{ route('avaliacoes.show', $av) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Ver</a></td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="px-6 py-6 text-center text-sm text-gray-400">Nenhuma avaliação</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- PDI --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Plano de Desenvolvimento (PDI)</h3>
+            <a href="{{ route('pdis.create', ['colaborador_id' => $colaborador->id]) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Novo PDI</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50"><tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Título</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Prazo</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                    <th class="px-6 py-3"></th>
+                </tr></thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->pdis as $pdi)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ $pdi->titulo }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($pdi->prazo)->format('d/m/Y') ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ \App\Models\Pdi::STATUS[$pdi->status] ?? $pdi->status }}</td>
+                            <td class="px-6 py-3 text-right"><a href="{{ route('pdis.show', $pdi) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Ver</a></td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="4" class="px-6 py-6 text-center text-sm text-gray-400">Nenhum PDI</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Onboarding --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Onboarding</h3>
+            <a href="{{ route('onboarding.create', ['colaborador_id' => $colaborador->id]) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Novo onboarding</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50"><tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Início</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                    <th class="px-6 py-3"></th>
+                </tr></thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->onboardings as $ob)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($ob->data_inicio)->format('d/m/Y') ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ \App\Models\Onboarding::STATUS[$ob->status] ?? $ob->status }}</td>
+                            <td class="px-6 py-3 text-right"><a href="{{ route('onboarding.show', $ob) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Ver</a></td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="3" class="px-6 py-6 text-center text-sm text-gray-400">Nenhum onboarding</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Feedbacks --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Feedbacks</h3>
+            <a href="{{ route('feedbacks.create', ['colaborador_id' => $colaborador->id]) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Novo feedback</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50"><tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Data</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tipo</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Autor</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Mensagem</th>
+                </tr></thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->feedbacks as $fb)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($fb->data)->format('d/m/Y') ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ ucfirst(strtolower($fb->tipo ?? '—')) }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($fb->autor)->name ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600 truncate max-w-md">{{ $fb->mensagem }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="4" class="px-6 py-6 text-center text-sm text-gray-400">Nenhum feedback</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Banco de horas --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div>
+                <h3 class="text-base font-semibold text-gray-900">Banco de Horas</h3>
+                @php $saldo = $colaborador->saldoBancoHoras(); @endphp
+                <p class="text-xs mt-0.5 {{ $saldo >= 0 ? 'text-emerald-600' : 'text-red-600' }}">Saldo atual: {{ number_format($saldo, 2, ',', '.') }}h</p>
+            </div>
+            <a href="{{ route('banco-horas.extrato', $colaborador) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Ver extrato</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50"><tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Data</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tipo</th>
+                    <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Horas</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Motivo</th>
+                </tr></thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->movimentacoesBanco->take(5) as $mov)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($mov->data)->format('d/m/Y') ?? '—' }}</td>
+                            <td class="px-6 py-3 text-sm font-medium {{ $mov->tipo === 'CREDITO' ? 'text-emerald-600' : 'text-red-600' }}">{{ $mov->tipo === 'CREDITO' ? 'Crédito' : 'Débito' }}</td>
+                            <td class="px-6 py-3 text-right text-sm text-gray-900">{{ number_format((float) $mov->horas, 2, ',', '.') }}h</td>
+                            <td class="px-6 py-3 text-sm text-gray-600 truncate max-w-md">{{ $mov->motivo }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="4" class="px-6 py-6 text-center text-sm text-gray-400">Nenhuma movimentação</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 @endsection

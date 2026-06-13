@@ -23,11 +23,12 @@ class AvaliacaoController extends Controller
         return view('avaliacoes.index', compact('avaliacoes', 'ciclos'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $colaboradores = Colaborador::where('status', 'ATIVO')->orderBy('nome')->get();
+        $colaboradorId = $request->colaborador_id;
 
-        return view('avaliacoes.create', compact('colaboradores'));
+        return view('avaliacoes.create', compact('colaboradores', 'colaboradorId'));
     }
 
     public function store(Request $request)

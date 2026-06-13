@@ -87,6 +87,12 @@ class ColaboradorController extends Controller
             'dependentes',
             'formacoes',
             'contratos',
+            'advertencias',
+            'avaliacoes.avaliador',
+            'pdis',
+            'onboardings',
+            'feedbacks.autor',
+            'movimentacoesBanco',
         ])->loadCount(['ocorrencias', 'horasExtras', 'promocoes', 'contratos']);
 
         $tiposBonus = \App\Models\TipoBonus::where('ativo', true)->orderBy('nome')->get();

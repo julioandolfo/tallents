@@ -84,6 +84,41 @@ class ColaboradorFichaCompletaTest extends TestCase
             ->assertSee(route('contratos.create', ['colaborador_id' => $colab->id]), false);
     }
 
+    public function test_show_exibe_modulos_orfaos_e_links(): void
+    {
+        $colab = Colaborador::create(['empresa_id' => $this->emp->id, 'setor_id' => $this->setor->id, 'cargo_id' => $this->cargo->id, 'nome' => 'Gustavo', 'status' => 'ATIVO']);
+
+        \App\Models\Advertencia::create(['empresa_id' => $this->emp->id, 'colaborador_id' => $colab->id, 'aplicada_por' => auth()->id(), 'tipo' => 'VERBAL', 'motivo' => 'Atraso reiterado', 'data' => '2024-03-01']);
+        \App\Models\Avaliacao::create(['colaborador_id' => $colab->id, 'avaliador_id' => auth()->id(), 'ciclo' => '2024.1', 'tipo' => 'GESTOR', 'nota_geral' => 8.5, 'status' => 'CONCLUIDA', 'data' => '2024-03-01']);
+        \App\Models\Pdi::create(['colaborador_id' => $colab->id, 'responsavel_id' => auth()->id(), 'titulo' => 'Liderança técnica', 'status' => 'EM_ANDAMENTO', 'prazo' => '2024-12-31']);
+        \App\Models\Onboarding::create(['colaborador_id' => $colab->id, 'empresa_id' => $this->emp->id, 'responsavel_id' => auth()->id(), 'data_inicio' => '2024-01-05', 'status' => 'EM_ANDAMENTO']);
+        \App\Models\Feedback::create(['colaborador_id' => $colab->id, 'autor_id' => auth()->id(), 'tipo' => 'POSITIVO', 'mensagem' => 'Excelente trabalho', 'data' => '2024-03-10']);
+        \App\Models\BancoHorasMovimentacao::create(['colaborador_id' => $colab->id, 'empresa_id' => $this->emp->id, 'registrado_por' => auth()->id(), 'tipo' => 'CREDITO', 'horas' => 4, 'motivo' => 'Hora extra', 'data' => '2024-03-12']);
+
+        $resp = $this->get(route('colaboradores.show', $colab))->assertOk();
+
+        $resp->assertSee('Advertências')->assertSee('Atraso reiterado');
+        $resp->assertSee('Avaliações de Desempenho')->assertSee('2024.1');
+        $resp->assertSee('Plano de Desenvolvimento (PDI)')->assertSee('Liderança técnica');
+        $resp->assertSee('Onboarding');
+        $resp->assertSee('Feedbacks')->assertSee('Excelente trabalho');
+        $resp->assertSee('Banco de Horas')->assertSee('4,00h');
+
+        // Links de criação pré-vinculados ao colaborador.
+        $resp->assertSee(route('advertencias.create', ['colaborador_id' => $colab->id]), false);
+        $resp->assertSee(route('pdis.create', ['colaborador_id' => $colab->id]), false);
+        $resp->assertSee(route('banco-horas.extrato', $colab), false);
+    }
+
+    public function test_avaliacao_create_preseleciona_colaborador(): void
+    {
+        $colab = Colaborador::create(['empresa_id' => $this->emp->id, 'nome' => 'Helena', 'status' => 'ATIVO']);
+
+        $this->get(route('avaliacoes.create', ['colaborador_id' => $colab->id]))
+            ->assertOk()
+            ->assertSee('value="' . $colab->id . '" selected', false);
+    }
+
     public function test_edicao_preserva_data_demissao(): void
     {
         $colab = Colaborador::create(['empresa_id' => $this->emp->id, 'nome' => 'Fabio', 'status' => 'ATIVO', 'data_admissao' => '2020-01-01']);
