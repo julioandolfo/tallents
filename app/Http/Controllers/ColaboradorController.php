@@ -16,6 +16,7 @@ class ColaboradorController extends Controller
     public function index(Request $request)
     {
         $colaboradores = Colaborador::with(['empresa', 'setor', 'cargo'])
+            ->visivelPara($request->user())
             ->when($request->empresa_id, fn($q, $v) => $q->where('empresa_id', $v))
             ->when($request->status, fn($q, $v) => $q->where('status', $v))
             ->when($request->search, fn($q, $v) => $q->where(function ($sub) use ($v) {
@@ -71,6 +72,8 @@ class ColaboradorController extends Controller
 
     public function show(Colaborador $colaborador)
     {
+        abort_unless($colaborador->visivelPara(request()->user()), 403);
+
         $colaborador->load([
             'empresa',
             'setor',
@@ -92,6 +95,8 @@ class ColaboradorController extends Controller
 
     public function edit(Colaborador $colaborador)
     {
+        abort_unless($colaborador->visivelPara(request()->user()), 403);
+
         $empresas = Empresa::where('ativa', true)->orderBy('nome')->get();
         $setores  = Setor::where('empresa_id', $colaborador->empresa_id)->orderBy('nome')->get();
         $cargos   = Cargo::where('empresa_id', $colaborador->empresa_id)->orderBy('nome')->get();
@@ -107,6 +112,8 @@ class ColaboradorController extends Controller
 
     public function update(Request $request, Colaborador $colaborador)
     {
+        abort_unless($colaborador->visivelPara($request->user()), 403);
+
         $data = $request->validate($this->rules() + [
             'empresa_id' => 'nullable|exists:empresas,id',
         ]);
@@ -237,6 +244,8 @@ class ColaboradorController extends Controller
 
     public function destroy(Colaborador $colaborador)
     {
+        abort_unless($colaborador->visivelPara(request()->user()), 403);
+
         $colaborador->delete();
 
         return redirect()

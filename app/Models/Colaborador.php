@@ -96,6 +96,37 @@ class Colaborador extends Model
         return $this->email_pessoal ?: ($this->email_login ?: $this->email);
     }
 
+    /**
+     * Restringe colaboradores conforme o papel: ADMIN (tudo), RH (empresa),
+     * GESTOR (setor), COLABORADOR (apenas ele mesmo).
+     */
+    public function scopeVisivelPara($query, ?\App\Models\Usuario $user)
+    {
+        if (! $user || $user->isAdmin()) {
+            return $query;
+        }
+        if ($user->isRh()) {
+            return $query->where('empresa_id', $user->empresa_id);
+        }
+        if ($user->isGestor()) {
+            return $query->where('setor_id', $user->setor_id);
+        }
+        if ($user->isColaborador()) {
+            return $query->where('id', $user->colaborador_id);
+        }
+
+        return $query->whereRaw('1 = 0');
+    }
+
+    public function visivelPara(?\App\Models\Usuario $user): bool
+    {
+        if (! $user || $user->isAdmin()) {
+            return true;
+        }
+
+        return static::query()->whereKey($this->getKey())->visivelPara($user)->exists();
+    }
+
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class);

@@ -10,6 +10,7 @@ class EmpresaController extends Controller
     public function index(Request $request)
     {
         $empresas = Empresa::withCount('colaboradores')
+            ->visivelPara($request->user())
             ->when($request->search, fn($q, $v) => $q->where(function ($sub) use ($v) {
                 $sub->where('nome', 'like', "%$v%")
                     ->orWhere('cnpj', 'like', "%$v%");
@@ -46,6 +47,8 @@ class EmpresaController extends Controller
 
     public function show(Empresa $empresa)
     {
+        abort_unless($empresa->visivelPara(request()->user()), 403);
+
         $empresa->loadCount(['colaboradores', 'setores', 'cargos'])
             ->load(['setores', 'cargos']);
 

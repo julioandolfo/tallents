@@ -11,6 +11,7 @@ class HoraExtraController extends Controller
     public function index(Request $request)
     {
         $horasExtras = HoraExtra::with(['colaborador.empresa'])
+            ->visivelPara($request->user())
             ->when($request->empresa_id, fn($q, $v) => $q->whereHas('colaborador', fn($sub) => $sub->where('empresa_id', $v)))
             ->when($request->colaborador_id, fn($q, $v) => $q->where('colaborador_id', $v))
             ->when($request->status, fn($q, $v) => $q->where('status', $v))
@@ -20,7 +21,8 @@ class HoraExtraController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        $totalValor  = HoraExtra::when($request->empresa_id, fn($q, $v) => $q->whereHas('colaborador', fn($sub) => $sub->where('empresa_id', $v)))
+        $totalValor  = HoraExtra::query()->visivelPara($request->user())
+            ->when($request->empresa_id, fn($q, $v) => $q->whereHas('colaborador', fn($sub) => $sub->where('empresa_id', $v)))
             ->when($request->colaborador_id, fn($q, $v) => $q->where('colaborador_id', $v))
             ->when($request->status, fn($q, $v) => $q->where('status', $v))
             ->sum('valor');
@@ -83,6 +85,8 @@ class HoraExtraController extends Controller
 
     public function show(HoraExtra $horasExtra)
     {
+        abort_unless($horasExtra->visivelPara(request()->user()), 403);
+
         $horasExtra->load(['colaborador.empresa', 'registradoPor']);
 
         return view('horas-extras.show', compact('horasExtra'));

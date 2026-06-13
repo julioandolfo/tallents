@@ -49,4 +49,17 @@ class FechamentoPagamento extends Model
     {
         return $this->hasMany(FechamentoPagamentoItem::class, 'fechamento_id');
     }
+
+    /** RH e GESTOR veem os fechamentos da própria empresa; ADMIN vê todos. */
+    public function scopeVisivelPara($query, ?\App\Models\Usuario $user)
+    {
+        if (! $user || $user->isAdmin()) {
+            return $query;
+        }
+        if ($user->isRh() || $user->isGestor()) {
+            return $query->where('empresa_id', $user->empresa_id);
+        }
+
+        return $query->whereRaw('1 = 0');
+    }
 }

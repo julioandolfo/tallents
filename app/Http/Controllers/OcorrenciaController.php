@@ -15,6 +15,7 @@ class OcorrenciaController extends Controller
     public function index(Request $request)
     {
         $ocorrencias = Ocorrencia::with(['colaborador.empresa', 'tipoOcorrencia', 'registradoPor'])
+            ->visivelPara($request->user())
             ->when($request->search, fn($q, $v) => $q->whereHas('colaborador', fn($sub) => $sub->where('nome', 'like', "%{$v}%")))
             ->when($request->empresa_id, fn($q, $v) => $q->whereHas('colaborador', fn($sub) => $sub->where('empresa_id', $v)))
             ->when($request->colaborador_id, fn($q, $v) => $q->where('colaborador_id', $v))
@@ -86,6 +87,8 @@ class OcorrenciaController extends Controller
 
     public function show(Ocorrencia $ocorrencia)
     {
+        abort_unless($ocorrencia->visivelPara(request()->user()), 403);
+
         $ocorrencia->load([
             'colaborador.empresa', 'tipoOcorrencia', 'registradoPor',
             'anexos.usuario', 'comentarios.usuario', 'historico.usuario',

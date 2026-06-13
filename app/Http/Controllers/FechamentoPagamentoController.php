@@ -14,6 +14,7 @@ class FechamentoPagamentoController extends Controller
     public function index(Request $request)
     {
         $fechamentos = FechamentoPagamento::with('empresa')
+            ->visivelPara($request->user())
             ->when($request->empresa_id, fn($q, $v) => $q->where('empresa_id', $v))
             ->when($request->status, fn($q, $v) => $q->where('status', $v))
             ->when($request->ano, fn($q, $v) => $q->where('ano', $v))
@@ -64,6 +65,8 @@ class FechamentoPagamentoController extends Controller
 
     public function show(FechamentoPagamento $fechamento)
     {
+        abort_unless($fechamento->visivelPara(request()->user()), 403);
+
         $fechamento->load(['empresa', 'itens.colaborador', 'criadoPor', 'fechadoPor']);
 
         // Colaboradores ativos da empresa, para seleção ao processar.

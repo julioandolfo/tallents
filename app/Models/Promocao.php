@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\EscopoPorColaborador;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Promocao extends Model
 {
+    use EscopoPorColaborador;
     use HasFactory;
 
     protected $table = 'promocoes';

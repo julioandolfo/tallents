@@ -76,4 +76,14 @@ class Empresa extends Model
     {
         return $this->hasMany(FechamentoPagamento::class);
     }
+
+    /** RH/GESTOR/COLABORADOR enxergam apenas a própria empresa; ADMIN vê todas. */
+    public function scopeVisivelPara($query, ?\App\Models\Usuario $user)
+    {
+        if (! $user || $user->isAdmin()) {
+            return $query;
+        }
+
+        return $query->where('id', $user->empresa_id);
+    }
 }

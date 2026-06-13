@@ -13,6 +13,7 @@ class PromocaoController extends Controller
     public function index(Request $request)
     {
         $promocoes = Promocao::with(['colaborador.empresa', 'cargoAnterior', 'cargoNovo', 'registradoPor'])
+            ->visivelPara($request->user())
             ->when($request->empresa_id, fn($q, $v) => $q->whereHas('colaborador', fn($sub) => $sub->where('empresa_id', $v)))
             ->when($request->colaborador_id, fn($q, $v) => $q->where('colaborador_id', $v))
             ->when($request->data_inicio, fn($q, $v) => $q->whereDate('data_promocao', '>=', $v))
@@ -89,6 +90,8 @@ class PromocaoController extends Controller
 
     public function show(Promocao $promocao)
     {
+        abort_unless($promocao->visivelPara(request()->user()), 403);
+
         $promocao->load(['colaborador.empresa', 'cargoAnterior', 'cargoNovo', 'registradoPor']);
 
         return view('promocoes.show', compact('promocao'));
