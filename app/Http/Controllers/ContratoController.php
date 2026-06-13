@@ -134,7 +134,7 @@ class ContratoController extends Controller
     private function enviarParaAutentique(Contrato $contrato, AutentiqueService $autentique): array
     {
         if (! $autentique->habilitado()) {
-            return ['error', 'Integração Autentique não configurada (defina AUTENTIQUE_TOKEN).'];
+            return ['error', 'Integração Autentique não configurada. Ative e informe o token em Integrações.'];
         }
 
         $contrato->load(['colaborador.cargo', 'colaborador.setor', 'colaborador.empresa']);

@@ -38,7 +38,7 @@
             <select name="metodo_assinatura" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 @foreach(\App\Models\Contrato::METODOS as $k => $v)<option value="{{ $k }}" {{ old('metodo_assinatura') == $k ? 'selected' : '' }}>{{ $v }}</option>@endforeach
             </select>
-            <p class="text-xs text-gray-400 mt-1">Autentique requer o token configurado (AUTENTIQUE_TOKEN).</p>
+            <p class="text-xs text-gray-400 mt-1">Autentique requer o token configurado em Integrações.</p>
         </div>
 
         {{-- Conteúdo + variáveis + preview (linha inteira) --}}

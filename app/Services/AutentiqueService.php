@@ -2,28 +2,53 @@
 
 namespace App\Services;
 
+use App\Models\Integracao;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
  * Integração com a Autentique (assinatura eletrônica) via API GraphQL v2.
  *
- * Best-effort: se o token não estiver configurado ou ocorrer erro, registra
- * no log e retorna null/false sem quebrar o fluxo. Configure em
- * config/services.php (AUTENTIQUE_TOKEN / AUTENTIQUE_SANDBOX).
+ * As credenciais são lidas da tela de Integrações (banco) e, como fallback,
+ * de config/services.php (.env). Best-effort: sem token ou em erro, registra
+ * no log e retorna null/false sem quebrar o fluxo.
  */
 class AutentiqueService
 {
     private string $endpoint = 'https://api.autentique.com.br/v2/graphql';
 
+    /** Configuração salva na UI (Integrações), quando ativa. */
+    private function integracao(): ?Integracao
+    {
+        $i = Integracao::where('provider', 'AUTENTIQUE')->first();
+
+        return ($i && $i->ativo) ? $i : null;
+    }
+
     public function habilitado(): bool
     {
-        return filled(config('services.autentique.token'));
+        return filled($this->token());
     }
 
     private function token(): ?string
     {
-        return config('services.autentique.token');
+        return $this->integracao()?->valor('token') ?: config('services.autentique.token');
+    }
+
+    private function sandbox(): bool
+    {
+        $ui = $this->integracao()?->valor('sandbox');
+        if ($ui !== null && $ui !== '') {
+            return ! in_array(mb_strtolower(trim($ui)), ['nao', 'não', 'no', 'false', '0', 'producao', 'produção'], true);
+        }
+
+        return (bool) config('services.autentique.sandbox', true);
+    }
+
+    /** Segredo do webhook (UI com fallback para .env). */
+    public function webhookSecret(): ?string
+    {
+        return $this->integracao()?->valor('webhook_secret') ?: config('services.autentique.webhook_secret');
     }
 
     /**
@@ -37,7 +62,7 @@ class AutentiqueService
             return null;
         }
 
-        $sandbox = config('services.autentique.sandbox') ? 'true' : 'false';
+        $sandbox = $this->sandbox() ? 'true' : 'false';
 
         $query = <<<GQL
         mutation CreateDocument(\$document: DocumentInput!, \$signers: [SignerInput!]!, \$file: Upload!) {

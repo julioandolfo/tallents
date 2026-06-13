@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Log;
  */
 class AutentiqueWebhookController extends Controller
 {
-    public function handle(Request $request)
+    public function handle(Request $request, \App\Services\AutentiqueService $autentique)
     {
-        // Verificação opcional por segredo compartilhado.
-        $segredo = config('services.autentique.webhook_secret');
+        // Verificação opcional por segredo compartilhado (configurado na UI).
+        $segredo = $autentique->webhookSecret();
         if ($segredo && ! hash_equals($segredo, (string) $request->header('X-Webhook-Secret'))) {
             return response()->json(['ok' => false], 401);
         }

@@ -48,6 +48,15 @@ class Integracao extends Model
                 'modelo'   => 'Modelo (ex: claude-sonnet-4-6)',
             ],
         ],
+        'AUTENTIQUE' => [
+            'nome'   => 'Autentique',
+            'desc'   => 'Assinatura eletrônica de contratos (autentique.com.br).',
+            'campos' => [
+                'token'          => 'API Token',
+                'sandbox'        => 'Ambiente sandbox? (sim / nao)',
+                'webhook_secret' => 'Segredo do webhook (opcional)',
+            ],
+        ],
     ];
 
     public function nome(): string

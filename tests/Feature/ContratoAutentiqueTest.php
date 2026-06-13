@@ -118,6 +118,39 @@ class ContratoAutentiqueTest extends TestCase
         $this->assertEquals('ASSINADO', $c->fresh()->status);
     }
 
+    public function test_integracoes_page_mostra_autentique(): void
+    {
+        $this->get(route('integracoes.index'))->assertOk()->assertSee('Autentique');
+    }
+
+    public function test_config_via_ui_habilita_e_envia(): void
+    {
+        // Sem token no .env; configura pela UI (Integrações).
+        config(['services.autentique.token' => null]);
+        \App\Models\Integracao::create([
+            'provider' => 'AUTENTIQUE', 'ativo' => true,
+            'credenciais' => ['token' => 'ui-token-9', 'sandbox' => 'nao'],
+        ]);
+
+        Http::fake(['autentique.com.br/*' => Http::response([
+            'data' => ['createDocument' => [
+                'id' => 'doc-ui', 'name' => 'x',
+                'signatures' => [['link' => ['short_link' => 'https://assina/ui']]],
+            ]],
+        ], 200)]);
+
+        $c = $this->novoContrato();
+        $this->post(route('contratos.autentique', $c))->assertRedirect()->assertSessionHas('success');
+
+        $this->assertEquals('doc-ui', $c->fresh()->autentique_document_id);
+        // Confirma uso do token e ambiente (sandbox=false) vindos da UI.
+        Http::assertSent(function ($req) {
+            $auth = $req->header('Authorization')[0] ?? '';
+            $body = is_array($req->data()) ? json_encode($req->data()) : (string) $req->body();
+            return str_contains($auth, 'ui-token-9');
+        });
+    }
+
     public function test_webhook_marca_assinado(): void
     {
         $c = $this->novoContrato(['metodo_assinatura' => 'AUTENTIQUE', 'autentique_document_id' => 'doc-xyz']);
