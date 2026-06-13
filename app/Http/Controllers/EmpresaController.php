@@ -50,9 +50,13 @@ class EmpresaController extends Controller
         abort_unless($empresa->visivelPara(request()->user()), 403);
 
         $empresa->loadCount(['colaboradores', 'setores', 'cargos'])
-            ->load(['setores', 'cargos']);
+            ->load([
+                'setores' => fn($q) => $q->withCount('colaboradores')->orderBy('nome'),
+                'cargos'  => fn($q) => $q->withCount('colaboradores')->orderBy('nome'),
+                'colaboradores' => fn($q) => $q->with(['cargo', 'setor'])->orderBy('nome'),
+            ]);
 
-        $colaboradoresAtivos = $empresa->colaboradores()->where('status', 'ATIVO')->count();
+        $colaboradoresAtivos = $empresa->colaboradores->where('status', 'ATIVO')->count();
 
         return view('empresas.show', compact('empresa', 'colaboradoresAtivos'));
     }
