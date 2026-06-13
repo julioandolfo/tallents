@@ -22,7 +22,9 @@
                 <select name="colaborador_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="">Selecione o colaborador</option>
                     @foreach($colaboradores ?? [] as $colaborador)
-                        <option value="{{ $colaborador->id }}" {{ (old('colaborador_id', request('colaborador_id'))) == $colaborador->id ? 'selected' : '' }}>
+                        <option value="{{ $colaborador->id }}"
+                                data-salario="{{ $colaborador->salario }}" data-cargo="{{ $colaborador->cargo_id }}"
+                                {{ (old('colaborador_id', request('colaborador_id'))) == $colaborador->id ? 'selected' : '' }}>
                             {{ $colaborador->nome }} — {{ $colaborador->cargo->nome ?? 'Sem cargo' }}
                         </option>
                     @endforeach
@@ -78,3 +80,22 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    const sel = document.querySelector('select[name="colaborador_id"]');
+    if (!sel) return;
+    function preencher() {
+        const opt = sel.selectedOptions[0];
+        if (!opt) return;
+        const salAnt = document.querySelector('[name="salario_anterior"]');
+        const cargoAnt = document.querySelector('[name="cargo_anterior_id"]');
+        if (salAnt && opt.dataset.salario && !salAnt.value) salAnt.value = opt.dataset.salario;
+        if (cargoAnt && opt.dataset.cargo) cargoAnt.value = opt.dataset.cargo;
+    }
+    sel.addEventListener('change', preencher);
+    if (sel.value) preencher();
+})();
+</script>
+@endpush

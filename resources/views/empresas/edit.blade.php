@@ -34,8 +34,12 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
-                        <input type="text" name="cnpj" value="{{ old('cnpj', $empresa->cnpj) }}"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="flex gap-2">
+                            <input type="text" name="cnpj" value="{{ old('cnpj', $empresa->cnpj) }}"
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <button type="button" data-cnpj-buscar class="px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition whitespace-nowrap">Buscar</button>
+                        </div>
+                        <p data-cnpj-msg class="text-xs text-gray-400 mt-1"></p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
@@ -99,3 +103,4 @@
     </form>
 </div>
 @endsection
+@include("empresas._cnpj-script")

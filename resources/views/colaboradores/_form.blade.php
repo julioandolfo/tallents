@@ -346,3 +346,48 @@
         <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition">{{ $c ? 'Salvar Alterações' : 'Salvar Colaborador' }}</button>
     </div>
 </div>
+
+@push('scripts')
+<script>
+(function () {
+    const empresa = document.querySelector('select[name="empresa_id"]');
+    if (!empresa) return;
+    const setor  = document.querySelector('select[name="setor_id"]');
+    const cargo  = document.querySelector('select[name="cargo_id"]');
+    const lider  = document.querySelector('select[name="lider_id"]');
+    const excluirId = @json($c->id ?? null);
+
+    async function carregar(url, select, atual, placeholder) {
+        if (!select) return;
+        const alvo = atual ?? select.value;
+        try {
+            const r = await fetch(url, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' });
+            if (!r.ok) return;
+            const data = await r.json();
+            select.innerHTML = '<option value="">' + placeholder + '</option>';
+            data.forEach(o => {
+                const opt = document.createElement('option');
+                opt.value = o.id; opt.textContent = o.nome;
+                if (String(o.id) === String(alvo)) opt.selected = true;
+                select.appendChild(opt);
+            });
+        } catch (e) { /* silencioso */ }
+    }
+
+    function recarregar(atual) {
+        const id = empresa.value;
+        if (!id) return;
+        carregar('/api/setores?empresa_id=' + id, setor, atual && atual.setor, 'Selecione o setor');
+        carregar('/api/cargos?empresa_id=' + id, cargo, atual && atual.cargo, 'Selecione o cargo');
+        let lurl = '/api/lideres?empresa_id=' + id + (excluirId ? '&excluir_id=' + excluirId : '');
+        carregar(lurl, lider, atual && atual.lider, 'Selecione');
+    }
+
+    // Ao carregar (edição): filtra pela empresa preservando as seleções atuais.
+    if (empresa.value) {
+        recarregar({ setor: setor && setor.value, cargo: cargo && cargo.value, lider: lider && lider.value });
+    }
+    empresa.addEventListener('change', () => recarregar(null));
+})();
+</script>
+@endpush

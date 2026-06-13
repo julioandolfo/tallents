@@ -63,6 +63,14 @@ Route::middleware(['auth'])->prefix('portal')->name('portal.')->group(function (
     Route::post('/contratos/{contrato}/assinar', [ContratoPortalController::class, 'assinar'])->name('contratos.assinar');
 });
 
+// ─── Endpoints AJAX para os formulários (sessão web) ─────────────────────────
+Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
+    Route::get('/setores', [\App\Http\Controllers\Api\SetorApiController::class, 'index'])->name('setores');
+    Route::get('/cargos', [\App\Http\Controllers\Api\CargoApiController::class, 'index'])->name('cargos');
+    Route::get('/lideres', [\App\Http\Controllers\Api\ColaboradorApiController::class, 'lideres'])->name('lideres');
+    Route::get('/cnpj/{cnpj}', [\App\Http\Controllers\Api\CnpjApiController::class, 'show'])->name('cnpj');
+});
+
 // ─── Chat interno (todos os usuários autenticados) ───────────────────────────
 Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
     Route::get('/', [ChatController::class, 'index'])->name('index');
