@@ -49,7 +49,38 @@
         @endforeach
     </div>
 
-    {{-- Grade inferior --}}
+    {{-- Gráficos --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 lg:col-span-2">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Ocorrências por mês</h3>
+            <canvas id="chartOcorrencias" height="120"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Ativos por empresa</h3>
+            <canvas id="chartEmpresas" height="160"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 lg:col-span-2">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">Horas extras por mês</h3>
+            <canvas id="chartHoras" height="120"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-5 py-4 border-b border-gray-100"><h3 class="text-base font-semibold text-gray-900">Ranking de ocorrências ({{ now()->year }})</h3></div>
+            <div class="divide-y divide-gray-100">
+                @forelse($rankingOcorrencias as $i => $r)
+                    <div class="flex items-center gap-3 px-5 py-3">
+                        <span class="h-7 w-7 shrink-0 rounded-full flex items-center justify-center text-xs font-bold {{ $i === 0 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-500' }}">{{ $i + 1 }}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">{{ optional($r->colaborador)->nome ?? '—' }}</p>
+                            <p class="text-xs text-gray-500 truncate">{{ optional(optional($r->colaborador)->empresa)->nome ?? '' }}</p>
+                        </div>
+                        <span class="text-sm font-semibold text-orange-600">{{ $r->total }}</span>
+                    </div>
+                @empty
+                    <p class="px-5 py-6 text-center text-sm text-gray-400">Sem ocorrências no ano.</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {{-- Últimas Ocorrências --}}
@@ -149,3 +180,23 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof Chart === 'undefined') return;
+    const dados = @json($charts);
+    const fmt = { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } };
+
+    const c1 = document.getElementById('chartOcorrencias');
+    if (c1) new Chart(c1, { type: 'bar', data: { labels: dados.meses, datasets: [{ data: dados.ocorrenciasMes, backgroundColor: '#f97316', borderRadius: 6 }] }, options: fmt });
+
+    const c2 = document.getElementById('chartHoras');
+    if (c2) new Chart(c2, { type: 'line', data: { labels: dados.meses, datasets: [{ data: dados.horasMes, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,.1)', fill: true, tension: .3 }] }, options: fmt });
+
+    const c3 = document.getElementById('chartEmpresas');
+    if (c3) new Chart(c3, { type: 'doughnut', data: { labels: dados.empresasLabels, datasets: [{ data: dados.empresasValores, backgroundColor: ['#4f46e5','#0ea5e9','#10b981','#f59e0b','#ef4444','#8b5cf6'] }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+});
+</script>
+@endpush
