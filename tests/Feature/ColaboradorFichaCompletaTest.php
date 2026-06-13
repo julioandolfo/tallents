@@ -110,6 +110,31 @@ class ColaboradorFichaCompletaTest extends TestCase
         $resp->assertSee(route('banco-horas.extrato', $colab), false);
     }
 
+    public function test_show_tem_abas_e_renderiza_campos_corrigidos(): void
+    {
+        $colab = Colaborador::create(['empresa_id' => $this->emp->id, 'setor_id' => $this->setor->id, 'cargo_id' => $this->cargo->id, 'nome' => 'Igor', 'status' => 'ATIVO', 'salario' => 2000]);
+        $tipo = \App\Models\TipoOcorrencia::create(['empresa_id' => $this->emp->id, 'nome' => 'Atraso', 'ativo' => true]);
+        $colab->ocorrencias()->create(['empresa_id' => $this->emp->id, 'tipo_ocorrencia_id' => $tipo->id, 'registrado_por' => auth()->id(), 'data_ocorrencia' => '2024-04-10', 'descricao' => 'Chegou 30min atrasado']);
+        \App\Models\HoraExtra::create(['empresa_id' => $this->emp->id, 'colaborador_id' => $colab->id, 'registrado_por' => auth()->id(), 'data' => '2024-04-12', 'horas' => 3, 'valor' => 90, 'status' => 'APROVADO']);
+        $novo = Cargo::create(['empresa_id' => $this->emp->id, 'nome' => 'Senior', 'salario_base' => 4000]);
+        \App\Models\Promocao::create(['empresa_id' => $this->emp->id, 'colaborador_id' => $colab->id, 'registrado_por' => auth()->id(), 'tipo' => 'PROMOCAO', 'cargo_anterior_id' => $this->cargo->id, 'cargo_novo_id' => $novo->id, 'salario_anterior' => 2000, 'salario_novo' => 4000, 'data_promocao' => '2024-04-15']);
+
+        $resp = $this->get(route('colaboradores.show', $colab))->assertOk();
+
+        // Navegação por abas presente.
+        foreach (['Visão Geral', 'Ocorrências', 'Horas &amp; Bônus', 'Carreira', 'Pessoal', 'Contratos'] as $aba) {
+            $resp->assertSee($aba, false);
+        }
+        $resp->assertSee("tab = 'geral'", false); // Alpine x-data
+
+        // Campos que antes liam atributos inexistentes (data/observacao/quantidade/novoCargoObj/novo_salario).
+        $resp->assertSee('Chegou 30min atrasado');   // ocorrencia->descricao
+        $resp->assertSee('10/04/2024');               // ocorrencia->data_ocorrencia
+        $resp->assertSee('3h');                        // hora_extra->horas
+        $resp->assertSee('Senior');                    // promocao->cargoNovo
+        $resp->assertSee('R$ 4.000,00');               // promocao->salario_novo
+    }
+
     public function test_avaliacao_create_preseleciona_colaborador(): void
     {
         $colab = Colaborador::create(['empresa_id' => $this->emp->id, 'nome' => 'Helena', 'status' => 'ATIVO']);
