@@ -140,6 +140,7 @@
                 @foreach([
                     ['label' => 'Matrícula', 'value' => $colaborador->matricula ?? '—'],
                     ['label' => 'Data de Admissão', 'value' => isset($colaborador->data_admissao) ? \Carbon\Carbon::parse($colaborador->data_admissao)->format('d/m/Y') : '—'],
+                    ['label' => 'Data de Demissão', 'value' => $colaborador->data_demissao ? \Carbon\Carbon::parse($colaborador->data_demissao)->format('d/m/Y') : '—'],
                     ['label' => 'Salário Base', 'value' => isset($colaborador->salario) ? 'R$ ' . number_format($colaborador->salario, 2, ',', '.') : '—'],
                     ['label' => 'Regime', 'value' => $colaborador->regime_trabalho ?? '—'],
                     ['label' => 'Carga Horária', 'value' => ($colaborador->carga_horaria ?? '—') . 'h/semana'],
@@ -212,6 +213,33 @@
             </div>
         </div>
         @endif
+
+        {{-- Acesso ao Sistema --}}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-base font-semibold text-gray-900">Acesso ao Sistema</h3>
+            </div>
+            <dl class="px-6 py-4 space-y-3">
+                @php $usuarioAcesso = $colaborador->user; @endphp
+                @if($usuarioAcesso)
+                    @foreach([
+                        ['label' => 'E-mail de login', 'value' => $colaborador->email_login ?: $usuarioAcesso->email],
+                        ['label' => 'Perfil de acesso', 'value' => ['ADMIN' => 'Administrador', 'RH' => 'RH', 'GESTOR' => 'Gestor', 'COLABORADOR' => 'Colaborador'][$usuarioAcesso->role] ?? $usuarioAcesso->role],
+                        ['label' => 'Conta ativa', 'value' => $usuarioAcesso->ativo ? 'Sim' : 'Não'],
+                        ['label' => 'Último acesso', 'value' => optional($usuarioAcesso->last_login_at)->format('d/m/Y H:i') ?? 'Nunca'],
+                    ] as $item)
+                    <div class="flex justify-between py-1 border-b border-gray-50 last:border-0">
+                        <dt class="text-sm text-gray-500">{{ $item['label'] }}</dt>
+                        <dd class="text-sm font-medium text-gray-900">{{ $item['value'] }}</dd>
+                    </div>
+                    @endforeach
+                @else
+                    <p class="text-sm text-gray-400">Este colaborador não possui acesso ao sistema.
+                        <a href="{{ route('colaboradores.edit', $colaborador) }}" class="text-indigo-600 hover:text-indigo-700 font-medium">Conceder acesso</a>
+                    </p>
+                @endif
+            </dl>
+        </div>
 
         {{-- Resumo de RH --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200">
@@ -518,6 +546,49 @@
                         </tr>
                     @empty
                         <tr><td colspan="5" class="px-6 py-6 text-center text-sm text-gray-400">Nenhum bônus cadastrado</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Contratos do colaborador --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900">Contratos e Documentos</h3>
+            <a href="{{ route('contratos.create', ['colaborador_id' => $colaborador->id]) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Novo contrato</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Título</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tipo</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Assinado em</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($colaborador->contratos as $contrato)
+                        @php
+                            $statusCor = [
+                                'ASSINADO'  => 'text-emerald-600',
+                                'PENDENTE'  => 'text-amber-600',
+                                'CANCELADO' => 'text-red-600',
+                            ][$contrato->status] ?? 'text-gray-500';
+                        @endphp
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-3 text-sm font-medium text-gray-900">{{ $contrato->titulo }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ ucfirst(strtolower($contrato->tipo)) }}</td>
+                            <td class="px-6 py-3 text-sm font-medium {{ $statusCor }}">{{ ucfirst(strtolower($contrato->status)) }}</td>
+                            <td class="px-6 py-3 text-sm text-gray-600">{{ optional($contrato->assinado_em)->format('d/m/Y H:i') ?? '—' }}</td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="{{ route('contratos.show', $contrato) }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Ver</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="px-6 py-6 text-center text-sm text-gray-400">Nenhum contrato cadastrado</td></tr>
                     @endforelse
                 </tbody>
             </table>

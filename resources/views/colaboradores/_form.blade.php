@@ -177,6 +177,12 @@
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Data de Demissão</label>
+                    <input type="date" name="data_demissao" value="{{ old('data_demissao', optional($c?->data_demissao)->format('Y-m-d')) }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <p class="text-xs text-gray-400 mt-1">Preencher apenas em caso de desligamento.</p>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Matrícula</label>
                     <input type="text" name="matricula" value="{{ old('matricula', $c->matricula ?? '') }}"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">

@@ -86,7 +86,8 @@ class ColaboradorController extends Controller
             'bonus.tipoBonus',
             'dependentes',
             'formacoes',
-        ])->loadCount(['ocorrencias', 'horasExtras', 'promocoes']);
+            'contratos',
+        ])->loadCount(['ocorrencias', 'horasExtras', 'promocoes', 'contratos']);
 
         $tiposBonus = \App\Models\TipoBonus::where('ativo', true)->orderBy('nome')->get();
 
@@ -160,6 +161,7 @@ class ColaboradorController extends Controller
             'regime_trabalho'      => 'nullable|string|max:30',
             'carga_horaria'        => 'nullable|string|max:30',
             'data_admissao'        => 'nullable|date',
+            'data_demissao'        => 'nullable|date|after_or_equal:data_admissao',
             'status'               => 'nullable|string|max:30',
             'cep'                  => 'nullable|string|max:10',
             'logradouro'           => 'nullable|string|max:255',
