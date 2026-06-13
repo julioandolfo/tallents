@@ -98,7 +98,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Senha Atual</label>
-                    <input type="password" name="current_password" required
+                    <input type="password" name="senha_atual" required
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>

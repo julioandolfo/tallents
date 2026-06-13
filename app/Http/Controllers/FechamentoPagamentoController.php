@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Bonus;
+use App\Models\ColaboradorBonus;
 use App\Models\Colaborador;
 use App\Models\Empresa;
 use App\Models\FechamentoPagamento;
@@ -135,7 +135,7 @@ class FechamentoPagamentoController extends Controller
                     ->sum('valor');
 
                 // Bônus ativos
-                $totalBonus = Bonus::where('colaborador_id', $colaborador->id)
+                $totalBonus = ColaboradorBonus::where('colaborador_id', $colaborador->id)
                     ->where('ativo', true)
                     ->whereMonth('created_at', $mes)
                     ->whereYear('created_at', $ano)

@@ -22,15 +22,15 @@
         <form method="GET" action="{{ route('ocorrencias.index') }}" class="flex flex-wrap gap-3 items-end">
             <div class="flex-1 min-w-[160px]">
                 <label class="block text-xs font-medium text-gray-600 mb-1">Buscar colaborador</label>
-                <input type="text" name="busca" value="{{ request('busca') }}" placeholder="Nome..."
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Nome..."
                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div class="min-w-[160px]">
                 <label class="block text-xs font-medium text-gray-600 mb-1">Tipo</label>
-                <select name="tipo_id" class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <select name="tipo_ocorrencia_id" class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="">Todos</option>
                     @foreach($tiposOcorrencias ?? [] as $tipo)
-                        <option value="{{ $tipo->id }}" {{ request('tipo_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nome }}</option>
+                        <option value="{{ $tipo->id }}" {{ request('tipo_ocorrencia_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nome }}</option>
                     @endforeach
                 </select>
             </div>

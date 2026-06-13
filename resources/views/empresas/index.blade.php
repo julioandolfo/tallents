@@ -21,7 +21,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
         <form method="GET" action="{{ route('empresas.index') }}" class="flex gap-3">
             <div class="flex-1">
-                <input type="text" name="busca" value="{{ request('busca') }}"
+                <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Buscar por nome ou CNPJ..."
                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>

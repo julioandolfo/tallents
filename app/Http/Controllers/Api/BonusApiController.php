@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bonus;
+use App\Models\ColaboradorBonus;
 use App\Models\Colaborador;
 use Illuminate\Http\Request;
 
@@ -25,16 +25,14 @@ class BonusApiController extends Controller
     {
         $data = $request->validate([
             'colaborador_id' => 'required|exists:colaboradores,id',
-            'tipo_bonus_id'  => 'required|exists:tipo_bonus,id',
+            'tipo_bonus_id'  => 'required|exists:tipos_bonus,id',
             'valor'          => 'required|numeric|min:0',
-            'descricao'      => 'nullable|string|max:1000',
             'ativo'          => 'boolean',
         ]);
 
-        $data['ativo']         = $request->boolean('ativo', true);
-        $data['registrado_por'] = auth()->id();
+        $data['ativo'] = $request->boolean('ativo', true);
 
-        $bonus = Bonus::create($data);
+        $bonus = ColaboradorBonus::create($data);
 
         return response()->json($bonus->load('tipoBonus'), 201);
     }
@@ -42,7 +40,7 @@ class BonusApiController extends Controller
     /**
      * Remove um bônus.
      */
-    public function destroy(Bonus $bonus)
+    public function destroy(ColaboradorBonus $bonus)
     {
         $bonus->delete();
 

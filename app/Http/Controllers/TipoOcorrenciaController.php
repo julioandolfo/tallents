@@ -96,6 +96,12 @@ class TipoOcorrenciaController extends Controller
 
     public function destroy(TipoOcorrencia $tiposOcorrencia)
     {
+        if ($tiposOcorrencia->ocorrencias()->exists()) {
+            return redirect()
+                ->route('tipos-ocorrencias.index')
+                ->with('error', 'Não é possível remover: há ocorrências registradas com este tipo.');
+        }
+
         $tiposOcorrencia->delete();
 
         return redirect()

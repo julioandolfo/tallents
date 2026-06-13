@@ -90,6 +90,12 @@ class TipoBonusController extends Controller
 
     public function destroy(TipoBonus $tiposBonus)
     {
+        if (\App\Models\ColaboradorBonus::where('tipo_bonus_id', $tiposBonus->id)->exists()) {
+            return redirect()
+                ->route('tipos-bonus.index')
+                ->with('error', 'Não é possível remover: há bônus de colaboradores usando este tipo.');
+        }
+
         $tiposBonus->delete();
 
         return redirect()

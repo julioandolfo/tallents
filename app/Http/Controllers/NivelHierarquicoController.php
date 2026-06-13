@@ -85,6 +85,15 @@ class NivelHierarquicoController extends Controller
 
     public function destroy(NivelHierarquico $niveisHierarquico)
     {
+        $emUso = \App\Models\Colaborador::where('nivel_hierarquico_id', $niveisHierarquico->id)->exists()
+            || \App\Models\Cargo::where('nivel_hierarquico_id', $niveisHierarquico->id)->exists();
+
+        if ($emUso) {
+            return redirect()
+                ->route('niveis-hierarquicos.index')
+                ->with('error', 'Não é possível remover: há colaboradores ou cargos vinculados a este nível.');
+        }
+
         $niveisHierarquico->delete();
 
         return redirect()
