@@ -58,62 +58,61 @@
 
     {{-- Card Principal - Identificação + Abas --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 h-24"></div>
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 h-20"></div>
         <div class="px-6">
-            <div class="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12">
-                {{-- Foto --}}
-                <div class="shrink-0">
-                    @if($colaborador->foto ?? false)
-                        <img src="{{ Storage::url($colaborador->foto) }}"
-                             class="h-24 w-24 rounded-full object-cover ring-4 ring-white shadow">
-                    @else
-                        <div class="h-24 w-24 rounded-full bg-indigo-100 ring-4 ring-white shadow flex items-center justify-center">
-                            <span class="text-indigo-700 text-2xl font-bold">{{ strtoupper(substr($colaborador->nome ?? 'N', 0, 2)) }}</span>
-                        </div>
-                    @endif
+            {{-- Foto (única que sobrepõe o banner) --}}
+            <div class="-mt-10">
+                @if($colaborador->foto ?? false)
+                    <img src="{{ Storage::url($colaborador->foto) }}"
+                         class="h-20 w-20 rounded-full object-cover ring-4 ring-white shadow">
+                @else
+                    <div class="h-20 w-20 rounded-full bg-indigo-100 ring-4 ring-white shadow flex items-center justify-center">
+                        <span class="text-indigo-700 text-xl font-bold">{{ strtoupper(substr($colaborador->nome ?? 'N', 0, 2)) }}</span>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Nome + metadados (abaixo do banner, sobre o fundo branco) --}}
+            <div class="mt-3">
+                <div class="flex flex-wrap items-center gap-3">
+                    <h2 class="text-xl font-bold text-gray-900">{{ $colaborador->nome ?? 'N/A' }}</h2>
+                    @php
+                        $badges = [
+                            'ATIVO'   => 'bg-green-100 text-green-700 ring-green-600/20',
+                            'INATIVO' => 'bg-red-100 text-red-700 ring-red-600/20',
+                            'FERIAS'  => 'bg-yellow-100 text-yellow-700 ring-yellow-600/20',
+                            'LICENCA' => 'bg-blue-100 text-blue-700 ring-blue-600/20',
+                        ];
+                        $badge = $badges[$colaborador->status ?? ''] ?? 'bg-gray-100 text-gray-700 ring-gray-600/20';
+                    @endphp
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ring-1 ring-inset {{ $badge }}">
+                        {{ $colaborador->status ?? 'N/A' }}
+                    </span>
                 </div>
-                {{-- Info --}}
-                <div class="flex-1 pt-2 sm:pt-0 pb-1 min-w-0">
-                    <div class="flex flex-wrap items-center gap-3">
-                        <h2 class="text-xl font-bold text-gray-900 truncate">{{ $colaborador->nome ?? 'N/A' }}</h2>
-                        @php
-                            $badges = [
-                                'ATIVO'   => 'bg-green-100 text-green-700 ring-green-600/20',
-                                'INATIVO' => 'bg-red-100 text-red-700 ring-red-600/20',
-                                'FERIAS'  => 'bg-yellow-100 text-yellow-700 ring-yellow-600/20',
-                                'LICENCA' => 'bg-blue-100 text-blue-700 ring-blue-600/20',
-                            ];
-                            $badge = $badges[$colaborador->status ?? ''] ?? 'bg-gray-100 text-gray-700 ring-gray-600/20';
-                        @endphp
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ring-1 ring-inset {{ $badge }}">
-                            {{ $colaborador->status ?? 'N/A' }}
-                        </span>
-                    </div>
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-sm text-gray-500">
-                        <span class="inline-flex items-center gap-1.5">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            {{ $colaborador->cargo->nome ?? 'Sem cargo' }}
-                        </span>
-                        <span class="inline-flex items-center gap-1.5">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                            </svg>
-                            {{ $colaborador->empresa->nome ?? 'Sem empresa' }}
-                        </span>
-                        @if($colaborador->setor ?? false)
-                        <span class="inline-flex items-center gap-1.5">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                      d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
-                            </svg>
-                            {{ $colaborador->setor->nome }}
-                        </span>
-                        @endif
-                    </div>
+                <div class="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-sm text-gray-500">
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        {{ $colaborador->cargo->nome ?? 'Sem cargo' }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        {{ $colaborador->empresa->nome ?? 'Sem empresa' }}
+                    </span>
+                    @if($colaborador->setor ?? false)
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                        </svg>
+                        {{ $colaborador->setor->nome }}
+                    </span>
+                    @endif
                 </div>
             </div>
 
