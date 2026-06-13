@@ -9,13 +9,19 @@
     {{-- Cabeçalho com botão --}}
     <div class="flex items-center justify-between">
         <p class="text-sm text-gray-500">{{ $colaboradores->total() ?? 0 }} colaboradores encontrados</p>
-        <a href="{{ route('colaboradores.create') }}"
-           class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Novo Colaborador
-        </a>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('exportar.colaboradores.csv', request()->query()) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">CSV</a>
+            <a href="{{ route('exportar.colaboradores.pdf', request()->query()) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">PDF</a>
+            <a href="{{ route('colaboradores.create') }}"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Novo Colaborador
+            </a>
+        </div>
     </div>
 
     {{-- Filtros --}}

@@ -71,6 +71,17 @@ Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
     Route::get('/cnpj/{cnpj}', [\App\Http\Controllers\Api\CnpjApiController::class, 'show'])->name('cnpj');
 });
 
+// ─── Exportações (CSV / PDF) ─────────────────────────────────────────────────
+Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->prefix('exportar')->name('exportar.')->group(function () {
+    $e = \App\Http\Controllers\ExportacaoController::class;
+    Route::get('/colaboradores/csv', [$e, 'colaboradoresCsv'])->name('colaboradores.csv');
+    Route::get('/colaboradores/pdf', [$e, 'colaboradoresPdf'])->name('colaboradores.pdf');
+    Route::get('/ocorrencias/csv', [$e, 'ocorrenciasCsv'])->name('ocorrencias.csv');
+    Route::get('/ocorrencias/pdf', [$e, 'ocorrenciasPdf'])->name('ocorrencias.pdf');
+    Route::get('/horas-extras/csv', [$e, 'horasExtrasCsv'])->name('horas-extras.csv');
+    Route::get('/fechamentos/{fechamento}/pdf', [$e, 'fechamentoPdf'])->name('fechamentos.pdf');
+});
+
 // ─── Chat interno (todos os usuários autenticados) ───────────────────────────
 Route::middleware(['auth'])->prefix('chat')->name('chat.')->group(function () {
     Route::get('/', [ChatController::class, 'index'])->name('index');

@@ -17,6 +17,9 @@
             </h2>
         </div>
         <x-ui.badge :color="$aberto ? 'yellow' : 'green'">{{ $aberto ? 'Aberto' : 'Fechado' }}</x-ui.badge>
+        @if($fechamento->itens->isNotEmpty())
+            <a href="{{ route('exportar.fechamentos.pdf', $fechamento) }}" class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition">PDF</a>
+        @endif
         @unless($aberto)
             <form method="POST" action="{{ route('fechamentos.reabrir', $fechamento) }}" x-data @submit.prevent="if(confirm('Reabrir este fechamento para edição?')) $el.submit()">
                 @csrf
