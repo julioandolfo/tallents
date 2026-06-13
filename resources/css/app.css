@@ -138,32 +138,32 @@ html.dark { color-scheme: dark; background-color: #0a0a0a; }
 .ts-dropdown .no-results { padding: 8px 12px; color: #9ca3af; }
 .ts-wrapper.single .ts-control:after { border-color: #9ca3af transparent transparent transparent; }
 
-/* ---- Dark mode (seletores reforçados + !important onde há empate) ---- */
+/* ---- Dark mode (paleta neutra do app: cards #171717, borda #262626) ---- */
 .dark .ts-wrapper.single .ts-control,
 .dark .ts-wrapper.single.full .ts-control,
 .dark .ts-wrapper.single.input-active .ts-control,
 .dark .ts-wrapper.single.input-active.focus .ts-control,
 .dark .ts-control {
-    background-color: #1f2937 !important;
-    border-color: #374151;
-    color: #f3f4f6;
+    background-color: #171717 !important;
+    border-color: #262626;
+    color: #e5e5e5;
 }
 .dark .ts-control,
 .dark .ts-control input,
-.dark .ts-control .item { color: #f3f4f6 !important; }
-.dark .ts-control input::placeholder { color: #9ca3af; }
+.dark .ts-control .item { color: #e5e5e5 !important; }
+.dark .ts-control input::placeholder { color: #737373; }
 .dark .ts-wrapper.focus .ts-control { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.45); }
 .dark .ts-dropdown {
-    background-color: #1f2937;
-    border-color: #374151;
-    color: #f3f4f6;
+    background-color: #171717;
+    border-color: #262626;
+    color: #e5e5e5;
 }
-.dark .ts-dropdown .option { color: #d1d5db; }
-.dark .ts-dropdown .option:hover { background-color: #374151; }
+.dark .ts-dropdown .option { color: #d4d4d4; }
+.dark .ts-dropdown .option:hover { background-color: #262626; }
 .dark .ts-dropdown .option.active { background-color: #4f46e5; color: #fff; }
-.dark .ts-dropdown .no-results { color: #6b7280; }
-.dark .ts-wrapper.single .ts-control:after { border-color: #9ca3af transparent transparent transparent; }
-.dark .ts-wrapper.disabled .ts-control { background-color: #111827 !important; opacity: 0.6; }
+.dark .ts-dropdown .no-results { color: #737373; }
+.dark .ts-wrapper.single .ts-control:after { border-color: #737373 transparent transparent transparent; }
+.dark .ts-wrapper.disabled .ts-control { background-color: #0f0f0f !important; opacity: 0.6; }
 
 /* ==========================================================================
    Formulários full-width em 2 colunas (.form-grid)
