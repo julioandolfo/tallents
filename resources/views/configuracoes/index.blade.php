@@ -14,6 +14,7 @@
                 @foreach([
                     ['key' => 'email',    'label' => 'E-mail / SMTP',   'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
                     ['key' => 'empresa',  'label' => 'Dados da Empresa', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5'],
+                    ['key' => 'push',     'label' => 'Notificações Push', 'icon' => 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'],
                     ['key' => 'sistema',  'label' => 'Sistema',          'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z'],
                 ] as $tab)
                 <button type="button"
@@ -177,6 +178,41 @@
                             <dd class="text-sm font-medium text-gray-900">{{ config('database.default') }}</dd>
                         </div>
                     </dl>
+                </div>
+            </div>
+
+            <!-- Aba Push -->
+            <div x-show="activeTab === 'push'" x-cloak>
+                <form method="POST" action="{{ route('configuracoes.push') }}" class="space-y-4">
+                    @csrf @method('PUT')
+                    <p class="text-sm text-gray-500">Integração com <strong>OneSignal</strong> para notificações push. As credenciais ficam no painel OneSignal &rarr; Settings &rarr; Keys &amp; IDs.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">OneSignal App ID</label>
+                            <input type="text" name="onesignal_app_id" value="{{ old('onesignal_app_id', $configPush->onesignal_app_id ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">REST API Key</label>
+                            <input type="password" name="onesignal_api_key" value="{{ old('onesignal_api_key', $configPush->onesignal_api_key ?? '') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <label class="flex items-center gap-2 text-sm text-gray-700">
+                        <input type="hidden" name="ativo" value="0">
+                        <input type="checkbox" name="ativo" value="1" {{ old('ativo', ($configPush->ativo ?? false)) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                        Ativar notificações push
+                    </label>
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition">Salvar</button>
+                    </div>
+                </form>
+
+                <div class="mt-6 pt-4 border-t border-gray-100">
+                    <a href="{{ route('configuracoes.templates.index') }}" class="inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        Editar templates de e-mail
+                    </a>
                 </div>
             </div>
 

@@ -174,6 +174,10 @@ Route::middleware(['auth', 'papel:ADMIN,RH,GESTOR'])->group(function () {
     Route::put('/configuracoes', [ConfiguracaoController::class, 'update'])->name('configuracoes.update');
     Route::put('/configuracoes/email', [ConfiguracaoController::class, 'updateEmail'])->name('configuracoes.email');
     Route::post('/configuracoes/email/testar', [ConfiguracaoController::class, 'testarEmail'])->name('configuracoes.email.testar');
+    Route::put('/configuracoes/push', [ConfiguracaoController::class, 'updatePush'])->name('configuracoes.push');
+    Route::get('/configuracoes/templates', [\App\Http\Controllers\TemplateEmailController::class, 'index'])->name('configuracoes.templates.index');
+    Route::get('/configuracoes/templates/{template}/editar', [\App\Http\Controllers\TemplateEmailController::class, 'edit'])->name('configuracoes.templates.edit');
+    Route::put('/configuracoes/templates/{template}', [\App\Http\Controllers\TemplateEmailController::class, 'update'])->name('configuracoes.templates.update');
     Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index');
     Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
     Route::put('/perfil/senha', [PerfilController::class, 'updateSenha'])->name('perfil.senha');

@@ -3,18 +3,18 @@
 namespace App\Mail;
 
 use App\Models\Promocao;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 
-class PromocaoRegistrada extends Mailable
+class PromocaoRegistrada extends TemplateMailable
 {
-    use Queueable, SerializesModels;
-
     public function __construct(public Promocao $promocao) {}
 
     public function build()
     {
-        return $this->subject('Você foi promovido(a)! 🎉')->view('emails.promocao');
+        return $this->comTemplate('promocao', [
+            'nome'         => optional($this->promocao->colaborador)->nome,
+            'cargo_novo'   => optional($this->promocao->cargoNovo)->nome ?? '—',
+            'salario_novo' => $this->promocao->salario_novo ? 'R$ ' . number_format($this->promocao->salario_novo, 2, ',', '.') : '—',
+            'data'         => optional($this->promocao->data_promocao)->format('d/m/Y'),
+        ], 'emails.promocao', 'Você foi promovido(a)! 🎉');
     }
 }

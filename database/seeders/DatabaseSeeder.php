@@ -40,5 +40,8 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $admin->assignRole('ADMIN');
+
+        // Templates de e-mail padrão (editáveis em Configurações).
+        $this->call(TemplateEmailSeeder::class);
     }
 }

@@ -3,19 +3,21 @@
 namespace App\Mail;
 
 use App\Models\Colaborador;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 
-class ColaboradorBoasVindas extends Mailable
+class ColaboradorBoasVindas extends TemplateMailable
 {
-    use Queueable, SerializesModels;
-
     public function __construct(public Colaborador $colaborador, public ?string $emailLogin = null) {}
 
     public function build()
     {
-        return $this->subject('Bem-vindo(a) à ' . ($this->colaborador->empresa->nome ?? config('app.name')))
-            ->view('emails.boas-vindas');
+        $empresa = optional($this->colaborador->empresa)->nome ?? config('app.name');
+
+        return $this->comTemplate('boas_vindas', [
+            'nome'        => $this->colaborador->nome,
+            'empresa'     => $empresa,
+            'cargo'       => optional($this->colaborador->cargo)->nome ?? '—',
+            'setor'       => optional($this->colaborador->setor)->nome ?? '—',
+            'email_login' => $this->emailLogin ?? '',
+        ], 'emails.boas-vindas', 'Bem-vindo(a) à ' . $empresa);
     }
 }

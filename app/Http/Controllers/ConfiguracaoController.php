@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ConfiguracaoEmail;
+use App\Models\ConfiguracaoPush;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,29 @@ class ConfiguracaoController extends Controller
             'empresa_telefone'  => $empresa->telefone ?? '',
         ];
 
-        return view('configuracoes.index', compact('config', 'configEmail', 'empresa'));
+        $configPush = ConfiguracaoPush::first();
+
+        return view('configuracoes.index', compact('config', 'configEmail', 'empresa', 'configPush'));
+    }
+
+    /** Salva as credenciais OneSignal (push). */
+    public function updatePush(Request $request)
+    {
+        $data = $request->validate([
+            'onesignal_app_id'  => 'nullable|string|max:255',
+            'onesignal_api_key' => 'nullable|string|max:500',
+            'ativo'             => 'boolean',
+        ]);
+
+        $cfg = ConfiguracaoPush::first() ?? new ConfiguracaoPush();
+        $cfg->fill([
+            'provider'          => 'onesignal',
+            'onesignal_app_id'  => $data['onesignal_app_id'] ?? null,
+            'onesignal_api_key' => $data['onesignal_api_key'] ?? null,
+            'ativo'             => $request->boolean('ativo'),
+        ])->save();
+
+        return redirect()->route('configuracoes.index')->with('success', 'Configurações de push salvas com sucesso!');
     }
 
     public function update(Request $request)

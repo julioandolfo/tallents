@@ -72,11 +72,18 @@ class OcorrenciaController extends Controller
 
         $ocorrencia->registrarHistorico('Ocorrência registrada');
 
-        // Notifica o colaborador por e-mail, se solicitado (best-effort).
+        // Notifica o colaborador por e-mail e push, se solicitado (best-effort).
         if ($ocorrencia->notificar_colaborador) {
+            $ocorrencia->load(['colaborador', 'tipoOcorrencia']);
             app(\App\Services\EmailService::class)->enviar(
                 $colaborador->emailContato(),
-                new \App\Mail\OcorrenciaRegistrada($ocorrencia->load(['colaborador', 'tipoOcorrencia']))
+                new \App\Mail\OcorrenciaRegistrada($ocorrencia)
+            );
+            app(\App\Services\PushService::class)->enviar(
+                [$colaborador->id],
+                'Nova ocorrência registrada',
+                (optional($ocorrencia->tipoOcorrencia)->nome ?? 'Ocorrência') . ' em ' . optional($ocorrencia->data_ocorrencia)->format('d/m/Y'),
+                ['ocorrencia_id' => $ocorrencia->id]
             );
         }
 
