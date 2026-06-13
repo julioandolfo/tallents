@@ -377,6 +377,11 @@
                 if (String(o.id) === String(alvo)) opt.selected = true;
                 select.appendChild(opt);
             });
+            // Sincroniza o Tom Select (busca) quando ativo neste select.
+            if (select.tomselect) {
+                select.tomselect.sync();
+                if (alvo) select.tomselect.setValue(String(alvo), true);
+            }
         } catch (e) { /* silencioso */ }
     }
 

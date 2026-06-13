@@ -4,14 +4,14 @@
 @section('page-title', 'Novo Feedback')
 
 @section('content')
-<div class="py-4 max-w-2xl">
+<div class="py-4">
     <div class="flex items-center gap-3 mb-6">
         <a href="{{ route('feedbacks.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
         </a>
         <h2 class="text-lg font-semibold text-gray-900">Registrar Feedback</h2>
     </div>
-    <form method="POST" action="{{ route('feedbacks.store') }}" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+    <form method="POST" action="{{ route('feedbacks.store') }}" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 form-grid">
         @csrf
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Colaborador <span class="text-red-500">*</span></label>

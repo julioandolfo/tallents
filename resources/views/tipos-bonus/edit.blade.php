@@ -4,7 +4,7 @@
 @section('page-title', 'Editar Tipo de Bônus')
 
 @section('content')
-<div class="py-4 max-w-xl">
+<div class="py-4">
     <div class="flex items-center gap-3 mb-6">
         <a href="{{ route('tipos-bonus.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -17,7 +17,7 @@
     <form method="POST" action="{{ route('tipos-bonus.update', $tipo) }}">
         @csrf
         @method('PUT')
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 form-grid">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                 <input type="text" name="nome" value="{{ old('nome', $tipo->nome) }}" required

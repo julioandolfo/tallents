@@ -4,7 +4,7 @@
 @section('page-title', 'Editar Empresa')
 
 @section('content')
-<div class="py-4 max-w-3xl">
+<div class="py-4">
     <div class="flex items-center gap-3 mb-6">
         <a href="{{ route('empresas.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

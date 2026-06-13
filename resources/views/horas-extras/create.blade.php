@@ -4,7 +4,7 @@
 @section('page-title', 'Lançar Hora Extra')
 
 @section('content')
-<div class="py-4 max-w-2xl">
+<div class="py-4">
     <div class="flex items-center gap-3 mb-6">
         <a href="{{ route('horas-extras.index') }}" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition">
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -16,7 +16,7 @@
 
     <form method="POST" action="{{ route('horas-extras.store') }}">
         @csrf
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 form-grid">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Colaborador <span class="text-red-500">*</span></label>
                 <select name="colaborador_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">

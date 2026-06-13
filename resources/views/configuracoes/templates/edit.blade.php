@@ -12,7 +12,7 @@
 
     @if($errors->any())<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{{ $errors->first() }}</div>@endif
 
-    <form method="POST" action="{{ route('configuracoes.templates.update', $template) }}" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
+    <form method="POST" action="{{ route('configuracoes.templates.update', $template) }}" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 form-grid">
         @csrf @method('PUT')
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Assunto</label>
