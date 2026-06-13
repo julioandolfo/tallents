@@ -53,12 +53,12 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Salário Anterior (R$)</label>
-                    <input type="number" name="salario_anterior" value="{{ old('salario_anterior') }}" step="0.01" min="0"
+                    <input type="number" name="salario_anterior" data-money value="{{ old('salario_anterior') }}" step="0.01" min="0"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Novo Salário (R$)</label>
-                    <input type="number" name="novo_salario" value="{{ old('novo_salario') }}" step="0.01" min="0"
+                    <input type="number" name="novo_salario" data-money value="{{ old('novo_salario') }}" step="0.01" min="0"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
@@ -89,7 +89,7 @@
     function preencher() {
         const opt = sel.selectedOptions[0];
         if (!opt) return;
-        const salAnt = document.querySelector('[name="salario_anterior"]');
+        const salAnt = document.querySelector('[name="salario_anterior" data-money]');
         const cargoAnt = document.querySelector('[name="cargo_anterior_id"]');
         if (salAnt && opt.dataset.salario && !salAnt.value) salAnt.value = opt.dataset.salario;
         if (cargoAnt && opt.dataset.cargo) cargoAnt.value = opt.dataset.cargo;

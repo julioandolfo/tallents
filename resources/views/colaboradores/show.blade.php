@@ -461,7 +461,7 @@
                         <option value="">Tipo de bônus *</option>
                         @foreach($tiposBonus ?? [] as $tb)<option value="{{ $tb->id }}">{{ $tb->nome }}</option>@endforeach
                     </select>
-                    <input type="number" step="0.01" min="0" name="valor" required placeholder="Valor (R$) *" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="number" step="0.01" min="0" name="valor" data-money required placeholder="Valor (R$) *" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <input type="date" name="data_inicio" title="Início da vigência" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <input type="date" name="data_fim" title="Fim da vigência" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <input type="text" name="observacoes" placeholder="Observações" class="lg:col-span-3 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">

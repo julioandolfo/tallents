@@ -38,12 +38,12 @@
     </div>
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Salário mín.</label>
-        <input type="number" step="0.01" name="salario_min" value="{{ old('salario_min', $vaga->salario_min ?? '') }}"
+        <input type="number" step="0.01" name="salario_min" data-money value="{{ old('salario_min', $vaga->salario_min ?? '') }}"
                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
     </div>
     <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Salário máx.</label>
-        <input type="number" step="0.01" name="salario_max" value="{{ old('salario_max', $vaga->salario_max ?? '') }}"
+        <input type="number" step="0.01" name="salario_max" data-money value="{{ old('salario_max', $vaga->salario_max ?? '') }}"
                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
     </div>
     <div>

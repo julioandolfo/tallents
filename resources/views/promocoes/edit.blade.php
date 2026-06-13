@@ -47,12 +47,12 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Salário Anterior</label>
-                    <input type="number" name="salario_anterior" value="{{ old('salario_anterior', $promocao->salario_anterior) }}" step="0.01"
+                    <input type="number" name="salario_anterior" data-money value="{{ old('salario_anterior', $promocao->salario_anterior) }}" step="0.01"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Novo Salário</label>
-                    <input type="number" name="novo_salario" value="{{ old('novo_salario', $promocao->novo_salario) }}" step="0.01"
+                    <input type="number" name="novo_salario" data-money value="{{ old('novo_salario', $promocao->novo_salario) }}" step="0.01"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>

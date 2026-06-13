@@ -42,12 +42,12 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Salário Base (R$)</label>
-                <input type="number" name="salario_base" value="{{ old('salario_base') }}" step="0.01" min="0"
+                <input type="number" name="salario_base" data-money value="{{ old('salario_base') }}" step="0.01" min="0"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Salário Máximo (R$)</label>
-                <input type="number" name="salario_maximo" value="{{ old('salario_maximo') }}" step="0.01" min="0"
+                <input type="number" name="salario_maximo" data-money value="{{ old('salario_maximo') }}" step="0.01" min="0"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>

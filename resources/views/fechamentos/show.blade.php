@@ -104,14 +104,14 @@
                             <td class="px-4 py-3 text-right text-sm text-gray-700">R$ {{ number_format($item->total_bonus, 2, ',', '.') }}</td>
                             <td class="px-4 py-3 text-right text-sm text-red-600">
                                 @if($aberto)
-                                    <input form="item-{{ $item->id }}" type="number" step="0.01" min="0" name="descontos" value="{{ $item->descontos }}" class="w-24 px-2 py-1 border border-gray-200 rounded text-right text-sm">
+                                    <input form="item-{{ $item->id }}" type="number" step="0.01" min="0" name="descontos" data-money value="{{ $item->descontos }}" class="w-24 px-2 py-1 border border-gray-200 rounded text-right text-sm">
                                 @else
                                     R$ {{ number_format($item->descontos, 2, ',', '.') }}
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-right text-sm text-emerald-600">
                                 @if($aberto)
-                                    <input form="item-{{ $item->id }}" type="number" step="0.01" min="0" name="adicionais" value="{{ $item->adicionais }}" class="w-24 px-2 py-1 border border-gray-200 rounded text-right text-sm">
+                                    <input form="item-{{ $item->id }}" type="number" step="0.01" min="0" name="adicionais" data-money value="{{ $item->adicionais }}" class="w-24 px-2 py-1 border border-gray-200 rounded text-right text-sm">
                                 @else
                                     R$ {{ number_format($item->adicionais, 2, ',', '.') }}
                                 @endif
